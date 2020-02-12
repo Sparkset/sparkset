@@ -10,11 +10,7 @@
       </div>
     </router-link>
     <ul id="pages">
-      <li
-        v-for="page in pages"
-        :key="page.path"
-        :class="$route.path.startsWith(page.path) ? 'active' : ''"
-      >
+      <li v-for="page in pages" :key="page.path">
         <router-link
           :to="page.path"
           @click.native="$store.commit('closeSideNav')"
@@ -78,7 +74,7 @@ export default {
 #pages > li > a:hover > span {
   color: #36d5d8;
 }
-#pages > li.active > a > span {
+#pages > li > a.router-link-exact-active > span {
   color: #36d5d8;
   font-weight: 500;
 }
