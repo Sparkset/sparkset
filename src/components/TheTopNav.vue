@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <ul id="left"></ul>
+    <input type= "text" v-model= "search" placeholder="Search" id="searchbar"/>
     <ul id="right">
       <li :class="[$store.state.openedTopNavItem === 'user' ? 'open' : '']">
         <button @click.stop="$store.commit('updateOpenedTopNavItem', 'user')">
@@ -26,7 +26,8 @@ export default {
   name: "TheTopNav",
   data() {
     return {
-      firstName: AV.User.current().get("firstName")
+      firstName: AV.User.current().get("firstName"),
+      search: ''
     };
   },
   created() {
@@ -142,5 +143,12 @@ export default {
 .dialogue > li > button:focus > span,
 .dialogue > li > button:hover > span {
   color: #36d5d8;
+}
+
+#searchbar {
+  width: 60%;
+  margin: 5px;
+  margin-left: 5px;
+  border-color: #36d5d8;
 }
 </style>
