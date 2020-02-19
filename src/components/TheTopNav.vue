@@ -145,10 +145,5 @@ export default {
   color: #36d5d8;
 }
 
-#searchbar {
-  width: 60%;
-  margin: 5px;
-  margin-left: 5px;
-  border-color: #36d5d8;
-}
+
 </style>

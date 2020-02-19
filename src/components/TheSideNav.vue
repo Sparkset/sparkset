@@ -9,6 +9,8 @@
         <img src="@/assets/logo.png" alt="Sparkset" />
       </div>
     </router-link>
+    <input type= "text" v-model= "search" placeholder="Search" id="searchbar"/>
+
     <ul id="pages">
       <li v-for="page in pages" :key="page.path">
         <router-link
@@ -77,5 +79,11 @@ export default {
 #pages > li > a.router-link-exact-active > span {
   color: #36d5d8;
   font-weight: 500;
+}
+#searchbar {
+  width: 95%;
+  margin: 5px;
+  margin-left: 5px;
+  border-color: #36d5d8;
 }
 </style>
