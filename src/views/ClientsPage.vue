@@ -16,6 +16,8 @@
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Company</th>
+                    <th>Position</th>
                     <th>Email</th>
                     <th>Cell Phone</th>
                   </tr>
@@ -32,38 +34,30 @@
                           "
                         />
                         <span>
-                          <p class="name">
-                            {{ client.get("firstName") }}
-                            <span class="last-name">
-                              {{ client.get("lastName") }}
-                            </span>
-                            <span class="nick-name">
-                              {{
-                                client.get("nickName")
-                                  ? `(${client.get("nickName")})`
-                                  : undefined
-                              }}
-                            </span>
-                          </p>
-                          <p class="job-title">
+                          {{ client.get("firstName") }}
+                          <span class="last-name">
+                            {{ client.get("lastName") }}
+                          </span>
+                          <span class="nick-name">
                             {{
-                              [
-                                client.get("jobTitle"),
-                                client.get("company")
-                                  ? client.get("company").get("name")
-                                  : undefined
-                              ]
-                                .filter(field => field)
-                                .join(", ")
+                              client.get("nickName")
+                                ? `(${client.get("nickName")})`
+                                : undefined
                             }}
-                          </p>
+                          </span>
                         </span>
                       </span>
                     </td>
-                    <td>{{ client.get("email") }}</td>
                     <td>
-                      {{ client.get("cellPhone") }}
+                      {{
+                        client.get("company")
+                          ? client.get("company").get("name")
+                          : undefined
+                      }}
                     </td>
+                    <td>{{ client.get("jobTitle") }}</td>
+                    <td>{{ client.get("email") }}</td>
+                    <td>{{ client.get("cellPhone") }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -141,18 +135,10 @@ export default {
   height: 36pt;
   object-fit: cover;
 }
-.name {
-  margin: 0;
-}
 .last-name {
   font-weight: 500;
 }
 .nick-name {
   opacity: 0.8;
-}
-.job-title {
-  margin: 0;
-  font-size: 10pt;
-  opacity: 0.4;
 }
 </style>
