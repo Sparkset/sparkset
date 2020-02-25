@@ -12,18 +12,73 @@
               </label>
             </div>
             <div class="field">
-              <table>
+              <table id="clients">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Company</th>
-                    <th>Position</th>
-                    <th>Email</th>
-                    <th>Cell Phone</th>
+                    <th @click="sortBy('name')">
+                      Name
+                      <span v-if="sortedBy === 'name'" class="sort-icon">
+                        <font-awesome-icon
+                          :icon="
+                            sortOrder === 1
+                              ? 'long-arrow-alt-up'
+                              : 'long-arrow-alt-down'
+                          "
+                        />
+                      </span>
+                    </th>
+                    <th @click="sortBy('company')">
+                      Company
+                      <span v-if="sortedBy === 'company'" class="sort-icon">
+                        <font-awesome-icon
+                          :icon="
+                            sortOrder === 1
+                              ? 'long-arrow-alt-up'
+                              : 'long-arrow-alt-down'
+                          "
+                        />
+                      </span>
+                    </th>
+                    <th @click="sortBy('jobTitle')">
+                      Job Title
+                      <span v-if="sortedBy === 'jobTitle'" class="sort-icon">
+                        <font-awesome-icon
+                          :icon="
+                            sortOrder === 1
+                              ? 'long-arrow-alt-up'
+                              : 'long-arrow-alt-down'
+                          "
+                        />
+                      </span>
+                    </th>
+                    <th @click="sortBy('email')">
+                      Email
+                      <span v-if="sortedBy === 'email'" class="sort-icon">
+                        <font-awesome-icon
+                          :icon="
+                            sortOrder === 1
+                              ? 'long-arrow-alt-up'
+                              : 'long-arrow-alt-down'
+                          "
+                        />
+                      </span>
+                    </th>
+                    <th @click="sortBy('cellPhone')">
+                      Cell Phone
+                      <span v-if="sortedBy === 'cellPhone'" class="sort-icon">
+                        <font-awesome-icon
+                          :icon="
+                            sortOrder === 1
+                              ? 'long-arrow-alt-up'
+                              : 'long-arrow-alt-down'
+                          "
+                        />
+                      </span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="client in filteredClients" :key="client.id">
+                  <tr v-for="client in sortedClients" :key="client.id">
                     <td>
                       <span class="picture-name-combo">
                         <img
@@ -34,16 +89,15 @@
                           "
                         />
                         <span>
-                          {{ client.get("firstName") }}
-                          <span class="last-name">
-                            {{ client.get("lastName") }}
+                          <span>
+                            {{ client.get("firstName") }}
+                            <span class="last-name">
+                              {{ client.get("lastName") }}
+                            </span>
                           </span>
+                          <br />
                           <span class="nick-name">
-                            {{
-                              client.get("nickName")
-                                ? `(${client.get("nickName")})`
-                                : undefined
-                            }}
+                            {{ client.get("nickName") }}
                           </span>
                         </span>
                       </span>
@@ -76,7 +130,9 @@ export default {
   data() {
     return {
       search: "",
-      clients: []
+      clients: [],
+      sortedBy: "name",
+      sortOrder: 1
     };
   },
   created() {
@@ -84,8 +140,6 @@ export default {
     const clientQuery = new AV.Query("Client");
     clientQuery
       .include("company")
-      .addAscending("lastName")
-      .addAscending("firstName")
       .limit(1000)
       .find()
       .then(clients => {
@@ -94,6 +148,13 @@ export default {
       .catch(error => {
         alert(error);
       });
+  },
+  methods: {
+    sortBy(field) {
+      const vm = this;
+      vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
+      vm.sortedBy = field;
+    }
   },
   computed: {
     filteredClients() {
@@ -118,12 +179,45 @@ export default {
             )
           : true
       );
+    },
+    sortedClients() {
+      const vm = this;
+      if (vm.sortedBy === "name") {
+        return vm.filteredClients
+          .sort((a, b) =>
+            a.get("firstName") > b.get("firstName")
+              ? vm.sortOrder
+              : -vm.sortOrder
+          )
+          .sort((a, b) =>
+            a.get("lastName") > b.get("lastName") ? vm.sortOrder : -vm.sortOrder
+          );
+      } else if (vm.sortedBy === "company") {
+        return vm.filteredClients.sort((a, b) =>
+          a.get("company").get("name") > b.get("company").get("name")
+            ? vm.sortOrder
+            : -vm.sortOrder
+        );
+      } else {
+        return vm.filteredClients.sort((a, b) =>
+          a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
+        );
+      }
     }
   }
 };
 </script>
 
 <style scoped>
+#clients {
+  table-layout: fixed;
+}
+#clients > thead > tr > th {
+  cursor: pointer;
+}
+.sort-icon {
+  opacity: 0.4;
+}
 .picture-name-combo {
   display: flex;
   align-items: center;
@@ -131,14 +225,15 @@ export default {
 .picture-name-combo > img {
   margin: 0 1rem 0 0;
   border-radius: 50%;
-  width: 36pt;
-  height: 36pt;
+  width: 30pt;
+  height: 30pt;
   object-fit: cover;
 }
 .last-name {
   font-weight: 500;
 }
 .nick-name {
-  opacity: 0.8;
+  font-size: 9pt;
+  opacity: 0.6;
 }
 </style>
