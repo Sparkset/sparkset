@@ -135,9 +135,11 @@ export default {
   align-items: center;
 }
 .picture-name-combo > img {
-  height: 36pt;
   margin: 0 1rem 0 0;
   border-radius: 50%;
+  width: 36pt;
+  height: 36pt;
+  object-fit: cover;
 }
 .name {
   margin: 0;
