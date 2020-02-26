@@ -94,6 +94,17 @@
                             <span class="last-name">
                               {{ client.get("lastName") }}
                             </span>
+                            <a
+                              v-if="client.get('linkedin')"
+                              :href="
+                                `https://www.linkedin.com/in/${client.get(
+                                  'linkedin'
+                                )}`
+                              "
+                              target="_blank"
+                            >
+                              <font-awesome-icon :icon="['fab', 'linkedin']" />
+                            </a>
                           </span>
                           <br />
                           <span class="nick-name">
