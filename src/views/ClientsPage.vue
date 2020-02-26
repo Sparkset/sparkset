@@ -121,8 +121,16 @@
                       }}
                     </td>
                     <td>{{ client.get("jobTitle") }}</td>
-                    <td>{{ client.get("email") }}</td>
-                    <td>{{ client.get("cellPhone") }}</td>
+                    <td>
+                      <a :href="`mailto:${client.get('email')}`">
+                        {{ client.get("email") }}
+                      </a>
+                    </td>
+                    <td>
+                      <a :href="`tel:${client.get('cellPhone')}`">
+                        {{ client.get("cellPhone") }}
+                      </a>
+                    </td>
                   </tr>
                 </tbody>
               </table>
