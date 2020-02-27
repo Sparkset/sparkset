@@ -9,6 +9,12 @@
         <img src="@/assets/logo.png" alt="Sparkset" />
       </div>
     </router-link>
+    <div id="search-button">
+      <button @click="$store.commit('openSearch')">
+        <font-awesome-icon icon="search" />
+        Search…
+      </button>
+    </div>
     <ul id="pages">
       <li v-for="page in pages" :key="page.path">
         <router-link
@@ -53,6 +59,20 @@ export default {
   height: 100%;
   object-fit: contain;
   object-position: center 0;
+}
+#search-button {
+  padding: 16px;
+}
+#search-button > button {
+  width: 100%;
+  padding: 8px;
+  background-color: rgba(204, 204, 204, 0.43);
+  text-align: left;
+  border-radius: 2px;
+}
+#search-button > button:focus,
+#search-button > button:hover {
+  filter: brightness(1.05);
 }
 #pages {
   margin: 0;

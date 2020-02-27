@@ -4,7 +4,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     sideNavOn: false,
-    openedTopNavItem: ""
+    openedTopNavItem: "",
+    searchOn: false
   },
   mutations: {
     closeSideNav(state) {
@@ -15,6 +16,12 @@ export default new Vuex.Store({
     },
     updateOpenedTopNavItem(state, item) {
       state.openedTopNavItem = state.openedTopNavItem === item ? "" : item;
+    },
+    openSearch(state) {
+      state.searchOn = true;
+    },
+    closeSearch(state) {
+      state.searchOn = false;
     }
   }
 });
