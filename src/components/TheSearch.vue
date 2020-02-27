@@ -5,7 +5,9 @@
       @click="$store.commit('closeSearch')"
       tabindex="-1"
     ></button>
-    <input id="search__bar" type="text" v-model="searchQuery" v-focus />
+    <div id="search__area">
+      <input type="text" v-model="searchQuery" v-focus />
+    </div>
   </div>
 </template>
 
@@ -43,7 +45,7 @@ export default {
   height: 100%;
   background-color: #00000099;
 }
-#search__bar {
+#search__area {
   position: absolute;
   margin: 24px auto;
   right: 0;
@@ -52,7 +54,7 @@ export default {
   max-width: 720px;
 }
 @media (min-width: 544px) {
-  #search__bar {
+  #search__area {
     margin: 32px auto;
     width: calc(100% - 64px);
   }

@@ -16,17 +16,13 @@
       <router-view name="authWrapper" class="auth-wrapper"></router-view>
       <router-view name="basicWrapper" class="basic-wrapper"></router-view>
     </transition>
-    <search id="search" v-if="$store.state.searchOn" />
+    <router-view v-if="$store.state.searchOn" name="search" class="search" />
   </div>
 </template>
 
 <script>
-import TheSearch from "./components/TheSearch";
 export default {
-  name: "App",
-  components: {
-    search: TheSearch
-  }
+  name: "App"
 };
 </script>
 
@@ -313,7 +309,7 @@ td > button.primary:hover {
 .page-wrapper-leave-to {
   opacity: 0;
 }
-#search {
+.search {
   z-index: 4;
 }
 @media (min-width: 544px) {

@@ -47,7 +47,8 @@ const routes = [
       sideNav: () => import("../components/TheSideNav.vue"),
       sideNavToggle: () => import("../components/TheSideNavToggle.vue"),
       topNav: () => import("../components/TheTopNav.vue"),
-      basicWrapper: () => import("../components/TheBasicWrapper.vue")
+      basicWrapper: () => import("../components/TheBasicWrapper.vue"),
+      search: () => import("../components/TheSearch.vue")
     },
     children: [
       {
