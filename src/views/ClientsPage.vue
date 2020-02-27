@@ -134,6 +134,11 @@
                   </tr>
                 </tbody>
               </table>
+              <div>
+                <div class= "field" align = "right">
+                  <button class ="primary">Add Client</button>
+                </div>
+              </div>
             </div>
           </section>
         </div>
