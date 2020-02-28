@@ -10,7 +10,7 @@
       </div>
     </router-link>
     <div id="search-button">
-      <button @click="$store.commit('openSearch')">
+      <button @click="$store.commit('openGlobalSearch')">
         <font-awesome-icon icon="search" />
         Search…
       </button>
@@ -61,12 +61,13 @@ export default {
   object-position: center 0;
 }
 #search-button {
-  padding: 16px;
+  padding: 0 16px 16px 16px;
 }
 #search-button > button {
   width: 100%;
   padding: 8px;
   background-color: rgba(204, 204, 204, 0.43);
+  color: #999;
   text-align: left;
   border-radius: 2px;
 }

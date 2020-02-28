@@ -41,7 +41,7 @@ export default {
     logOut() {
       const vm = this;
       vm.closeOpenedTopNavItem();
-      vm.$store.commit("closeSearch");
+      vm.$store.commit("closeGlobalSearch");
       AV.User.logOut().then(() => {
         vm.$router.push("/");
       });
