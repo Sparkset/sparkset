@@ -1,20 +1,42 @@
 <template>
   <div id="search">
-    <button
-      id="search__exit"
-      @click="$store.commit('closeGlobalSearch')"
-      tabindex="-1"
-    ></button>
-    <div id="search__area">
-      <input type="text" v-model="query" v-focus @input="getResults" />
-      <div v-if="query" id="results">
-        <button v-for="result in results" :key="result.id" class="result">
-          <span class="result__name"
-            >{{ result.get("firstName") }} {{ result.get("lastName") }}</span
-          >
-          <span class="result__company">{{
-            result.get("company").get("name")
-          }}</span>
+    <div id="search__exit" @click="$store.commit('closeGlobalSearch')"></div>
+    <div
+      id="search__area"
+      @keydown.up.prevent="selectedResult = Math.max(selectedResult - 1, 0)"
+      @keydown.down.prevent="
+        selectedResult = Math.min(selectedResult + 1, results.length - 1)
+      "
+      @keydown.shift.tab.prevent="
+        selectedResult = Math.max(selectedResult - 1, 0)
+      "
+      @keydown.exact.tab.prevent="
+        selectedResult = Math.min(selectedResult + 1, results.length - 1)
+      "
+      @keydown.esc="$store.commit('closeGlobalSearch')"
+    >
+      <input
+        type="text"
+        :class="[results.length ? 'has-results' : null]"
+        v-model="query"
+        v-focus
+        @input="getResults"
+        @keydown.enter="$store.commit('closeGlobalSearch')"
+      />
+      <div v-if="results.length" id="results">
+        <button
+          v-for="(result, index) in results"
+          :key="result.id"
+          :class="['result', index === selectedResult ? 'selected' : null]"
+          @mousemove="selectedResult = index"
+          @click="$store.commit('closeGlobalSearch')"
+        >
+          <span class="result__name">
+            {{ result.get("firstName") }} {{ result.get("lastName") }}
+          </span>
+          <span class="result__company">
+            {{ result.get("company").get("name") }}
+          </span>
         </button>
       </div>
     </div>
@@ -28,7 +50,8 @@ export default {
   data() {
     return {
       query: "",
-      results: []
+      results: [],
+      selectedResult: 0
     };
   },
   methods: {
@@ -45,7 +68,8 @@ export default {
           "nickName",
           "jobTitle",
           "email",
-          "cellPhone"
+          "cellPhone",
+          "workPhone"
         ];
         AV.Query.and(
           ...keywords.map(keyword =>
@@ -68,6 +92,7 @@ export default {
           .find()
           .then(clients => {
             vm.results = clients;
+            vm.selectedResult = 0;
           })
           .catch(error => {
             alert(error);
@@ -115,20 +140,25 @@ export default {
   border: none;
   padding: 12px;
 }
+#search__area > input.has-results {
+  border-bottom: 1px solid rgba(204, 204, 204, 0.43);
+  border-radius: 2px 2px 0 0;
+}
 #results {
-  position: absolute;
-  top: 40px;
   width: 100%;
-  padding: 6px 0 0 0;
   background-color: #fff;
   border-radius: 0 0 2px 2px;
+  overflow: hidden;
 }
 .result {
   display: block;
-  border-top: 1px solid rgba(204, 204, 204, 0.43);
   width: 100%;
   height: 46px;
   padding: 0 12px;
+}
+.result.selected {
+  background-color: #36d5d8;
+  color: #fff;
 }
 .result__name {
   float: left;
