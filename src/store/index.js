@@ -5,7 +5,7 @@ export default new Vuex.Store({
   state: {
     sideNavOn: false,
     openedTopNavItem: "",
-    searchOn: false
+    globalSearchOn: false
   },
   mutations: {
     closeSideNav(state) {
@@ -17,11 +17,11 @@ export default new Vuex.Store({
     updateOpenedTopNavItem(state, item) {
       state.openedTopNavItem = state.openedTopNavItem === item ? "" : item;
     },
-    openSearch(state) {
-      state.searchOn = true;
+    openGlobalSearch(state) {
+      state.globalSearchOn = true;
     },
-    closeSearch(state) {
-      state.searchOn = false;
+    closeGlobalSearch(state) {
+      state.globalSearchOn = false;
     }
   }
 });

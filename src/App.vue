@@ -16,7 +16,11 @@
       <router-view name="authWrapper" class="auth-wrapper"></router-view>
       <router-view name="basicWrapper" class="basic-wrapper"></router-view>
     </transition>
-    <router-view v-if="$store.state.searchOn" name="search" class="search" />
+    <router-view
+      v-if="$store.state.globalSearchOn"
+      name="globalSearch"
+      class="global-search"
+    />
   </div>
 </template>
 
@@ -309,7 +313,7 @@ td > button.primary:hover {
 .page-wrapper-leave-to {
   opacity: 0;
 }
-.search {
+.global-search {
   z-index: 4;
 }
 @media (min-width: 544px) {
