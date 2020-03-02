@@ -12,6 +12,9 @@
               </label>
             </div>
             <div class="field">
+              <router-link to="/clients/add" tag="button">AddClient</router-link>
+            </div>
+            <div class="field">
               <table id="clients">
                 <thead>
                   <tr>
@@ -173,6 +176,9 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
+    },
+    goToAddClients(){
+      this.$router.push('../views/AddClientPage.vue');
     }
   },
   computed: {

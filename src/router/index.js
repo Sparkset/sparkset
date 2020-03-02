@@ -58,6 +58,10 @@ const routes = [
       {
         path: "/clients",
         component: () => import("../views/ClientsPage.vue")
+      },
+      {
+        path: "/clients/add",
+        component:() => import("../views/AddClientPage.vue")
       }
     ],
     beforeEnter: (to, from, next) => {
