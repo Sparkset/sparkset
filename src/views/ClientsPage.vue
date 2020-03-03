@@ -12,9 +12,9 @@
               </label>
             </div>
             <div class="field">
-              <router-link to="/clients/add" tag="button"
-                >AddClient</router-link
-              >
+              <router-link to="/clients/add" tag="button">
+                Add Client
+              </router-link>
             </div>
             <div class="field">
               <table id="clients">
