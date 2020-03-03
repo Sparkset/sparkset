@@ -176,9 +176,6 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
-    },
-    goToAddClients(){
-      this.$router.push('../views/AddClientPage.vue');
     }
   },
   computed: {

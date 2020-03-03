@@ -6,15 +6,13 @@
           <section class="fields">
             <h1>New Client</h1>
             <div class="field">
-              <p>This page is for creating new clients.</p>
+              <p>Enter information for new client.</p>
               <form @submit.prevent="go">
               <div class="field">
                 <label>
                   <span>Client Name</span>
                   <input
                     v-model="name"
-                    autocomplete=""
-                    placeholder="Name"
                     required
                   />
                 </label>
@@ -24,8 +22,6 @@
                   <span>Email</span>
                   <input
                     v-model="email"
-                    autocomplete=""
-                    placeholder="Email"
                     required
                   />
                 </label>
@@ -35,8 +31,6 @@
                   <span>Company</span>
                   <input
                     v-model="company"
-                    autocomplete=""
-                    placeholder="Company"
                     required
                   />
                 </label>
@@ -46,8 +40,6 @@
                   <span>Job Title</span>
                   <input
                     v-model="jobTitle"
-                    autocomplete=""
-                    placeholder="Job Title"
                     required
                   />
                 </label>
@@ -57,8 +49,6 @@
                   <span>Cell Phone</span>
                   <input
                     v-model="cellPhone"
-                    autocomplete=""
-                    placeholder="Cell Phone"
                     required
                   />
                 </label>
@@ -68,8 +58,15 @@
                   <span>Nickname</span>
                   <input
                     v-model="nickname"
-                    autocomplete=""
-                    placeholder="Nickname"
+                  />
+                </label>
+              </div>
+              <div class="field">
+                <label>
+                  <span>Profile Picture</span>
+                  <input
+                    type = "file"
+                    id = "avatar-upload"
                   />
                 </label>
               </div>
@@ -89,14 +86,32 @@
 import AV from "leancloud-storage";
 export default {
   name: "AddClientPage",
+  data() {
+    return {
+      email: "",
+      name: "",
+      nickName: "",
+      cellPhone: "",
+      jobTitle: "",
+      profilePic: null
+    };
+  },
   methods: {
       go(){
           const vm = this;
           var nameSplit = vm.name.split(" ", 2);
-          console.log("hello");
-          console.log(vm.email);
-          var clients = new AV.Object('Client');
-          clients
+          var client = new AV.Object('Client');
+          var avatarUpload = document.getElementById("avatar-upload");
+          if(avatarUpload.files.length){
+              var localFile = avatarUpload.files[0];
+              var file = new AV.File('avatar.jpg', localFile);
+              file.save().then(function(file){
+                  console.log("File uploaded. ObjectId: " + file.id);
+              },function(error){
+                  alert(error);
+              });
+          }
+          client
             .set("email", vm.email)
             .set("firstName", nameSplit[0])
             .set("lastName", nameSplit[1])
@@ -108,7 +123,7 @@ export default {
                 vm.$router.push(vm.$route.query.return || "/overview");
             })
             .catch(error => {
-                 console.log(error);
+                 alert(error);
             });
       }
   }
