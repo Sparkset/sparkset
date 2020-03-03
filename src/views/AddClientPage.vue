@@ -8,72 +8,52 @@
             <div class="field">
               <p>Enter information for new client.</p>
               <form @submit.prevent="go">
-              <div class="field">
-                <label>
-                  <span>Client Name</span>
-                  <input
-                    v-model="name"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  <span>Email</span>
-                  <input
-                    v-model="email"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  <span>Company</span>
-                  <input
-                    v-model="company"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  <span>Job Title</span>
-                  <input
-                    v-model="jobTitle"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  <span>Cell Phone</span>
-                  <input
-                    v-model="cellPhone"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  <span>Nickname</span>
-                  <input
-                    v-model="nickname"
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  <span>Profile Picture</span>
-                  <input
-                    type = "file"
-                    id = "avatar-upload"
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <button type="submit" class="primary">Continue</button>
-              </div>
-            </form>
+                <div class="field">
+                  <label>
+                    <span>Client Name</span>
+                    <input v-model="name" required />
+                  </label>
+                </div>
+                <div class="field">
+                  <label>
+                    <span>Email</span>
+                    <input v-model="email" required />
+                  </label>
+                </div>
+                <div class="field">
+                  <label>
+                    <span>Company</span>
+                    <input v-model="company" required />
+                  </label>
+                </div>
+                <div class="field">
+                  <label>
+                    <span>Job Title</span>
+                    <input v-model="jobTitle" required />
+                  </label>
+                </div>
+                <div class="field">
+                  <label>
+                    <span>Cell Phone</span>
+                    <input v-model="cellPhone" required />
+                  </label>
+                </div>
+                <div class="field">
+                  <label>
+                    <span>Nickname</span>
+                    <input v-model="nickname" />
+                  </label>
+                </div>
+                <div class="field">
+                  <label>
+                    <span>Profile Picture</span>
+                    <input type="file" id="avatar-upload" />
+                  </label>
+                </div>
+                <div class="field">
+                  <button type="submit" class="primary">Continue</button>
+                </div>
+              </form>
             </div>
           </section>
         </div>
@@ -90,42 +70,46 @@ export default {
     return {
       email: "",
       name: "",
-      nickName: "",
+      nickname: "",
       cellPhone: "",
       jobTitle: "",
+      company: "",
       profilePic: null
     };
   },
   methods: {
-      go(){
-          const vm = this;
-          var nameSplit = vm.name.split(" ", 2);
-          var client = new AV.Object('Client');
-          var avatarUpload = document.getElementById("avatar-upload");
-          if(avatarUpload.files.length){
-              var localFile = avatarUpload.files[0];
-              var file = new AV.File('avatar.jpg', localFile);
-              file.save().then(function(file){
-                  console.log("File uploaded. ObjectId: " + file.id);
-              },function(error){
-                  alert(error);
-              });
+    go() {
+      const vm = this;
+      var client = new AV.Object("Client");
+      var avatarUpload = document.getElementById("avatar-upload");
+      var file = null;
+      if (avatarUpload.files.length) {
+        var localFile = avatarUpload.files[0];
+        file = new AV.File("avatar.jpg", localFile);
+        file.save().then(
+          function(file) {
+            console.log("File uploaded. ObjectId: " + file.id);
+          },
+          function(error) {
+            alert(error);
           }
-          client
-            .set("email", vm.email)
-            .set("firstName", nameSplit[0])
-            .set("lastName", nameSplit[1])
-            .set("nickName", vm.nickname)
-            .set("cellPhone", vm.cellPhone)
-            .set("jobTitle", vm.jobTitle)
-            .save()
-            .then(() => {
-                vm.$router.push(vm.$route.query.return || "/overview");
-            })
-            .catch(error => {
-                 alert(error);
-            });
+        );
       }
+      client
+        .set("email", vm.email)
+        .set("nickName", vm.nickname)
+        .set("cellPhone", vm.cellPhone)
+        .set("jobTitle", vm.jobTitle)
+        .set("fullName", vm.name)
+        .set("picture", file)
+        .save()
+        .then(() => {
+          vm.$router.push(vm.$route.query.return || "/clients");
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
   }
 };
 </script>

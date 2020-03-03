@@ -12,7 +12,9 @@
               </label>
             </div>
             <div class="field">
-              <router-link to="/clients/add" tag="button">AddClient</router-link>
+              <router-link to="/clients/add" tag="button"
+                >AddClient</router-link
+              >
             </div>
             <div class="field">
               <table id="clients">
@@ -93,10 +95,7 @@
                         />
                         <span>
                           <span>
-                            {{ client.get("firstName") }}
-                            <span class="last-name">
-                              {{ client.get("lastName") }}
-                            </span>
+                            {{ client.get("fullName") }}
                             <a
                               v-if="client.get('linkedin')"
                               :href="
