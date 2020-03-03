@@ -15,9 +15,9 @@
               <table id="clients">
                 <thead>
                   <tr>
-                    <th @click="sortBy('name')">
+                    <th @click="sortBy('fullName')">
                       Name
-                      <span v-if="sortedBy === 'name'" class="sort-icon">
+                      <span v-if="sortedBy === 'fullName'" class="sort-icon">
                         <font-awesome-icon
                           :icon="
                             sortOrder === 1
@@ -90,10 +90,7 @@
                         />
                         <span>
                           <span>
-                            {{ client.get("firstName") }}
-                            <span class="last-name">
-                              {{ client.get("lastName") }}
-                            </span>
+                            {{ client.get("fullName") }}
                             <a
                               v-if="client.get('linkedin')"
                               :href="
@@ -150,7 +147,7 @@ export default {
     return {
       search: "",
       clients: [],
-      sortedBy: "name",
+      sortedBy: "fullName",
       sortOrder: 1
     };
   },
@@ -181,13 +178,10 @@ export default {
       return vm.clients.filter(client =>
         vm.search
           ? [
-              client.get("firstName"),
-              client.get("lastName"),
+              client.get("fullName"),
               client.get("nickName"),
               client.get("jobTitle"),
-              client.get("company")
-                ? client.get("company").get("name")
-                : undefined,
+              client.get("company").get("name"),
               client.get("email"),
               client.get("cellPhone")
             ].reduce(
@@ -201,17 +195,7 @@ export default {
     },
     sortedClients() {
       const vm = this;
-      if (vm.sortedBy === "name") {
-        return vm.filteredClients
-          .sort((a, b) =>
-            a.get("firstName") > b.get("firstName")
-              ? vm.sortOrder
-              : -vm.sortOrder
-          )
-          .sort((a, b) =>
-            a.get("lastName") > b.get("lastName") ? vm.sortOrder : -vm.sortOrder
-          );
-      } else if (vm.sortedBy === "company") {
+      if (vm.sortedBy === "company") {
         return vm.filteredClients.sort((a, b) =>
           a.get("company").get("name") > b.get("company").get("name")
             ? vm.sortOrder
@@ -247,9 +231,6 @@ export default {
   width: 30pt;
   height: 30pt;
   object-fit: cover;
-}
-.last-name {
-  font-weight: 500;
 }
 .nick-name {
   font-size: 9pt;

@@ -32,7 +32,7 @@
           @click="$store.commit('closeGlobalSearch')"
         >
           <span class="result__name">
-            {{ result.get("firstName") }} {{ result.get("lastName") }}
+            {{ result.get("fullName") }}
           </span>
           <span class="result__company">
             {{ result.get("company").get("name") }}
@@ -63,8 +63,7 @@ export default {
         .filter(keyword => keyword);
       if (keywords.length) {
         const fields = [
-          "firstName",
-          "lastName",
+          "fullName",
           "nickName",
           "jobTitle",
           "email",
