@@ -95,7 +95,7 @@ export default {
 #pages > li > a:hover > span {
   color: #36d5d8;
 }
-#pages > li > a.router-link-exact-active > span {
+#pages > li > a.router-link-active > span {
   color: #36d5d8;
   font-weight: 500;
 }

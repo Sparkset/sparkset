@@ -14,6 +14,11 @@
               <span>Log out</span>
             </button>
           </li>
+          <li>
+            <button @click="changePassword">
+              <span>Change Password</span>
+            </button>
+          </li>
         </ul>
       </li>
     </ul>
@@ -49,6 +54,9 @@ export default {
     closeOpenedTopNavItem() {
       const vm = this;
       vm.$store.commit("updateOpenedTopNavItem", "");
+    },
+    changePassword() {
+      console.log("hello");
     }
   }
 };
