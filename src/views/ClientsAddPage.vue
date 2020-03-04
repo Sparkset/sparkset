@@ -93,9 +93,13 @@ export default {
         .set("jobTitle", vm.jobTitle)
         .set("fullName", vm.name)
         .set("picture", file)
+        .set(
+          "company",
+          AV.Object.createWithoutData("Company", "5e585d0d6c073d0009d86c05")
+        )
         .save()
-        .then(() => {
-          vm.$router.push("/clients");
+        .then(client => {
+          vm.$router.push(`/client/${client.id}`);
         })
         .catch(error => {
           alert(error);
