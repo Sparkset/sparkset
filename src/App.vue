@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div>
     <transition name="side-nav">
       <router-view
@@ -182,6 +182,11 @@ button {
   font-size: 12pt;
   cursor: pointer;
 }
+
+#modalbutton {
+  border: #36d5d8;
+}
+
 .field > button,
 td > button {
   border: 1px solid #36d5d8;

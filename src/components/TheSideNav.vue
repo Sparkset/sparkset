@@ -37,6 +37,10 @@ export default {
         {
           name: "Clients",
           path: "/clients"
+        },
+        {
+          name: "EachClientPage",
+          path: "/clientpage"
         }
       ]
     };

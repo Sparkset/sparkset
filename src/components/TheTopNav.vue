@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <input type= "text" v-model= "search" placeholder="Search" id="searchbar"/>
+    <!-- <input type= "text" v-model= "search" placeholder="Search" id="searchbar"/> -->
     <ul id="right">
       <li :class="[$store.state.openedTopNavItem === 'user' ? 'open' : '']">
         <button @click.stop="$store.commit('updateOpenedTopNavItem', 'user')">
