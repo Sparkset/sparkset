@@ -27,6 +27,10 @@ const routes = [
     },
     children: [
       {
+        path: "/reset",
+        component: () => import("../views/ResetPage.vue")
+      },
+      {
         path: "/",
         component: () => import("../views/AuthPage.vue"),
         beforeEnter: (to, from, next) => {
@@ -51,6 +55,10 @@ const routes = [
       globalSearch: () => import("../components/TheGlobalSearch.vue")
     },
     children: [
+      {
+        path: "/settings",
+        component: () => import("../views/SettingsPage.vue")
+      },
       {
         path: "/overview",
         component: () => import("../views/OverviewPage.vue")

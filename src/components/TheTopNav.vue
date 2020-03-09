@@ -10,13 +10,19 @@
         </button>
         <ul class="dialogue">
           <li>
-            <button @click="logOut">
-              <span>Log out</span>
-            </button>
+            <router-link
+              :to="'/settings'"
+              @click.native="$store.commit('updateExpandedSideNavItem', '')"
+            >
+              <span>
+                <font-awesome-icon icon="cog" class="dialogue__icon" />
+                <span>Settings</span>
+              </span>
+            </router-link>
           </li>
           <li>
-            <button @click="changePassword">
-              <span>Change Password</span>
+            <button @click="logOut">
+              <span>Log out</span>
             </button>
           </li>
         </ul>
@@ -54,9 +60,6 @@ export default {
     closeOpenedTopNavItem() {
       const vm = this;
       vm.$store.commit("updateOpenedTopNavItem", "");
-    },
-    changePassword() {
-      alert("hello");
     }
   }
 };
