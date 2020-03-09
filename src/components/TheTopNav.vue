@@ -56,7 +56,7 @@ export default {
       vm.$store.commit("updateOpenedTopNavItem", "");
     },
     changePassword() {
-      console.log("hello");
+      alert("hello");
     }
   }
 };
