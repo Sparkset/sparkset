@@ -334,6 +334,7 @@ td > button.primary:hover {
     max-width: 480px;
   }
   label > input,
+  label > textarea,
   label > select {
     margin: 8px 0 0 0;
   }

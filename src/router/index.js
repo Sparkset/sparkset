@@ -73,7 +73,7 @@ const routes = [
       },
       {
         path: "/notes",
-        component: () => import("../views/Notes.vue")
+        component: () => import("../views/NotesPage.vue")
       }
     ],
     beforeEnter: (to, from, next) => {
