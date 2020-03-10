@@ -126,7 +126,7 @@
                             </a>
                           </span>
                           <br />
-                          <span class="nick-name">
+                          <span class="nickname">
                             {{ client.get("nickname") }}
                           </span>
                         </span>
@@ -430,7 +430,7 @@ export default {
   height: 30pt;
   object-fit: cover;
 }
-.nick-name {
+.nickname {
   font-size: 9pt;
   opacity: 0.6;
 }
