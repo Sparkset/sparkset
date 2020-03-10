@@ -4,7 +4,10 @@
       <div class="column">
         <div class="card">
           <section class="fields">
-            <h1>Showing {{ clients.length }} Clients</h1>
+            <h1>
+              Showing {{ clients.length }}
+              {{ clients.length === 1 ? "Client" : "Clients" }}
+            </h1>
             <div class="field field--half">
               <label>
                 <span>Whose</span>
