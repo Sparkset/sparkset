@@ -57,7 +57,12 @@ const routes = [
       {
         path: "/clients",
         component: () => import("../views/ClientsPage.vue")
+      },
+      {
+        path: "/clientpage",
+        component: () => import("../views/EachClientPage.vue")
       }
+
     ],
     beforeEnter: (to, from, next) => {
       isLoggedIn().then(result => {

@@ -134,11 +134,26 @@
                   </tr>
                 </tbody>
               </table>
-              <div>
-                <div class= "field" align = "right">
-                  <button class ="primary">Add Client</button>
+
+              <div id ="app">
+                <button v-on:click="modal = !modal"> View Modal </button>
+                <div v-if="modal" class= "justify-center">
+                  <div class="bg-white p-4 rounded">
+                    <h2>Hello</h2>
+                    <p>I hope this works</p>
+                    <button> Close </button>
+                  </div>
                 </div>
               </div>
+
+              <!-- <div>
+                <div class= "field" align = "right">
+                  <button class ="primary" @click = "showModal = true"> Add Client</button>
+                  <modal v-if="showModal" @close = "showModal = false">
+                    <h3 slot = "header"> Adding Client</h3>
+                  </modal>
+                </div>
+              </div> -->
             </div>
           </section>
         </div>
@@ -146,11 +161,13 @@
     </div>
   </div>
 </template>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
 <script>
 import AV from "leancloud-storage";
+
 export default {
   name: "ClientsPage",
+
   data() {
     return {
       search: "",
@@ -230,6 +247,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
