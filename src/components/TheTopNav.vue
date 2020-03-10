@@ -14,10 +14,7 @@
               :to="'/settings'"
               @click.native="$store.commit('updateExpandedSideNavItem', '')"
             >
-              <span>
-                <font-awesome-icon icon="cog" class="dialogue__icon" />
-                <span>Settings</span>
-              </span>
+              <span>Settings</span>
             </router-link>
           </li>
           <li>
