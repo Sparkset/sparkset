@@ -64,7 +64,7 @@ export default {
       if (keywords.length) {
         const fields = [
           "fullName",
-          "nickName",
+          "nickname",
           "jobTitle",
           "email",
           "cellPhone",

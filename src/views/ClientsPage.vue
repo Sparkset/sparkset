@@ -124,7 +124,7 @@
                           </span>
                           <br />
                           <span class="nick-name">
-                            {{ client.get("nickName") }}
+                            {{ client.get("nickname") }}
                           </span>
                         </span>
                       </span>
@@ -172,7 +172,7 @@ export default {
         },
         {
           class: "Client",
-          key: "nickName",
+          key: "nickname",
           name: "Nickname"
         },
         {

@@ -11,14 +11,38 @@
             <form @submit.prevent="go">
               <div class="field field--half">
                 <label>
-                  <span>Client Name</span>
-                  <input v-model="name" required />
+                  <span>Full Name</span>
+                  <input v-model="fullName" required />
+                </label>
+              </div>
+              <div class="field field--half">
+                <label>
+                  <span>Nickname</span>
+                  <input v-model="nickname" />
+                </label>
+              </div>
+              <div class="field field--half">
+                <label>
+                  <span>Profile Picture</span>
+                  <input type="file" id="avatar-upload" />
                 </label>
               </div>
               <div class="field field--half">
                 <label>
                   <span>Email</span>
                   <input v-model="email" required />
+                </label>
+              </div>
+              <div class="field field--half">
+                <label>
+                  <span>Cell Phone</span>
+                  <input v-model="cellPhone" required />
+                </label>
+              </div>
+              <div class="field field--half">
+                <label>
+                  <span>Work Phone</span>
+                  <input v-model="workPhone" required />
                 </label>
               </div>
               <div class="field field--half field--with--dropdown">
@@ -79,20 +103,8 @@
               </div>
               <div class="field field--half">
                 <label>
-                  <span>Cell Phone</span>
-                  <input v-model="cellPhone" required />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Nickname</span>
-                  <input v-model="nickname" />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Profile Picture</span>
-                  <input type="file" id="avatar-upload" />
+                  <span>Job Description</span>
+                  <input v-model="jobDescription" required />
                 </label>
               </div>
               <div class="field">
@@ -112,17 +124,19 @@ export default {
   name: "ClientsAddPage",
   data() {
     return {
-      email: "",
-      name: "",
+      fullName: "",
       nickname: "",
+      email: "",
       cellPhone: "",
-      jobTitle: "",
+      workPhone: "",
       companyName: "",
       company: new AV.Object("Company"),
       companyPrediction: new AV.Object("Company"),
       companyFacebook: "",
       companyInstagram: "",
-      companyLinkedin: ""
+      companyLinkedin: "",
+      jobTitle: "",
+      jobDescription: ""
     };
   },
   methods: {
@@ -175,13 +189,15 @@ export default {
       }
       const client = new AV.Object("Client");
       client
+        .set("fullName", vm.fullName)
+        .set("nickname", vm.nickname)
+        .set("picture", file)
         .set("email", vm.email)
-        .set("nickName", vm.nickname)
         .set("cellPhone", vm.cellPhone)
+        .set("workPhone", vm.workPhone)
         .set("company", vm.company)
         .set("jobTitle", vm.jobTitle)
-        .set("fullName", vm.name)
-        .set("picture", file)
+        .set("jobDescription", vm.jobDescription)
         .save()
         .then(() => {
           vm.$router.push("/clients");
