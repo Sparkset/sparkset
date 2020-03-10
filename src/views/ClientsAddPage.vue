@@ -28,7 +28,8 @@
                     type="text"
                     v-model="companyName"
                     @input="findCompany"
-                    @keydown.down="completeCompany"
+                    @keydown.down="completeCompanyWithPrediction"
+                    @blur="completeCompany"
                     required
                   />
                   <div
@@ -147,10 +148,14 @@ export default {
         vm.companyPrediction = new AV.Object("Company");
       }
     },
-    completeCompany() {
+    completeCompanyWithPrediction() {
       const vm = this;
       vm.company = vm.companyPrediction;
       vm.companyName = vm.company.get("name");
+      vm.completeCompany();
+    },
+    completeCompany() {
+      const vm = this;
       vm.companyFacebook = vm.company.get("facebook");
       vm.companyInstagram = vm.company.get("instagram");
       vm.companyLinkedin = vm.company.get("linkedin");
