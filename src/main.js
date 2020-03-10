@@ -5,6 +5,7 @@ import {
   faBars,
   faLongArrowAltUp,
   faLongArrowAltDown,
+  faArrowDown,
   faSearch
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
@@ -16,7 +17,14 @@ AV.init({
   appId: "nLNpC0EXtPodRpoeEmjDFnHC-MdYXbMMI",
   appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1"
 });
-library.add(faBars, faLongArrowAltUp, faLongArrowAltDown, faLinkedin, faSearch);
+library.add(
+  faBars,
+  faLongArrowAltUp,
+  faLongArrowAltDown,
+  faLinkedin,
+  faArrowDown,
+  faSearch
+);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.config.productionTip = false;
 new Vue({
