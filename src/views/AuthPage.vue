@@ -40,11 +40,6 @@
               </div>
             </form>
           </section>
-          <section class="fields">
-            <div class="field">
-              <button @click="requestPasswordReset">Reset Password</button>
-            </div>
-          </section>
         </div>
       </div>
     </div>
@@ -72,30 +67,13 @@ export default {
           if (error.code === 210) {
             alert("The password you provided is incorrect. Please try again.");
           } else if (error.code === 211) {
-            alert("We could not find a user with the email provided.");
+            alert(
+              "We could not find a user with the username or email provided."
+            );
           } else {
             alert(error);
           }
         });
-    },
-    requestPasswordReset() {
-      const vm = this;
-      const email = vm.email || prompt("Please enter your email:");
-      if (email) {
-        AV.User.requestPasswordReset(email)
-          .then(() => {
-            alert(
-              "You will receive an email with instructions to reset your password."
-            );
-          })
-          .catch(error => {
-            if (error.code === 205) {
-              alert("We could not find a user with the email provided.");
-            } else {
-              alert(error);
-            }
-          });
-      }
     }
   }
 };

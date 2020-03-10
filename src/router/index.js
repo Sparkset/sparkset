@@ -27,10 +27,6 @@ const routes = [
     },
     children: [
       {
-        path: "/reset",
-        component: () => import("../views/ResetPage.vue")
-      },
-      {
         path: "/",
         component: () => import("../views/AuthPage.vue"),
         beforeEnter: (to, from, next) => {
@@ -51,14 +47,9 @@ const routes = [
       sideNav: () => import("../components/TheSideNav.vue"),
       sideNavToggle: () => import("../components/TheSideNavToggle.vue"),
       topNav: () => import("../components/TheTopNav.vue"),
-      basicWrapper: () => import("../components/TheBasicWrapper.vue"),
-      globalSearch: () => import("../components/TheGlobalSearch.vue")
+      basicWrapper: () => import("../components/TheBasicWrapper.vue")
     },
     children: [
-      {
-        path: "/settings",
-        component: () => import("../views/SettingsPage.vue")
-      },
       {
         path: "/overview",
         component: () => import("../views/OverviewPage.vue")
@@ -70,6 +61,10 @@ const routes = [
       {
         path: "/clients/add",
         component: () => import("../views/ClientsAddPage.vue")
+      },
+      {
+        path: "/client/:id",
+        component: () => import("../views/ClientPage.vue"),
       }
     ],
     beforeEnter: (to, from, next) => {

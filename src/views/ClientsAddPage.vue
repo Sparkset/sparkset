@@ -9,87 +9,43 @@
               <p>Enter information for new client.</p>
             </div>
             <form @submit.prevent="go">
-              <div class="field field--half">
+              <div class="field">
                 <label>
                   <span>Client Name</span>
                   <input v-model="name" required />
                 </label>
               </div>
-              <div class="field field--half">
+              <div class="field">
                 <label>
                   <span>Email</span>
                   <input v-model="email" required />
                 </label>
               </div>
-              <div class="field field--half field--with--dropdown">
+              <div class="field">
                 <label>
                   <span>Company</span>
-                  <input
-                    type="text"
-                    v-model="companyName"
-                    @input="findCompany"
-                    @keydown.down="completeCompanyWithPrediction"
-                    @blur="completeCompany"
-                    required
-                  />
-                  <div
-                    class="dropdown"
-                    :style="{
-                      display:
-                        companyPrediction.get('name') &&
-                        companyName !== companyPrediction.get('name')
-                          ? null
-                          : 'none'
-                    }"
-                  >
-                    <span class="dropdown__left">
-                      {{ companyPrediction.get("name") }}
-                    </span>
-                    <span class="dropdown__right">
-                      <kbd>
-                        <font-awesome-icon icon="arrow-down" />
-                      </kbd>
-                    </span>
-                  </div>
+                  <input v-model="company" required />
                 </label>
               </div>
-              <div class="field field--half">
-                <label>
-                  <span>Company Facebook</span>
-                  <input v-model="companyFacebook" required />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Company Instagram</span>
-                  <input v-model="companyInstagram" required />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Company LinkedIn</span>
-                  <input v-model="companyLinkedin" required />
-                </label>
-              </div>
-              <div class="field field--half">
+              <div class="field">
                 <label>
                   <span>Job Title</span>
                   <input v-model="jobTitle" required />
                 </label>
               </div>
-              <div class="field field--half">
+              <div class="field">
                 <label>
                   <span>Cell Phone</span>
                   <input v-model="cellPhone" required />
                 </label>
               </div>
-              <div class="field field--half">
+              <div class="field">
                 <label>
                   <span>Nickname</span>
                   <input v-model="nickname" />
                 </label>
               </div>
-              <div class="field field--half">
+              <div class="field">
                 <label>
                   <span>Profile Picture</span>
                   <input type="file" id="avatar-upload" />
@@ -117,56 +73,12 @@ export default {
       nickname: "",
       cellPhone: "",
       jobTitle: "",
-      companyName: "",
-      company: new AV.Object("Company"),
-      companyPrediction: new AV.Object("Company"),
-      companyFacebook: "",
-      companyInstagram: "",
-      companyLinkedin: ""
+      company: ""
     };
   },
   methods: {
-    findCompany() {
-      const vm = this;
-      if (vm.companyName) {
-        const companyQuery = new AV.Query("Company");
-        companyQuery
-          .equalTo("name", vm.companyName)
-          .first()
-          .then(company => {
-            vm.company = company || new AV.Object("Company");
-          });
-        const companyQueryForPrediction = new AV.Query("Company");
-        companyQueryForPrediction
-          .startsWith("name", vm.companyName)
-          .first()
-          .then(company => {
-            vm.companyPrediction = company || new AV.Object("Company");
-          });
-      } else {
-        vm.company = new AV.Object("Company");
-        vm.companyPrediction = new AV.Object("Company");
-      }
-    },
-    completeCompanyWithPrediction() {
-      const vm = this;
-      vm.company = vm.companyPrediction;
-      vm.companyName = vm.company.get("name");
-      vm.completeCompany();
-    },
-    completeCompany() {
-      const vm = this;
-      vm.companyFacebook = vm.company.get("facebook");
-      vm.companyInstagram = vm.company.get("instagram");
-      vm.companyLinkedin = vm.company.get("linkedin");
-    },
     go() {
       const vm = this;
-      vm.company
-        .set("name", vm.companyName)
-        .set("facebook", vm.companyFacebook)
-        .set("instagram", vm.companyInstagram)
-        .set("linkedin", vm.companyLinkedin);
       const avatarUpload = document.getElementById("avatar-upload");
       let file = null;
       if (avatarUpload.files.length) {
@@ -178,13 +90,18 @@ export default {
         .set("email", vm.email)
         .set("nickName", vm.nickname)
         .set("cellPhone", vm.cellPhone)
-        .set("company", vm.company)
         .set("jobTitle", vm.jobTitle)
         .set("fullName", vm.name)
         .set("picture", file)
+        .set(
+          "company",
+          AV.Object.createWithoutData("Company", "5e585d0d6c073d0009d86c05")
+        )
         .save()
         .then(() => {
-          vm.$router.push("/clients");
+          vm.$router.push("/clients");})
+        .then(client => {
+          vm.$router.push(`/client/${client.id}`);
         })
         .catch(error => {
           alert(error);
@@ -194,14 +111,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.dropdown__left {
-  float: left;
-}
-.dropdown__right {
-  float: right;
-}
-.dropdown__right > kbd {
-  font-size: 6pt;
-}
-</style>
+<style scoped></style>
