@@ -4,7 +4,7 @@
       <div class="column column--right">
         <div class="card">
           <section class="fields">
-            <h1>Overview</h1>
+            <h1>Upcoming</h1>
             <div class="field">
               <p>
                 This is the overview page that shows upcoming events.
