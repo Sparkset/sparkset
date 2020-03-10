@@ -41,6 +41,10 @@ export default {
         {
           name: "Clients",
           path: "/clients"
+        },
+        {
+          name: "Notes",
+          path: "/notes"
         }
       ]
     };
