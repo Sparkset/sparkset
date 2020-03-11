@@ -21,7 +21,7 @@
         v-model="query"
         v-focus
         @input="getResults"
-        @keydown.enter="$store.commit('closeGlobalSearch')"
+        @keydown.enter="goToSelectedClient"
       />
       <div v-if="results.length" id="results">
         <button
@@ -29,7 +29,7 @@
           :key="result.id"
           :class="['result', index === selectedResult ? 'selected' : null]"
           @mousemove="selectedResult = index"
-          @click="$store.commit('closeGlobalSearch')"
+          @click="goToSelectedClient"
         >
           <span class="result__name">
             {{ result.get("fullName") }}
@@ -99,6 +99,11 @@ export default {
       } else {
         vm.results = [];
       }
+    },
+    goToSelectedClient() {
+      const vm = this;
+      vm.$store.commit("closeGlobalSearch");
+      vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
     }
   },
   directives: {

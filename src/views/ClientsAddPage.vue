@@ -185,7 +185,7 @@ export default {
       let file = null;
       if (avatarUpload.files.length) {
         const localFile = avatarUpload.files[0];
-        file = new AV.File("avatar.jpg", localFile);
+        file = new AV.File("avatar", localFile);
       }
       const client = new AV.Object("Client");
       client
@@ -200,7 +200,7 @@ export default {
         .set("jobDescription", vm.jobDescription)
         .save()
         .then(() => {
-          vm.$router.push("/clients");
+          vm.$router.push(`/client/${client.id}`);
         })
         .catch(error => {
           alert(error);

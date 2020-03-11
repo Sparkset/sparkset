@@ -112,7 +112,9 @@
                         />
                         <span>
                           <span>
-                            {{ client.get("fullName") }}
+                            <router-link :to="`/client/${client.id}`">
+                              {{ client.get("fullName") }}
+                            </router-link>
                             <a
                               v-if="client.get('linkedin')"
                               :href="
