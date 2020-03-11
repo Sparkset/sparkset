@@ -9,12 +9,14 @@
         <img src="@/assets/logo.png" alt="Sparkset" />
       </div>
     </router-link>
+    <div id="search-button">
+      <button @click="$store.commit('openGlobalSearch')">
+        <font-awesome-icon icon="search" />
+        Search…
+      </button>
+    </div>
     <ul id="pages">
-      <li
-        v-for="page in pages"
-        :key="page.path"
-        :class="$route.path.startsWith(page.path) ? 'active' : ''"
-      >
+      <li v-for="page in pages" :key="page.path">
         <router-link
           :to="page.path"
           @click.native="$store.commit('closeSideNav')"
@@ -58,6 +60,21 @@ export default {
   object-fit: contain;
   object-position: center 0;
 }
+#search-button {
+  padding: 0 16px 16px 16px;
+}
+#search-button > button {
+  width: 100%;
+  padding: 8px;
+  background-color: rgba(204, 204, 204, 0.43);
+  color: #999;
+  text-align: left;
+  border-radius: 2px;
+}
+#search-button > button:focus,
+#search-button > button:hover {
+  filter: brightness(1.05);
+}
 #pages {
   margin: 0;
   padding: 0;
@@ -78,7 +95,7 @@ export default {
 #pages > li > a:hover > span {
   color: #36d5d8;
 }
-#pages > li.active > a > span {
+#pages > li > a.router-link-active > span {
   color: #36d5d8;
   font-weight: 500;
 }

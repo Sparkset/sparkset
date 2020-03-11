@@ -57,6 +57,14 @@ const routes = [
       {
         path: "/clients",
         component: () => import("../views/ClientsPage.vue")
+      },
+      {
+        path: "/clients/add",
+        component: () => import("../views/ClientsAddPage.vue")
+      },
+      {
+        path: "/client/:id",
+        component: () => import("../views/ClientPage.vue"),
       }
     ],
     beforeEnter: (to, from, next) => {
