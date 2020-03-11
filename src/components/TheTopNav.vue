@@ -10,6 +10,14 @@
         </button>
         <ul class="dialogue">
           <li>
+            <router-link
+              :to="'/settings'"
+              @click.native="$store.commit('updateExpandedSideNavItem', '')"
+            >
+              <span>Settings</span>
+            </router-link>
+          </li>
+          <li>
             <button @click="logOut">
               <span>Log out</span>
             </button>
@@ -41,6 +49,7 @@ export default {
     logOut() {
       const vm = this;
       vm.closeOpenedTopNavItem();
+      vm.$store.commit("closeGlobalSearch");
       AV.User.logOut().then(() => {
         vm.$router.push("/");
       });

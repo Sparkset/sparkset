@@ -27,6 +27,10 @@ const routes = [
     },
     children: [
       {
+        path: "/reset",
+        component: () => import("../views/ResetPage.vue")
+      },
+      {
         path: "/",
         component: () => import("../views/AuthPage.vue"),
         beforeEnter: (to, from, next) => {
@@ -47,9 +51,14 @@ const routes = [
       sideNav: () => import("../components/TheSideNav.vue"),
       sideNavToggle: () => import("../components/TheSideNavToggle.vue"),
       topNav: () => import("../components/TheTopNav.vue"),
-      basicWrapper: () => import("../components/TheBasicWrapper.vue")
+      basicWrapper: () => import("../components/TheBasicWrapper.vue"),
+      globalSearch: () => import("../components/TheGlobalSearch.vue")
     },
     children: [
+      {
+        path: "/settings",
+        component: () => import("../views/SettingsPage.vue")
+      },
       {
         path: "/overview",
         component: () => import("../views/OverviewPage.vue")
@@ -64,7 +73,11 @@ const routes = [
       },
       {
         path: "/client/:id",
-        component: () => import("../views/ClientPage.vue"),
+        component: () => import("../views/ClientPage.vue")
+      },
+      {
+        path: "/notes",
+        component: () => import("../views/NotesPage.vue")
       }
     ],
     beforeEnter: (to, from, next) => {

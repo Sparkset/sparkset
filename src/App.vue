@@ -16,6 +16,11 @@
       <router-view name="authWrapper" class="auth-wrapper"></router-view>
       <router-view name="basicWrapper" class="basic-wrapper"></router-view>
     </transition>
+    <router-view
+      v-if="$store.state.globalSearchOn"
+      name="globalSearch"
+      class="global-search"
+    />
   </div>
 </template>
 
@@ -308,6 +313,9 @@ td > button.primary:hover {
 .page-wrapper-leave-to {
   opacity: 0;
 }
+.global-search {
+  z-index: 4;
+}
 @media (min-width: 544px) {
   .card {
     margin: 0 0 16px 0;
@@ -326,6 +334,7 @@ td > button.primary:hover {
     max-width: 480px;
   }
   label > input,
+  label > textarea,
   label > select {
     margin: 8px 0 0 0;
   }

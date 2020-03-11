@@ -64,7 +64,7 @@ export default {
       if (keywords.length) {
         const fields = [
           "fullName",
-          "nickName",
+          "nickname",
           "jobTitle",
           "email",
           "cellPhone",
@@ -137,6 +137,7 @@ export default {
 }
 #search__area > input {
   border: none;
+  margin: 0;
   padding: 12px;
 }
 #search__area > input.has-results {
