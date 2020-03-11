@@ -72,6 +72,10 @@ const routes = [
         component: () => import("../views/ClientsAddPage.vue")
       },
       {
+        path: "/clients/:id",
+        component: () => import("../views/ClientPage.vue")
+      },
+      {
         path: "/notes",
         component: () => import("../views/NotesPage.vue")
       }
