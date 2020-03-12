@@ -135,11 +135,7 @@
                       </span>
                     </td>
                     <td>
-                      {{
-                        client.get("company")
-                          ? client.get("company").get("name")
-                          : undefined
-                      }}
+                      {{ client.get("company").get("name") }}
                     </td>
                     <td>{{ client.get("jobTitle") }}</td>
                     <td>

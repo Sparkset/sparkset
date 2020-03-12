@@ -42,25 +42,7 @@
       </div>
       <div class="column column--left">
         <div class="card">
-          <section class="fields">
-            <h1>{{ client.get("fullName") }}</h1>
-            <div class="field">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Company: {{ client.get("company").get("name") }}</td>
-                    <td>Email: {{ client.get("email") }}</td>
-                    <td>Address: {{ client.get("address") }}</td>
-                  </tr>
-                  <tr>
-                    <td>Job Title: {{ client.get("jobTitle") }}</td>
-                    <td>Phone: {{ client.get("cellPhone") }}</td>
-                    <td>Nickname: {{ client.get("nickName") }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+          <ClientForm :client="client" :key="client.id" :callback="callback" />
         </div>
         <div class="card">
           <section class="fields">
@@ -73,9 +55,13 @@
 </template>
 
 <script>
+import ClientForm from "@/components/ClientForm.vue";
 import AV from "leancloud-storage";
 export default {
   name: "ClientPage",
+  components: {
+    ClientForm
+  },
   data() {
     return {
       client: new AV.Object("Client").set("company", new AV.Object("Company"))
@@ -111,6 +97,9 @@ export default {
         .catch(error => {
           alert(error);
         });
+    },
+    callback() {
+      alert("Profile updated.");
     }
   }
 };
