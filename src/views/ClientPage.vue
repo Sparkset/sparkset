@@ -75,6 +75,9 @@ export default {
       .get(vm.$route.params.id)
       .then(client => {
         vm.client = client;
+      })
+      .catch(error => {
+        alert(error);
       });
   },
   methods: {

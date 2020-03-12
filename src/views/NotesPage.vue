@@ -68,6 +68,9 @@ export default {
         .find()
         .then(notes => {
           vm.notes = notes;
+        })
+        .catch(error => {
+          alert(error);
         });
     },
     addNote() {

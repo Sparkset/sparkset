@@ -14,16 +14,16 @@
           <input v-model="nickname" />
         </label>
       </div>
-      <div v-if="isNew" class="field field--half">
-        <label>
-          <span>Profile Picture</span>
-          <input type="file" id="avatar-upload" />
-        </label>
-      </div>
       <div class="field field--half">
         <label>
           <span>Email</span>
           <input v-model="email" required />
+        </label>
+      </div>
+      <div class="field field--half">
+        <label>
+          <span>LinkedIn</span>
+          <input v-model="linkedin" />
         </label>
       </div>
       <div class="field field--half">
@@ -36,6 +36,30 @@
         <label>
           <span>Work Phone</span>
           <input v-model="workPhone" required />
+        </label>
+      </div>
+      <div class="field field--half">
+        <label>
+          <span>Address</span>
+          <input v-model="address" />
+        </label>
+      </div>
+      <div class="field field--half">
+        <label>
+          <span>Communication Channel</span>
+          <input v-model="commChannelPref" />
+        </label>
+      </div>
+      <div class="field field--half">
+        <label>
+          <span>Communication Time</span>
+          <input v-model="commTimePref" />
+        </label>
+      </div>
+      <div class="field field--half">
+        <label>
+          <span>Communication Frequency</span>
+          <input v-model="commFrequencyPref" />
         </label>
       </div>
       <div class="field field--half field--with--dropdown">
@@ -73,19 +97,19 @@
       <div class="field field--half">
         <label>
           <span>Company Facebook</span>
-          <input v-model="companyFacebook" required />
+          <input v-model="companyFacebook" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Company Instagram</span>
-          <input v-model="companyInstagram" required />
+          <input v-model="companyInstagram" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Company LinkedIn</span>
-          <input v-model="companyLinkedin" required />
+          <input v-model="companyLinkedin" />
         </label>
       </div>
       <div class="field field--half">
@@ -97,7 +121,13 @@
       <div class="field field--half">
         <label>
           <span>Job Description</span>
-          <input v-model="jobDescription" required />
+          <input v-model="jobDescription" />
+        </label>
+      </div>
+      <div v-if="isNew" class="field field--half">
+        <label>
+          <span>Profile Picture</span>
+          <input type="file" id="avatar-upload" />
         </label>
       </div>
       <div class="field">
@@ -121,8 +151,13 @@ export default {
       fullName: "",
       nickname: "",
       email: "",
+      linkedin: "",
       cellPhone: "",
       workPhone: "",
+      address: "",
+      commChannelPref: "",
+      commTimePref: "",
+      commFrequencyPref: "",
       companyName: "",
       company: new AV.Object("Company"),
       companyPrediction: new AV.Object("Company"),
@@ -143,6 +178,9 @@ export default {
           .first()
           .then(company => {
             vm.company = company || new AV.Object("Company");
+          })
+          .catch(error => {
+            alert(error);
           });
         const companyQueryForPrediction = new AV.Query("Company");
         companyQueryForPrediction
@@ -150,6 +188,9 @@ export default {
           .first()
           .then(company => {
             vm.companyPrediction = company || new AV.Object("Company");
+          })
+          .catch(error => {
+            alert(error);
           });
       } else {
         vm.company = new AV.Object("Company");
@@ -188,8 +229,13 @@ export default {
         .set("fullName", vm.fullName)
         .set("nickname", vm.nickname)
         .set("email", vm.email)
+        .set("linkedin", vm.linkedin)
         .set("cellPhone", vm.cellPhone)
         .set("workPhone", vm.workPhone)
+        .set("address", vm.address)
+        .set("commChannelPref", vm.commChannelPref)
+        .set("commTimePref", vm.commTimePref)
+        .set("commFrequencyPref", vm.commFrequencyPref)
         .set("company", vm.company)
         .set("jobTitle", vm.jobTitle)
         .set("jobDescription", vm.jobDescription)
@@ -205,8 +251,13 @@ export default {
     vm.fullName = vm.client.get("fullName");
     vm.nickname = vm.client.get("nickname");
     vm.email = vm.client.get("email");
+    vm.linkedin = vm.client.get("linkedin");
     vm.cellPhone = vm.client.get("cellPhone");
     vm.workPhone = vm.client.get("workPhone");
+    vm.address = vm.client.get("address");
+    vm.commChannelPref = vm.client.get("commChannelPref");
+    vm.commTimePref = vm.client.get("commTimePref");
+    vm.commFrequencyPref = vm.client.get("commFrequencyPref");
     vm.companyName = vm.client.get("company").get("name");
     vm.company = vm.client.get("company");
     vm.companyFacebook = vm.client.get("company").get("facebook");
