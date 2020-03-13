@@ -156,6 +156,9 @@ label > textarea,
 label > select {
   margin: 6px 0 0 0;
 }
+label > textarea {
+  resize: vertical;
+}
 option {
   font-weight: 400;
 }

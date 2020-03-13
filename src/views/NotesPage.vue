@@ -63,6 +63,7 @@ export default {
       const vm = this;
       const noteQuery = new AV.Query("Note");
       noteQuery
+        .equalTo("owner", AV.User.current())
         .descending("createdAt")
         .limit(1000)
         .find()
