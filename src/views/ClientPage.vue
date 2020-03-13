@@ -165,6 +165,10 @@ export default {
   padding: 12px 0;
   border-bottom: 2px solid transparent;
 }
+.tags > li > a:focus > span,
+.tags > li > a:hover > span {
+  color: #36d5d8;
+}
 .tags > li > a.router-link-exact-active > span {
   border-bottom: 2px solid #36d5d8;
   color: #36d5d8;
