@@ -8,22 +8,11 @@
             <form @submit.prevent="saveChanges">
               <div class="field field--half">
                 <label>
-                  <span>First Name</span>
+                  <span>Full Name</span>
                   <input
-                    v-model="pendingChanges.firstName"
+                    v-model="pendingChanges.fullName"
                     type="text"
-                    autocomplete="given-name"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Last Name</span>
-                  <input
-                    v-model="pendingChanges.lastName"
-                    type="text"
-                    autocomplete="family-name"
+                    autocomplete="name"
                     required
                   />
                 </label>
@@ -35,6 +24,17 @@
                     v-model="pendingChanges.email"
                     type="email"
                     autocomplete="email"
+                    required
+                  />
+                </label>
+              </div>
+              <div class="field field--half">
+                <label>
+                  <span>Phone Number</span>
+                  <input
+                    v-model="pendingChanges.mobilePhoneNumber"
+                    type="tel"
+                    autocomplete="tel"
                     required
                   />
                 </label>
@@ -87,9 +87,9 @@ export default {
   data() {
     return {
       pendingChanges: {
-        firstName: "",
-        lastName: "",
+        fullName: "",
         email: "",
+        mobilePhoneNumber: "",
         newPassword: "",
         confirmPassword: ""
       }
@@ -97,18 +97,26 @@ export default {
   },
   created() {
     const vm = this;
-    vm.pendingChanges.firstName = AV.User.current().get("firstName");
-    vm.pendingChanges.lastName = AV.User.current().get("lastName");
+    vm.pendingChanges.fullName = AV.User.current().get("fullName");
     vm.pendingChanges.email = AV.User.current().get("email");
+    vm.pendingChanges.mobilePhoneNumber = AV.User.current().get(
+      "mobilePhoneNumber"
+    );
   },
   methods: {
     saveChanges() {
       const vm = this;
       AV.User.current()
-        .set("firstName", vm.pendingChanges.firstName)
-        .set("lastName", vm.pendingChanges.lastName)
+        .set("fullName", vm.pendingChanges.fullName)
         .set("email", vm.pendingChanges.email)
         .set("username", vm.pendingChanges.email)
+        .set(
+          "mobilePhoneNumber",
+          vm.pendingChanges.mobilePhoneNumber &&
+            !vm.pendingChanges.mobilePhoneNumber.startsWith("+")
+            ? `+1${vm.pendingChanges.mobilePhoneNumber}`
+            : vm.pendingChanges.mobilePhoneNumber
+        )
         .save()
         .then(() => {
           alert("Profile saved.");
@@ -118,9 +126,17 @@ export default {
             alert(
               "The email address you entered is not a valid one. Please check your input."
             );
-          } else if (error.code === 203) {
+          } else if (error.code === 127) {
+            alert(
+              "The phone number you entered is not a valid one (non-US number should start with a plus sign). Please check your input."
+            );
+          } else if (error.code === 202 || error.code === 203) {
             alert(
               "The email address you entered is already used for another account."
+            );
+          } else if (error.code === 214) {
+            alert(
+              "The phone number you entered is already used for another account."
             );
           } else {
             alert(error);

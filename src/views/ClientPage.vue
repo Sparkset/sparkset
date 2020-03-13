@@ -21,7 +21,7 @@
                 />
                 <span>Edit</span>
               </div>
-              <input id="upload" type="file" @change="uploadPicture" />
+              <input id="avatar-upload" type="file" @change="uploadPicture" />
             </div>
             <div class="field">
               <p>
@@ -82,14 +82,16 @@ export default {
   },
   methods: {
     pickPicture() {
-      document.getElementById("upload").click();
+      document.getElementById("avatar-upload").click();
     },
     uploadPicture() {
       const vm = this;
-      const file = new AV.File(
-        "avatar",
-        document.getElementById("upload").files[0]
-      );
+      const avatarUpload = document.getElementById("avatar-upload");
+      let file = null;
+      if (avatarUpload.files.length) {
+        const localFile = avatarUpload.files[0];
+        file = new AV.File(localFile.name, localFile);
+      }
       vm.client
         .set("picture", file)
         .save()
@@ -139,7 +141,7 @@ export default {
 #image:hover > span {
   background-color: #000000cc;
 }
-#upload {
+#avatar-upload {
   display: none;
 }
 </style>

@@ -5,15 +5,12 @@
       <li :class="[$store.state.openedTopNavItem === 'user' ? 'open' : '']">
         <button @click.stop="$store.commit('updateOpenedTopNavItem', 'user')">
           <span>
-            <span id="right__name">{{ firstName }}</span>
+            <span id="right__name">{{ fullName }}</span>
           </span>
         </button>
         <ul class="dialogue">
           <li>
-            <router-link
-              :to="'/settings'"
-              @click.native="$store.commit('updateExpandedSideNavItem', '')"
-            >
+            <router-link :to="'/settings'">
               <span>Settings</span>
             </router-link>
           </li>
@@ -34,7 +31,7 @@ export default {
   name: "TheTopNav",
   data() {
     return {
-      firstName: AV.User.current().get("firstName")
+      fullName: AV.User.current().get("fullName")
     };
   },
   created() {

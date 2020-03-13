@@ -368,13 +368,13 @@ td > button.primary:hover {
   }
 }
 @media (min-width: 1296px) {
-  .field--half {
+  .column:not(.column--right) .field--half {
     width: calc((100% - 16px) / 2);
   }
-  .field--half:nth-of-type(2n-1) {
+  .column:not(.column--right) .field--half:nth-of-type(2n-1) {
     margin: 0 16px 16px 0;
   }
-  .field--half:nth-of-type(2n) {
+  .column:not(.column--right) .field--half:nth-of-type(2n) {
     margin: 0 0 16px 0;
   }
   .column--right {
