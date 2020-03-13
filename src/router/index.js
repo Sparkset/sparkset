@@ -73,7 +73,21 @@ const routes = [
       },
       {
         path: "/client/:id",
-        component: () => import("../views/ClientPage.vue")
+        component: () => import("../views/ClientPage.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("../components/ClientProfile.vue")
+          },
+          {
+            path: "events",
+            component: () => import("../components/ClientEvents.vue")
+          },
+          {
+            path: "files",
+            component: () => import("../components/ClientFiles.vue")
+          }
+        ]
       },
       {
         path: "/notes",

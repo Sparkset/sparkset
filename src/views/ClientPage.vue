@@ -42,12 +42,26 @@
       </div>
       <div class="column column--left">
         <div class="card">
-          <ClientForm :client="client" :key="client.id" :callback="callback" />
-        </div>
-        <div class="card">
-          <section class="fields">
-            <h1>Events</h1>
+          <section>
+            <ul class="tags">
+              <li>
+                <router-link :to="`/client/${$route.params.id}`">
+                  <span>Profile</span>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="`/client/${$route.params.id}/events`">
+                  <span>Events</span>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="`/client/${$route.params.id}/files`">
+                  <span>Files</span>
+                </router-link>
+              </li>
+            </ul>
           </section>
+          <router-view :key="$route.path"></router-view>
         </div>
       </div>
     </div>
@@ -55,13 +69,9 @@
 </template>
 
 <script>
-import ClientForm from "@/components/ClientForm.vue";
 import AV from "leancloud-storage";
 export default {
   name: "ClientPage",
-  components: {
-    ClientForm
-  },
   data() {
     return {
       client: new AV.Object("Client").set("company", new AV.Object("Company"))
@@ -102,9 +112,6 @@ export default {
         .catch(error => {
           alert(error);
         });
-    },
-    callback() {
-      alert("Profile updated.");
     }
   }
 };
@@ -143,5 +150,31 @@ export default {
 }
 #avatar-upload {
   display: none;
+}
+.tags {
+  margin: 0 18px;
+  padding: 0;
+  list-style: none;
+}
+.tags > li {
+  display: inline-block;
+  margin: 0 24px 0 0;
+}
+.tags > li > a > span {
+  display: inline-block;
+  padding: 12px 0;
+  border-bottom: 2px solid transparent;
+}
+.tags > li > a.router-link-exact-active > span {
+  border-bottom: 2px solid #36d5d8;
+  color: #36d5d8;
+}
+@media (min-width: 544px) {
+  .tags {
+    margin: 0 24px;
+  }
+  .tags > li {
+    margin: 0 32px 0 0;
+  }
 }
 </style>
