@@ -117,7 +117,10 @@ export default {
       });
       vm.client
         .save()
-        .then(vm.search)
+        .then(() => {
+          vm.search();
+          vm.$refs.filesInput.value = "";
+        })
         .catch(error => {
           alert(error);
         });

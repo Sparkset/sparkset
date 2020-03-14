@@ -100,6 +100,7 @@ export default {
         .save()
         .then(client => {
           vm.client = client;
+          vm.$refs.picturesInput.value = "";
         })
         .catch(error => {
           alert(error);
