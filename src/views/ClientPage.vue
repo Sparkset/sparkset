@@ -1,68 +1,66 @@
 <template>
   <div>
-    <div class="columns">
-      <div class="column column--right">
-        <div class="card card--center">
-          <section class="fields">
-            <div class="field">
-              <div
-                id="image"
-                tabindex="0"
-                @click="pickPicture"
-                @keypress.enter="pickPicture"
-              >
-                <img
-                  :src="
-                    client.get('picture')
-                      ? client.get('picture').url()
-                      : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-                  "
-                  alt="The picture of the client."
-                />
-                <span>Edit</span>
-              </div>
-              <input id="avatar-upload" type="file" @change="uploadPicture" />
+    <div class="column column--right">
+      <div class="card card--center">
+        <section class="fields">
+          <div class="field">
+            <div
+              id="image"
+              tabindex="0"
+              @click="pickPicture"
+              @keypress.enter="pickPicture"
+            >
+              <img
+                :src="
+                  client.get('picture')
+                    ? client.get('picture').url()
+                    : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                "
+                alt="The picture of the client."
+              />
+              <span>Edit</span>
             </div>
-            <div class="field">
-              <p>
-                Since
-                {{
-                  client.createdAt
-                    ? client.createdAt.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric"
-                      })
-                    : undefined
-                }}
-              </p>
-            </div>
-          </section>
-        </div>
+            <input id="avatar-upload" type="file" @change="uploadPicture" />
+          </div>
+          <div class="field">
+            <p>
+              Since
+              {{
+                client.createdAt
+                  ? client.createdAt.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric"
+                    })
+                  : undefined
+              }}
+            </p>
+          </div>
+        </section>
       </div>
-      <div class="column column--left">
-        <div class="card">
-          <section>
-            <ul class="tags">
-              <li>
-                <router-link :to="`/client/${$route.params.id}`">
-                  <span>Profile</span>
-                </router-link>
-              </li>
-              <li>
-                <router-link :to="`/client/${$route.params.id}/events`">
-                  <span>Events</span>
-                </router-link>
-              </li>
-              <li>
-                <router-link :to="`/client/${$route.params.id}/files`">
-                  <span>Files</span>
-                </router-link>
-              </li>
-            </ul>
-          </section>
-          <router-view :key="$route.path"></router-view>
-        </div>
+    </div>
+    <div class="column column--left">
+      <div class="card">
+        <section>
+          <ul class="tags">
+            <li>
+              <router-link :to="`/client/${$route.params.id}`">
+                <span>Profile</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link :to="`/client/${$route.params.id}/events`">
+                <span>Events</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link :to="`/client/${$route.params.id}/files`">
+                <span>Files</span>
+              </router-link>
+            </li>
+          </ul>
+        </section>
+        <router-view :key="$route.path"></router-view>
       </div>
     </div>
   </div>

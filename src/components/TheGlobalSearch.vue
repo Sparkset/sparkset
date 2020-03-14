@@ -1,8 +1,8 @@
 <template>
-  <div id="search">
-    <div id="search__exit" @click="$store.commit('closeGlobalSearch')"></div>
+  <div>
+    <div id="exit" @click="$store.commit('closeGlobalSearch')"></div>
     <div
-      id="search__area"
+      id="main"
       @keydown.up.prevent="selectedResult = Math.max(selectedResult - 1, 0)"
       @keydown.down.prevent="
         selectedResult = Math.min(selectedResult + 1, results.length - 1)
@@ -117,14 +117,7 @@ export default {
 </script>
 
 <style scoped>
-#search {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-#search__exit {
+#exit {
   position: absolute;
   top: 0;
   left: 0;
@@ -132,7 +125,7 @@ export default {
   height: 100%;
   background-color: #00000099;
 }
-#search__area {
+#main {
   position: absolute;
   margin: 24px auto;
   right: 0;
@@ -140,19 +133,20 @@ export default {
   width: calc(100% - 48px);
   max-width: 720px;
 }
-#search__area > input {
+#main > input {
   border: none;
   margin: 0;
   padding: 12px;
+  border-radius: 4px;
 }
-#search__area > input.has-results {
+#main > input.has-results {
   border-bottom: 1px solid rgba(204, 204, 204, 0.43);
-  border-radius: 2px 2px 0 0;
+  border-radius: 4px 4px 0 0;
 }
 #results {
   width: 100%;
   background-color: #fff;
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 4px 4px;
   overflow: hidden;
 }
 .result {
@@ -173,7 +167,7 @@ export default {
   float: right;
 }
 @media (min-width: 544px) {
-  #search__area {
+  #main {
     margin: 32px auto;
     width: calc(100% - 64px);
   }

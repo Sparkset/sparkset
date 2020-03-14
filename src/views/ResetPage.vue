@@ -1,46 +1,44 @@
 <template>
   <div>
-    <div class="columns">
-      <div class="column column--thin">
-        <div class="card card--center card--ghosted">
-          <section class="fields">
+    <div class="column column--thin">
+      <div class="card card--center card--ghosted">
+        <section class="fields">
+          <div class="field">
+            <img id="logo" src="@/assets/logo.png" alt="Sparkset" />
+          </div>
+        </section>
+      </div>
+      <div class="card">
+        <section class="fields">
+          <h1>Reset Password</h1>
+          <form @submit.prevent="go">
             <div class="field">
-              <img id="logo" src="@/assets/logo.png" alt="Sparkset" />
+              <label>
+                <span>New Password</span>
+                <input
+                  v-model="newPassword"
+                  type="password"
+                  autocomplete="new-password"
+                  required
+                />
+              </label>
             </div>
-          </section>
-        </div>
-        <div class="card">
-          <section class="fields">
-            <h1>Reset Password</h1>
-            <form @submit.prevent="go">
-              <div class="field">
-                <label>
-                  <span>New Password</span>
-                  <input
-                    v-model="newPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  <span>Confirm Password</span>
-                  <input
-                    v-model="confirmPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <button type="submit" class="primary">Continue</button>
-              </div>
-            </form>
-          </section>
-        </div>
+            <div class="field">
+              <label>
+                <span>Confirm Password</span>
+                <input
+                  v-model="confirmPassword"
+                  type="password"
+                  autocomplete="new-password"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field">
+              <button type="submit" class="primary">Continue</button>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
   </div>

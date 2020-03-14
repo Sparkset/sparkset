@@ -1,45 +1,43 @@
 <template>
   <div>
-    <div class="columns">
-      <div class="column">
-        <div class="card">
-          <section class="fields">
-            <h1>Notes ({{ notes.length }})</h1>
-            <form @submit.prevent="addNote">
-              <div class="field">
-                <label>
-                  Title
-                  <input type="text" v-model="note.title" required />
-                </label>
-              </div>
-              <div class="field">
-                <label>
-                  Content
-                  <textarea rows="5" v-model="note.content" required></textarea>
-                </label>
-              </div>
-              <div class="field">
-                <button type="submit" class="primary">
-                  Save
-                </button>
-              </div>
-            </form>
-          </section>
-        </div>
-        <div v-if="notes.length" class="card">
-          <section v-for="note in notes" :key="note.id" class="fields">
+    <div class="column">
+      <div class="card">
+        <section class="fields">
+          <h1>Notes ({{ notes.length }})</h1>
+          <form @submit.prevent="addNote">
             <div class="field">
-              <h1>{{ note.get("title") }}</h1>
-              <p>{{ note.get("createdAt").toLocaleString("en-US") }}</p>
-              <p>{{ note.get("content") }}</p>
+              <label>
+                Title
+                <input type="text" v-model="note.title" required />
+              </label>
             </div>
             <div class="field">
-              <button class="close" @click="removeNote(note)">
-                Delete
+              <label>
+                Content
+                <textarea rows="5" v-model="note.content" required></textarea>
+              </label>
+            </div>
+            <div class="field">
+              <button type="submit" class="primary">
+                Save
               </button>
             </div>
-          </section>
-        </div>
+          </form>
+        </section>
+      </div>
+      <div v-if="notes.length" class="card">
+        <section v-for="note in notes" :key="note.id" class="fields">
+          <div class="field">
+            <h1>{{ note.get("title") }}</h1>
+            <p>{{ note.get("createdAt").toLocaleString("en-US") }}</p>
+            <p>{{ note.get("content") }}</p>
+          </div>
+          <div class="field">
+            <button class="close" @click="removeNote(note)">
+              Delete
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   </div>

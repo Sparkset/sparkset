@@ -1,80 +1,78 @@
 <template>
   <div>
-    <div class="columns">
-      <div class="column">
-        <div class="card">
-          <section class="fields">
-            <h1>Basic Information</h1>
-            <form @submit.prevent="saveChanges">
-              <div class="field field--half">
-                <label>
-                  <span>Full Name</span>
-                  <input
-                    v-model="pendingChanges.fullName"
-                    type="text"
-                    autocomplete="name"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Email</span>
-                  <input
-                    v-model="pendingChanges.email"
-                    type="email"
-                    autocomplete="email"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Phone Number</span>
-                  <input
-                    v-model="pendingChanges.mobilePhoneNumber"
-                    type="tel"
-                    autocomplete="tel"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <button type="submit" class="primary">Save Changes</button>
-              </div>
-            </form>
-          </section>
-          <section class="fields">
-            <h1>Change Password</h1>
-            <form @submit.prevent="updatePassword">
-              <div class="field field--half">
-                <label>
-                  <span>New Password</span>
-                  <input
-                    v-model="pendingChanges.newPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field field--half">
-                <label>
-                  <span>Confirm Password</span>
-                  <input
-                    v-model="pendingChanges.confirmPassword"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                  />
-                </label>
-              </div>
-              <div class="field">
-                <button type="submit">Update Password</button>
-              </div>
-            </form>
-          </section>
-        </div>
+    <div class="column">
+      <div class="card">
+        <section class="fields">
+          <h1>Basic Information</h1>
+          <form @submit.prevent="saveChanges">
+            <div class="field field--half">
+              <label>
+                <span>Full Name</span>
+                <input
+                  v-model="pendingChanges.fullName"
+                  type="text"
+                  autocomplete="name"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Email</span>
+                <input
+                  v-model="pendingChanges.email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Phone Number</span>
+                <input
+                  v-model="pendingChanges.mobilePhoneNumber"
+                  type="tel"
+                  autocomplete="tel"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field">
+              <button type="submit" class="primary">Save Changes</button>
+            </div>
+          </form>
+        </section>
+        <section class="fields">
+          <h1>Change Password</h1>
+          <form @submit.prevent="updatePassword">
+            <div class="field field--half">
+              <label>
+                <span>New Password</span>
+                <input
+                  v-model="pendingChanges.newPassword"
+                  type="password"
+                  autocomplete="new-password"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Confirm Password</span>
+                <input
+                  v-model="pendingChanges.confirmPassword"
+                  type="password"
+                  autocomplete="new-password"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field">
+              <button type="submit">Update Password</button>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
   </div>

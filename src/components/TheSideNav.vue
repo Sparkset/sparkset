@@ -55,7 +55,7 @@ export default {
 <style scoped>
 #logo {
   width: 100%;
-  height: 108px;
+  height: 112px;
   padding: 32px;
 }
 #logo > img {
@@ -73,7 +73,7 @@ export default {
   background-color: rgba(204, 204, 204, 0.43);
   color: #999;
   text-align: left;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 #search-button > button:focus,
 #search-button > button:hover {

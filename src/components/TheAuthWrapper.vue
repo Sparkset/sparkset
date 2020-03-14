@@ -14,6 +14,8 @@ export default {
 #page {
   margin: 0 auto;
   padding: 0 24px 24px 24px;
+  width: 100%;
+  overflow: auto;
 }
 @media (min-width: 544px) {
   #page {

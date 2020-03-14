@@ -20,7 +20,7 @@
       v-if="$store.state.globalSearchOn"
       name="globalSearch"
       class="global-search"
-    />
+    ></router-view>
   </div>
 </template>
 
@@ -217,10 +217,6 @@ td > button.primary:focus,
 td > button.primary:hover {
   filter: brightness(1.05);
 }
-.columns {
-  width: 100%;
-  overflow: auto;
-}
 .column {
   float: right;
   margin: 24px auto 0 auto;
@@ -317,6 +313,11 @@ td > button.primary:hover {
   opacity: 0;
 }
 .global-search {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 4;
 }
 @media (min-width: 544px) {

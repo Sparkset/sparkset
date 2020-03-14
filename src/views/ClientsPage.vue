@@ -1,159 +1,157 @@
 <template>
   <div>
-    <div class="columns">
-      <div class="column">
-        <div class="card">
-          <section class="fields">
-            <h1>
-              Showing {{ clients.length }}
-              {{ clients.length === 1 ? "Client" : "Clients" }}
-            </h1>
-            <div class="field field--half">
-              <label>
-                <span>Whose</span>
-                <select v-model="selectedField" @change="search">
-                  <option
-                    v-for="(field, index) in fields"
-                    :key="field.name"
-                    :value="index"
-                  >
-                    {{ field.name }}
-                  </option>
-                </select>
-              </label>
-            </div>
-            <div class="field field--half">
-              <label>
-                <span>Contains</span>
-                <input type="text" v-model="query" @input="search" />
-              </label>
-            </div>
-            <div class="field">
-              <router-link to="/clients/add" tag="button">
-                Add Client
-              </router-link>
-            </div>
-            <div class="field">
-              <table id="clients">
-                <thead>
-                  <tr>
-                    <th @click="sortBy('fullName')">
-                      Name
-                      <span v-if="sortedBy === 'fullName'" class="sort-icon">
-                        <font-awesome-icon
-                          :icon="
-                            sortOrder === 1
-                              ? 'long-arrow-alt-up'
-                              : 'long-arrow-alt-down'
-                          "
-                        />
-                      </span>
-                    </th>
-                    <th @click="sortBy('company')">
-                      Company
-                      <span v-if="sortedBy === 'company'" class="sort-icon">
-                        <font-awesome-icon
-                          :icon="
-                            sortOrder === 1
-                              ? 'long-arrow-alt-up'
-                              : 'long-arrow-alt-down'
-                          "
-                        />
-                      </span>
-                    </th>
-                    <th @click="sortBy('jobTitle')">
-                      Job Title
-                      <span v-if="sortedBy === 'jobTitle'" class="sort-icon">
-                        <font-awesome-icon
-                          :icon="
-                            sortOrder === 1
-                              ? 'long-arrow-alt-up'
-                              : 'long-arrow-alt-down'
-                          "
-                        />
-                      </span>
-                    </th>
-                    <th @click="sortBy('email')">
-                      Email
-                      <span v-if="sortedBy === 'email'" class="sort-icon">
-                        <font-awesome-icon
-                          :icon="
-                            sortOrder === 1
-                              ? 'long-arrow-alt-up'
-                              : 'long-arrow-alt-down'
-                          "
-                        />
-                      </span>
-                    </th>
-                    <th @click="sortBy('cellPhone')">
-                      Cell Phone
-                      <span v-if="sortedBy === 'cellPhone'" class="sort-icon">
-                        <font-awesome-icon
-                          :icon="
-                            sortOrder === 1
-                              ? 'long-arrow-alt-up'
-                              : 'long-arrow-alt-down'
-                          "
-                        />
-                      </span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="client in sortedClients" :key="client.id">
-                    <td>
-                      <span class="picture-name-combo">
-                        <img
-                          :src="
-                            client.get('picture')
-                              ? client.get('picture').url()
-                              : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-                          "
-                        />
+    <div class="column">
+      <div class="card">
+        <section class="fields">
+          <h1>
+            Showing {{ clients.length }}
+            {{ clients.length === 1 ? "Client" : "Clients" }}
+          </h1>
+          <div class="field field--half">
+            <label>
+              <span>Whose</span>
+              <select v-model="selectedField" @change="search">
+                <option
+                  v-for="(field, index) in fields"
+                  :key="field.name"
+                  :value="index"
+                >
+                  {{ field.name }}
+                </option>
+              </select>
+            </label>
+          </div>
+          <div class="field field--half">
+            <label>
+              <span>Contains</span>
+              <input type="text" v-model="query" @input="search" />
+            </label>
+          </div>
+          <div class="field">
+            <router-link to="/clients/add" tag="button">
+              Add Client
+            </router-link>
+          </div>
+          <div class="field">
+            <table id="clients">
+              <thead>
+                <tr>
+                  <th @click="sortBy('fullName')">
+                    Name
+                    <span v-if="sortedBy === 'fullName'" class="sort-icon">
+                      <font-awesome-icon
+                        :icon="
+                          sortOrder === 1
+                            ? 'long-arrow-alt-up'
+                            : 'long-arrow-alt-down'
+                        "
+                      />
+                    </span>
+                  </th>
+                  <th @click="sortBy('company')">
+                    Company
+                    <span v-if="sortedBy === 'company'" class="sort-icon">
+                      <font-awesome-icon
+                        :icon="
+                          sortOrder === 1
+                            ? 'long-arrow-alt-up'
+                            : 'long-arrow-alt-down'
+                        "
+                      />
+                    </span>
+                  </th>
+                  <th @click="sortBy('jobTitle')">
+                    Job Title
+                    <span v-if="sortedBy === 'jobTitle'" class="sort-icon">
+                      <font-awesome-icon
+                        :icon="
+                          sortOrder === 1
+                            ? 'long-arrow-alt-up'
+                            : 'long-arrow-alt-down'
+                        "
+                      />
+                    </span>
+                  </th>
+                  <th @click="sortBy('email')">
+                    Email
+                    <span v-if="sortedBy === 'email'" class="sort-icon">
+                      <font-awesome-icon
+                        :icon="
+                          sortOrder === 1
+                            ? 'long-arrow-alt-up'
+                            : 'long-arrow-alt-down'
+                        "
+                      />
+                    </span>
+                  </th>
+                  <th @click="sortBy('cellPhone')">
+                    Cell Phone
+                    <span v-if="sortedBy === 'cellPhone'" class="sort-icon">
+                      <font-awesome-icon
+                        :icon="
+                          sortOrder === 1
+                            ? 'long-arrow-alt-up'
+                            : 'long-arrow-alt-down'
+                        "
+                      />
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="client in sortedClients" :key="client.id">
+                  <td>
+                    <span class="picture-name-combo">
+                      <img
+                        :src="
+                          client.get('picture')
+                            ? client.get('picture').url()
+                            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                        "
+                      />
+                      <span>
                         <span>
-                          <span>
-                            <router-link :to="`/client/${client.id}`">
-                              {{ client.get("fullName") }}
-                            </router-link>
-                            <a
-                              v-if="client.get('linkedin')"
-                              :href="
-                                `https://www.linkedin.com/in/${client.get(
-                                  'linkedin'
-                                )}`
-                              "
-                              target="_blank"
-                            >
-                              <font-awesome-icon :icon="['fab', 'linkedin']" />
-                            </a>
-                          </span>
-                          <br />
-                          <span class="nickname">
-                            {{ client.get("nickname") }}
-                          </span>
+                          <router-link :to="`/client/${client.id}`">
+                            {{ client.get("fullName") }}
+                          </router-link>
+                          <a
+                            v-if="client.get('linkedin')"
+                            :href="
+                              `https://www.linkedin.com/in/${client.get(
+                                'linkedin'
+                              )}`
+                            "
+                            target="_blank"
+                          >
+                            <font-awesome-icon :icon="['fab', 'linkedin']" />
+                          </a>
+                        </span>
+                        <br />
+                        <span class="nickname">
+                          {{ client.get("nickname") }}
                         </span>
                       </span>
-                    </td>
-                    <td>
-                      {{ client.get("company").get("name") }}
-                    </td>
-                    <td>{{ client.get("jobTitle") }}</td>
-                    <td>
-                      <a :href="`mailto:${client.get('email')}`">
-                        {{ client.get("email") }}
-                      </a>
-                    </td>
-                    <td>
-                      <a :href="`tel:${client.get('cellPhone')}`">
-                        {{ client.get("cellPhone") }}
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </div>
+                    </span>
+                  </td>
+                  <td>
+                    {{ client.get("company").get("name") }}
+                  </td>
+                  <td>{{ client.get("jobTitle") }}</td>
+                  <td>
+                    <a :href="`mailto:${client.get('email')}`">
+                      {{ client.get("email") }}
+                    </a>
+                  </td>
+                  <td>
+                    <a :href="`tel:${client.get('cellPhone')}`">
+                      {{ client.get("cellPhone") }}
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </div>
   </div>

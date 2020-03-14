@@ -1,10 +1,8 @@
 <template>
   <div>
-    <div class="columns">
-      <div class="column">
-        <div class="card">
-          <ClientForm :client="client" is-new :callback="callback" />
-        </div>
+    <div class="column">
+      <div class="card">
+        <ClientForm :client="client" is-new :callback="callback" />
       </div>
     </div>
   </div>
