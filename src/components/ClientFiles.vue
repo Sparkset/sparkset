@@ -62,9 +62,15 @@
         <tbody>
           <tr v-for="file in sortedFiles" :key="file.id">
             <td>
-              <a :href="file.url()">
-                {{ file.get("name") }}
-              </a>
+              <span>
+                <a :href="file.url()">
+                  {{ file.get("name") }}
+                </a>
+              </span>
+              <br />
+              <span class="description">
+                {{ file.metaData("description") }}
+              </span>
             </td>
             <td>{{ file.createdAt.toLocaleString("en-US") }}</td>
             <td>{{ addUnitToSize(file.size()) }}</td>
@@ -113,6 +119,10 @@ export default {
       const files = vm.$refs.filesInput.files;
       files.forEach(file => {
         const fileInFiles = new AV.File(file.name, file);
+        fileInFiles.metaData(
+          "description",
+          prompt(`Enter a description for ${file.name}:`)
+        );
         vm.client.add("files", fileInFiles);
       });
       vm.client
@@ -188,5 +198,9 @@ export default {
 <style scoped>
 #upload > input[type="file"] {
   display: none;
+}
+.description {
+  font-size: 9pt;
+  opacity: 0.6;
 }
 </style>
