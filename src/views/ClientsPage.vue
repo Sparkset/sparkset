@@ -33,12 +33,12 @@
             </router-link>
           </div>
           <div class="field">
-            <table id="clients">
+            <table>
               <thead>
                 <tr>
-                  <th @click="sortBy('fullName')">
+                  <th class="sortable" @click="sortBy('fullName')">
                     Name
-                    <span v-if="sortedBy === 'fullName'" class="sort-icon">
+                    <span v-if="sortedBy === 'fullName'">
                       <font-awesome-icon
                         :icon="
                           sortOrder === 1
@@ -48,9 +48,9 @@
                       />
                     </span>
                   </th>
-                  <th @click="sortBy('company')">
+                  <th class="sortable" @click="sortBy('company')">
                     Company
-                    <span v-if="sortedBy === 'company'" class="sort-icon">
+                    <span v-if="sortedBy === 'company'">
                       <font-awesome-icon
                         :icon="
                           sortOrder === 1
@@ -60,9 +60,9 @@
                       />
                     </span>
                   </th>
-                  <th @click="sortBy('jobTitle')">
+                  <th class="sortable" @click="sortBy('jobTitle')">
                     Job Title
-                    <span v-if="sortedBy === 'jobTitle'" class="sort-icon">
+                    <span v-if="sortedBy === 'jobTitle'">
                       <font-awesome-icon
                         :icon="
                           sortOrder === 1
@@ -72,9 +72,9 @@
                       />
                     </span>
                   </th>
-                  <th @click="sortBy('email')">
+                  <th class="sortable" @click="sortBy('email')">
                     Email
-                    <span v-if="sortedBy === 'email'" class="sort-icon">
+                    <span v-if="sortedBy === 'email'">
                       <font-awesome-icon
                         :icon="
                           sortOrder === 1
@@ -84,9 +84,9 @@
                       />
                     </span>
                   </th>
-                  <th @click="sortBy('cellPhone')">
+                  <th class="sortable" @click="sortBy('cellPhone')">
                     Cell Phone
-                    <span v-if="sortedBy === 'cellPhone'" class="sort-icon">
+                    <span v-if="sortedBy === 'cellPhone'">
                       <font-awesome-icon
                         :icon="
                           sortOrder === 1
@@ -406,15 +406,6 @@ export default {
 </script>
 
 <style scoped>
-#clients {
-  table-layout: fixed;
-}
-#clients > thead > tr > th {
-  cursor: pointer;
-}
-.sort-icon {
-  opacity: 0.4;
-}
 .picture-name-combo {
   display: flex;
   align-items: center;

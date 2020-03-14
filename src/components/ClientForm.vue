@@ -127,7 +127,7 @@
       <div v-if="isNew" class="field field--half">
         <label>
           <span>Profile Picture</span>
-          <input type="file" id="avatar-upload" />
+          <input type="file" ref="picturesInput" />
         </label>
       </div>
       <div class="field">
@@ -216,13 +216,9 @@ export default {
         .set("facebook", vm.companyFacebook)
         .set("instagram", vm.companyInstagram)
         .set("linkedin", vm.companyLinkedin);
-      if (vm.isNew) {
-        const avatarUpload = document.getElementById("avatar-upload");
-        let file = null;
-        if (avatarUpload.files.length) {
-          const localFile = avatarUpload.files[0];
-          file = new AV.File(localFile.name, localFile);
-        }
+      if (vm.isNew && vm.$refs.picturesInput.files.length) {
+        const picture = vm.$refs.picturesInput.files[0];
+        const file = new AV.File(picture.name, picture);
         vm.client.set("picture", file);
       }
       vm.client
@@ -269,14 +265,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.dropdown__left {
-  float: left;
-}
-.dropdown__right {
-  float: right;
-}
-.dropdown__right > kbd {
-  font-size: 6pt;
-}
-</style>
+<style scoped></style>

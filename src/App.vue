@@ -57,19 +57,7 @@ table {
   width: 100%;
   text-align: left;
   border-spacing: 0 2px;
-}
-table.condensed {
   table-layout: fixed;
-}
-table.condensed > thead > tr > th {
-  height: 320px;
-  vertical-align: bottom;
-}
-table.condensed > thead > tr > th > span {
-  display: inline-block;
-  white-space: nowrap;
-  transform: rotate(-90deg) translateX(-12pt);
-  transform-origin: 0 0;
 }
 thead {
   background-color: #00000009;
@@ -80,6 +68,12 @@ tbody {
 th,
 td {
   padding: 8px;
+}
+th.sortable {
+  cursor: pointer;
+}
+th.sortable > span > svg {
+  opacity: 0.4;
 }
 .card {
   position: relative;
@@ -176,9 +170,19 @@ option {
 input:focus + .dropdown {
   display: block;
 }
-.dropdown > span {
+.dropdown__left,
+.dropdown__right {
   font-size: 9pt;
   color: #36d5d8;
+}
+.dropdown__left {
+  float: left;
+}
+.dropdown__right {
+  float: right;
+}
+.dropdown__right > kbd {
+  font-size: 6pt;
 }
 button {
   border: unset;
@@ -205,16 +209,30 @@ td > button:hover {
   background-color: #36d5d811;
 }
 .field > button.primary,
+td > button.primary,
+.field > button.danger,
+td > button.danger {
+  font-weight: 500;
+  color: #fff;
+}
+.field > button.primary,
 td > button.primary {
   border: 1px solid #36d5d8;
   background-color: #36d5d8;
-  font-weight: 500;
-  color: #fff;
+}
+.field > button.danger,
+td > button.danger {
+  border: 1px solid #e52f2e;
+  background-color: #e52f2e;
 }
 .field > button.primary:focus,
 .field > button.primary:hover,
 td > button.primary:focus,
-td > button.primary:hover {
+td > button.primary:hover,
+.field > button.danger:focus,
+.field > button.danger:hover,
+td > button.danger:focus,
+td > button.danger:hover {
   filter: brightness(1.05);
 }
 .column {

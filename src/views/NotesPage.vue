@@ -29,7 +29,7 @@
         <section v-for="note in notes" :key="note.id" class="fields">
           <div class="field">
             <h1>{{ note.get("title") }}</h1>
-            <p>{{ note.get("createdAt").toLocaleString("en-US") }}</p>
+            <p>{{ note.createdAt.toLocaleString("en-US") }}</p>
             <p>{{ note.get("content") }}</p>
           </div>
           <div class="field">

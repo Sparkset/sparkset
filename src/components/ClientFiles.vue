@@ -1,13 +1,189 @@
 <template>
   <section class="fields">
-    <h1>Files</h1>
+    <h1>
+      Showing {{ client.get("files").length }}
+      {{ client.get("files").length === 1 ? "File" : "Files" }}
+    </h1>
+    <div class="field field--half">
+      <label>
+        <span>Whose Name Contains</span>
+        <input type="text" v-model="query" />
+      </label>
+    </div>
+    <div class="field">
+      <button id="upload" @click="$refs.filesInput.click()">
+        Upload Files
+        <input type="file" @change="uploadFiles" ref="filesInput" multiple />
+      </button>
+    </div>
+    <div class="field">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" @click="sortBy('name')">
+              Name
+              <span v-if="sortedBy === 'name'">
+                <font-awesome-icon
+                  :icon="
+                    sortOrder === 1
+                      ? 'long-arrow-alt-up'
+                      : 'long-arrow-alt-down'
+                  "
+                />
+              </span>
+            </th>
+            <th class="sortable" @click="sortBy('createdAt')">
+              Uploaded at
+              <span v-if="sortedBy === 'createdAt'">
+                <font-awesome-icon
+                  :icon="
+                    sortOrder === 1
+                      ? 'long-arrow-alt-up'
+                      : 'long-arrow-alt-down'
+                  "
+                />
+              </span>
+            </th>
+            <th class="sortable" @click="sortBy('size')">
+              Size
+              <span v-if="sortedBy === 'size'">
+                <font-awesome-icon
+                  :icon="
+                    sortOrder === 1
+                      ? 'long-arrow-alt-up'
+                      : 'long-arrow-alt-down'
+                  "
+                />
+              </span>
+            </th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="file in sortedFiles" :key="file.id">
+            <td>
+              <a :href="file.url()">
+                {{ file.get("name") }}
+              </a>
+            </td>
+            <td>{{ file.createdAt.toLocaleString("en-US") }}</td>
+            <td>{{ addUnitToSize(file.size()) }}</td>
+            <td>
+              <button class="danger" @click="deleteFile(file)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 </template>
 
 <script>
+import AV from "leancloud-storage";
 export default {
-  name: "ClientFiles"
+  name: "ClientFiles",
+  data() {
+    return {
+      query: "",
+      client: new AV.Object("Client").set("files", []),
+      sortedBy: "createdAt",
+      sortOrder: -1
+    };
+  },
+  created() {
+    const vm = this;
+    vm.search();
+  },
+  methods: {
+    search() {
+      const vm = this;
+      const clientQuery = new AV.Query("Client");
+      clientQuery
+        .include("files")
+        .get(vm.$route.params.id)
+        .then(client => {
+          vm.client = client;
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
+    uploadFiles() {
+      const vm = this;
+      const files = vm.$refs.filesInput.files;
+      files.forEach(file => {
+        const fileInFiles = new AV.File(file.name, file);
+        vm.client.add("files", fileInFiles);
+      });
+      vm.client
+        .save()
+        .then(vm.search)
+        .catch(error => {
+          alert(error);
+        });
+    },
+    sortBy(field) {
+      const vm = this;
+      vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
+      vm.sortedBy = field;
+    },
+    addUnitToSize(size) {
+      if (size >= 1024 * 1024 * 1024 * 1024) {
+        return `${(size / 1024 / 1024 / 1024 / 1024).toFixed(2)} TB`;
+      } else if (size >= 1024 * 1024 * 1024) {
+        return `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
+      } else if (size >= 1024 * 1024) {
+        return `${(size / 1024 / 1024).toFixed(2)} MB`;
+      } else if (size >= 1024) {
+        return `${(size / 1024).toFixed()} KB`;
+      } else {
+        return size === 1 ? `${size} byte` : `${size} bytes`;
+      }
+    },
+    deleteFile(file) {
+      const vm = this;
+      if (confirm(`Are you sure to delete ${file.get("name")}?`)) {
+        vm.client
+          .remove("files", file)
+          .save()
+          .then(vm.search)
+          .catch(error => {
+            alert(error);
+          });
+      }
+    }
+  },
+  computed: {
+    filteredFiles() {
+      const vm = this;
+      return vm.client
+        .get("files")
+        .filter(file =>
+          vm.query ? file.get("name").includes(vm.query) : true
+        );
+    },
+    sortedFiles() {
+      const vm = this;
+      if (vm.sortedBy === "createdAt") {
+        return vm.filteredFiles.sort((a, b) =>
+          a.createdAt > b.createdAt ? vm.sortOrder : -vm.sortOrder
+        );
+      } else if (vm.sortedBy === "size") {
+        return vm.filteredFiles.sort((a, b) =>
+          a.size() > b.size() ? vm.sortOrder : -vm.sortOrder
+        );
+      } else {
+        return vm.filteredFiles.sort((a, b) =>
+          a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
+        );
+      }
+    }
+  }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#upload > input[type="file"] {
+  display: none;
+}
+</style>

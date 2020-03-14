@@ -7,8 +7,8 @@
             <div
               id="image"
               tabindex="0"
-              @click="pickPicture"
-              @keypress.enter="pickPicture"
+              @click="$refs.picturesInput.click()"
+              @keypress.enter="$refs.picturesInput.click()"
             >
               <img
                 :src="
@@ -19,8 +19,8 @@
                 alt="The picture of the client."
               />
               <span>Edit</span>
+              <input type="file" @change="uploadPicture" ref="picturesInput" />
             </div>
-            <input id="avatar-upload" type="file" @change="uploadPicture" />
           </div>
           <div class="field">
             <p>
@@ -89,23 +89,17 @@ export default {
       });
   },
   methods: {
-    pickPicture() {
-      document.getElementById("avatar-upload").click();
-    },
     uploadPicture() {
       const vm = this;
-      const avatarUpload = document.getElementById("avatar-upload");
-      let file = null;
-      if (avatarUpload.files.length) {
-        const localFile = avatarUpload.files[0];
-        file = new AV.File(localFile.name, localFile);
+      if (vm.$refs.picturesInput.files.length) {
+        const picture = vm.$refs.picturesInput.files[0];
+        const file = new AV.File(picture.name, picture);
+        vm.client.set("picture", file);
       }
       vm.client
-        .set("picture", file)
         .save()
         .then(client => {
           vm.client = client;
-          alert("Profile picture uploaded.");
         })
         .catch(error => {
           alert(error);
@@ -146,7 +140,7 @@ export default {
 #image:hover > span {
   background-color: #000000cc;
 }
-#avatar-upload {
+#image > input[type="file"] {
   display: none;
 }
 .tags {
