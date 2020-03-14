@@ -28,9 +28,9 @@
             </label>
           </div>
           <div class="field">
-            <router-link to="/clients/add" tag="button">
+            <button class="primary" @click="$router.push('/clients/add')">
               Add Client
-            </router-link>
+            </button>
           </div>
           <div class="field">
             <table>

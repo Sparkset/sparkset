@@ -19,8 +19,8 @@
                 alt="The picture of the client."
               />
               <span>Edit</span>
-              <input type="file" @change="uploadPicture" ref="picturesInput" />
             </div>
+            <input type="file" @change="uploadPicture" ref="picturesInput" />
           </div>
           <div class="field">
             <p>
@@ -141,7 +141,7 @@ export default {
 #image:hover > span {
   background-color: #000000cc;
 }
-#image > input[type="file"] {
+#image + input[type="file"] {
   display: none;
 }
 .tags {

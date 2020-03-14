@@ -11,10 +11,10 @@
       </label>
     </div>
     <div class="field">
-      <button id="upload" @click="$refs.filesInput.click()">
+      <button id="upload" class="primary" @click="$refs.filesInput.click()">
         Upload Files
-        <input type="file" @change="uploadFiles" ref="filesInput" multiple />
       </button>
+      <input type="file" @change="uploadFiles" ref="filesInput" multiple />
     </div>
     <div class="field">
       <table>
@@ -141,17 +141,13 @@ export default {
       vm.sortedBy = field;
     },
     addUnitToSize(size) {
-      if (size >= 1024 * 1024 * 1024 * 1024) {
-        return `${(size / 1024 / 1024 / 1024 / 1024).toFixed(2)} TB`;
-      } else if (size >= 1024 * 1024 * 1024) {
-        return `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
-      } else if (size >= 1024 * 1024) {
-        return `${(size / 1024 / 1024).toFixed(2)} MB`;
-      } else if (size >= 1024) {
-        return `${(size / 1024).toFixed()} KB`;
-      } else {
-        return size === 1 ? `${size} byte` : `${size} bytes`;
+      const units = ["KB", "MB", "GB", "TB"];
+      for (let i = units.length; i > 0; i--) {
+        if (size >= Math.pow(1024, i)) {
+          return `${(size / Math.pow(1024, i)).toFixed(1)} ${units[i - 1]}`;
+        }
       }
+      return size === 1 ? `${size} byte` : `${size} bytes`;
     },
     deleteFile(file) {
       const vm = this;
@@ -196,7 +192,7 @@ export default {
 </script>
 
 <style scoped>
-#upload > input[type="file"] {
+#upload + input[type="file"] {
   display: none;
 }
 .description {
