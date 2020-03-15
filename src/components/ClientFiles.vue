@@ -24,11 +24,12 @@
               Name
               <span v-if="sortedBy === 'name'">
                 <font-awesome-icon
-                  :icon="
+                  :icon="[
+                    'fas',
                     sortOrder === 1
                       ? 'long-arrow-alt-up'
                       : 'long-arrow-alt-down'
-                  "
+                  ]"
                 />
               </span>
             </th>
@@ -36,11 +37,12 @@
               Uploaded at
               <span v-if="sortedBy === 'createdAt'">
                 <font-awesome-icon
-                  :icon="
+                  :icon="[
+                    'fas',
                     sortOrder === 1
                       ? 'long-arrow-alt-up'
                       : 'long-arrow-alt-down'
-                  "
+                  ]"
                 />
               </span>
             </th>
@@ -48,11 +50,12 @@
               Size
               <span v-if="sortedBy === 'size'">
                 <font-awesome-icon
-                  :icon="
+                  :icon="[
+                    'fas',
                     sortOrder === 1
                       ? 'long-arrow-alt-up'
                       : 'long-arrow-alt-down'
-                  "
+                  ]"
                 />
               </span>
             </th>

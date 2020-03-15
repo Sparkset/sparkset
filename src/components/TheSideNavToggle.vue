@@ -5,7 +5,7 @@
     @click="$store.commit('toggleSideNav')"
     @keypress.enter="$store.commit('toggleSideNav')"
   >
-    <font-awesome-icon icon="bars" />
+    <font-awesome-icon :icon="['fas', 'bars']" />
   </div>
 </template>
 

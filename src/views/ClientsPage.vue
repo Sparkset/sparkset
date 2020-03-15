@@ -40,11 +40,12 @@
                     Name
                     <span v-if="sortedBy === 'fullName'">
                       <font-awesome-icon
-                        :icon="
+                        :icon="[
+                          'fas',
                           sortOrder === 1
                             ? 'long-arrow-alt-up'
                             : 'long-arrow-alt-down'
-                        "
+                        ]"
                       />
                     </span>
                   </th>
@@ -52,11 +53,12 @@
                     Company
                     <span v-if="sortedBy === 'company'">
                       <font-awesome-icon
-                        :icon="
+                        :icon="[
+                          'fas',
                           sortOrder === 1
                             ? 'long-arrow-alt-up'
                             : 'long-arrow-alt-down'
-                        "
+                        ]"
                       />
                     </span>
                   </th>
@@ -64,11 +66,12 @@
                     Job Title
                     <span v-if="sortedBy === 'jobTitle'">
                       <font-awesome-icon
-                        :icon="
+                        :icon="[
+                          'fas',
                           sortOrder === 1
                             ? 'long-arrow-alt-up'
                             : 'long-arrow-alt-down'
-                        "
+                        ]"
                       />
                     </span>
                   </th>
@@ -76,11 +79,12 @@
                     Email
                     <span v-if="sortedBy === 'email'">
                       <font-awesome-icon
-                        :icon="
+                        :icon="[
+                          'fas',
                           sortOrder === 1
                             ? 'long-arrow-alt-up'
                             : 'long-arrow-alt-down'
-                        "
+                        ]"
                       />
                     </span>
                   </th>
@@ -88,11 +92,12 @@
                     Cell Phone
                     <span v-if="sortedBy === 'cellPhone'">
                       <font-awesome-icon
-                        :icon="
+                        :icon="[
+                          'fas',
                           sortOrder === 1
                             ? 'long-arrow-alt-up'
                             : 'long-arrow-alt-down'
-                        "
+                        ]"
                       />
                     </span>
                   </th>

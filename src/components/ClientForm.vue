@@ -88,7 +88,7 @@
             </span>
             <span class="dropdown__right">
               <kbd>
-                <font-awesome-icon icon="arrow-down" />
+                <font-awesome-icon :icon="['fas', 'arrow-down']" />
               </kbd>
             </span>
           </div>

@@ -11,7 +11,7 @@
     </router-link>
     <div id="search-button">
       <button @click="$store.commit('openGlobalSearch')">
-        <font-awesome-icon icon="search" />
+        <font-awesome-icon :icon="['fas', 'search']" />
         Search…
       </button>
     </div>
