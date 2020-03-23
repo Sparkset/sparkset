@@ -1,4 +1,6 @@
-# Sparkset CMS
+# Sparkset CRM
+
+[Sparkset](https://www.hellosparkset.com) helps business owners build experiences that aim to impress customers and promote growth. To better understand the clients and make the best decisions for them, it collects all sorts of data from the clients and continuously analyzes them. This app serves as a CRM where Sparkset employees can take notes when interviewing clients and easily look them up.
 
 ## Dependencies
 
