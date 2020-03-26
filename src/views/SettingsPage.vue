@@ -73,6 +73,58 @@
             </div>
           </form>
         </section>
+        <section class="fields">
+          <h1>Add New User</h1>
+          <form @submit.prevent="addNewUser">
+            <div class="field field--half">
+              <label>
+                <span>Email Address</span>
+                <input
+                  v-model="pendingChanges.newEmailAddress"
+                  type="email"
+                  autocomplete="new-email"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Password</span>
+                <input
+                  v-model="pendingChanges.newUserPassword"
+                  type="password"
+                  autocomplete="new-user-password"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Full Name</span>
+                <input
+                  v-model="pendingChanges.newFullName"
+                  type="text"
+                  autocomplete="name"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Phone Number</span>
+                <input
+                  v-model="pendingChanges.newPhoneNumber"
+                  type="tel"
+                  autocomplete="tel"
+                  required
+                />
+              </label>
+            </div>
+            <div class="field">
+              <button type="submit">Add New User</button>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
   </div>
@@ -89,7 +141,11 @@ export default {
         email: "",
         mobilePhoneNumber: "",
         newPassword: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        newEmailAddress: "",
+        newPhoneNumber: "",
+        newUserPassword: "",
+        newFullName: ""
       }
     };
   },
@@ -159,6 +215,27 @@ export default {
             alert(error);
           });
       }
+    },
+    addNewUser() {
+      const vm = this;
+      var user = new AV.User();
+      user.setUsername(vm.pendingChanges.newEmailAddress);
+      user.setPassword(vm.pendingChanges.newUserPassword);
+      user.setEmail(vm.pendingChanges.newEmailAddress);
+      user.setMobilePhoneNumber(vm.pendingChanges.newPhoneNumber);
+      user.set("fullName", vm.pendingChanges.newFullName);
+      user.signUp().then(
+        function() {
+          alert(
+            "User Created with email address: " +
+              vm.pendingChanges.newEmailAddress +
+              "."
+          );
+        },
+        function(error) {
+          alert(error);
+        }
+      );
     }
   }
 };
