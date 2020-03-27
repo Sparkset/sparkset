@@ -142,6 +142,13 @@
             </div>
           </form>
         </section>
+        <section class="fields" v-else>
+          <h1>Add New User</h1>
+          <h4>
+            Current account does not have access to adding new users. Please
+            contact system administrator.
+          </h4>
+        </section>
       </div>
     </div>
   </div>
