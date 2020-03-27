@@ -1,6 +1,8 @@
 import Vue from "vue";
 import AV from "leancloud-storage";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import ToggleButton from "vue-js-toggle-button";
+Vue.use(ToggleButton);
 import {
   faBars,
   faLongArrowAltUp,

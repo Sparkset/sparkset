@@ -82,7 +82,6 @@
                 <input
                   v-model="pendingChanges.newEmailAddress"
                   type="email"
-                  autocomplete="new-email"
                   required
                 />
               </label>
@@ -120,6 +119,24 @@
                 />
               </label>
             </div>
+            <div class="field field--half">
+              <toggle-button
+                :value="false"
+                :color="{
+                  checked: '#00FF00',
+                  unchecked: '#FF0000',
+                  disabled: '#CCCCCC'
+                }"
+                :labels="{
+                  checked: 'Give ability to add users',
+                  unchecked: 'Do not give ability to add users'
+                }"
+                :width="250"
+                :height="35"
+                :font-size="12"
+                @change="changeUserCreationPermission"
+              />
+            </div>
             <div class="field">
               <button type="submit">Add New User</button>
             </div>
@@ -145,7 +162,8 @@ export default {
         newEmailAddress: "",
         newPhoneNumber: "",
         newUserPassword: "",
-        newFullName: ""
+        newFullName: "",
+        allowCreationOfNewUsers: false
       }
     };
   },
@@ -217,25 +235,35 @@ export default {
       }
     },
     addNewUser() {
+      const currentUser = AV.User.current();
+      if (currentUser.addNewUser == true) {
+        const vm = this;
+        const user = new AV.User();
+        user
+          .setUsername(vm.pendingChanges.newEmailAddress)
+          .setPassword(vm.pendingChanges.newUserPassword)
+          .setEmail(vm.pendingChanges.newEmailAddress)
+          .setMobilePhoneNumber(vm.pendingChanges.newPhoneNumber)
+          .set("fullName", vm.pendingChanges.newFullName)
+          .set("addNewUsers", vm.pendingChanges.allowCreationOfNewUsers)
+          .signUp()
+          .then(function() {
+            alert(
+              `User Created with email address: ${vm.pendingChanges.newEmailAddress}.`
+            );
+          })
+          .catch(function(error) {
+            alert(error);
+          });
+      } else {
+        alert(
+          "Current permissions do not allow you to add new users to system. Please contact system administrator to get functionality"
+        );
+      }
+    },
+    changeUserCreationPermission(value) {
       const vm = this;
-      var user = new AV.User();
-      user.setUsername(vm.pendingChanges.newEmailAddress);
-      user.setPassword(vm.pendingChanges.newUserPassword);
-      user.setEmail(vm.pendingChanges.newEmailAddress);
-      user.setMobilePhoneNumber(vm.pendingChanges.newPhoneNumber);
-      user.set("fullName", vm.pendingChanges.newFullName);
-      user.signUp().then(
-        function() {
-          alert(
-            "User Created with email address: " +
-              vm.pendingChanges.newEmailAddress +
-              "."
-          );
-        },
-        function(error) {
-          alert(error);
-        }
-      );
+      vm.pendingChanges.allowCreationOfNewUsers = value["value"];
     }
   }
 };
