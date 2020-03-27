@@ -131,7 +131,7 @@
                   checked: 'Give ability to add users',
                   unchecked: 'Do not give ability to add users'
                 }"
-                :width="250"
+                :width="230"
                 :height="35"
                 :font-size="12"
                 @change="changeUserCreationPermission"
@@ -142,13 +142,13 @@
             </div>
           </form>
         </section>
-        <section class="fields" v-else>
+        <!-- <section class="fields" v-else>
           <h1>Add New User</h1>
           <h4>
             Current account does not have access to adding new users. Please
             contact system administrator.
           </h4>
-        </section>
+        </section> -->
       </div>
     </div>
   </div>
