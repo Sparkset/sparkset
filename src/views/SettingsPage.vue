@@ -73,7 +73,7 @@
             </div>
           </form>
         </section>
-        <section class="fields">
+        <section class="fields" v-if="includeAddUserTemplate">
           <h1>Add New User</h1>
           <form @submit.prevent="addNewUser">
             <div class="field field--half">
@@ -164,7 +164,8 @@ export default {
         newUserPassword: "",
         newFullName: "",
         allowCreationOfNewUsers: false
-      }
+      },
+      includeAddUserTemplate: false
     };
   },
   created() {
@@ -174,6 +175,7 @@ export default {
     vm.pendingChanges.mobilePhoneNumber = AV.User.current().get(
       "mobilePhoneNumber"
     );
+    vm.includeAddUserTemplate = AV.User.current().get("addNewUsers");
   },
   methods: {
     saveChanges() {
@@ -235,31 +237,24 @@ export default {
       }
     },
     addNewUser() {
-      const currentUser = AV.User.current();
-      if (currentUser.addNewUser == true) {
-        const vm = this;
-        const user = new AV.User();
-        user
-          .setUsername(vm.pendingChanges.newEmailAddress)
-          .setPassword(vm.pendingChanges.newUserPassword)
-          .setEmail(vm.pendingChanges.newEmailAddress)
-          .setMobilePhoneNumber(vm.pendingChanges.newPhoneNumber)
-          .set("fullName", vm.pendingChanges.newFullName)
-          .set("addNewUsers", vm.pendingChanges.allowCreationOfNewUsers)
-          .signUp()
-          .then(function() {
-            alert(
-              `User Created with email address: ${vm.pendingChanges.newEmailAddress}.`
-            );
-          })
-          .catch(function(error) {
-            alert(error);
-          });
-      } else {
-        alert(
-          "Current permissions do not allow you to add new users to system. Please contact system administrator to get functionality"
-        );
-      }
+      const vm = this;
+      const user = new AV.User();
+      user
+        .setUsername(vm.pendingChanges.newEmailAddress)
+        .setPassword(vm.pendingChanges.newUserPassword)
+        .setEmail(vm.pendingChanges.newEmailAddress)
+        .setMobilePhoneNumber(vm.pendingChanges.newPhoneNumber)
+        .set("fullName", vm.pendingChanges.newFullName)
+        .set("addNewUsers", vm.pendingChanges.allowCreationOfNewUsers)
+        .signUp()
+        .then(function() {
+          alert(
+            `User Created with email address: ${vm.pendingChanges.newEmailAddress}.`
+          );
+        })
+        .catch(function(error) {
+          alert(error);
+        });
     },
     changeUserCreationPermission(value) {
       const vm = this;
