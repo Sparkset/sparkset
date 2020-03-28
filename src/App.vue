@@ -110,10 +110,10 @@ section:last-of-type {
   padding: 18px 18px 6px 18px;
   overflow: auto;
 }
-.fields h1,
-.fields h2,
-.fields p,
-.fields li {
+.fields > h1,
+.fields > h2,
+.fields > p,
+.fields > li {
   margin: 8px 0;
 }
 .field {
@@ -143,7 +143,7 @@ select {
 input:focus,
 textarea:focus,
 select:focus {
-  border: 1px solid #36d5d8;
+  border-color: #36d5d8;
 }
 label > input,
 label > textarea,
