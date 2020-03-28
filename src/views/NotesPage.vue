@@ -21,6 +21,7 @@
               <multiselect
                 v-model="value"
                 tag-placeholder="Add this as new tag"
+                placeholder="Search or add new tag (click to interact)"
                 label="name"
                 track-by="code"
                 :options="options"
@@ -29,6 +30,8 @@
                 @tag="addTag"
               ></multiselect>
             </div>
+            <br />
+            <br />
             <div class="field">
               <button type="submit" class="primary">
                 Save
@@ -44,10 +47,11 @@
             <p>{{ note.createdAt.toLocaleString("en-US") }}</p>
             <p>{{ note.get("content") }}</p>
             <h4>Tags</h4>
-            <p>{{ note.get("tags") }}</p>
-            <!-- <ul>
-              <li v-for="{ tag, index } in note.get("tags")" :key="index">{{ tag }}</li>
-            </ul> -->
+            <ul>
+              <li v-for="(tag, index) in note.get('tags')" :key="index">
+                {{ tag.name }}
+              </li>
+            </ul>
           </div>
           <div class="field">
             <button class="close" @click="removeNote(note)">
