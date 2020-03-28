@@ -270,9 +270,9 @@ export default {
           }
         });
     },
-    changeUserCreationPermission(value) {
+    changeUserCreationPermission(e) {
       const vm = this;
-      vm.newUser.allowAddingNewUsers = value["value"];
+      vm.newUser.allowAddingNewUsers = e.value;
     }
   }
 };
