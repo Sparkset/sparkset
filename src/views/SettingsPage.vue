@@ -74,8 +74,8 @@
           </form>
         </section>
       </div>
-      <div class="card">
-        <section class="fields" v-if="allowAddingNewUsers">
+      <div v-if="allowAddingNewUsers" class="card">
+        <section class="fields">
           <h1>Add New User</h1>
           <form @submit.prevent="addNewUser">
             <div class="field field--half">
@@ -108,7 +108,7 @@
             </div>
             <div class="field field--half">
               <toggle-button
-                :value="false"
+                :value="newUser.allowAddingNewUsers"
                 :color="{
                   checked: '#36d5d8',
                   unchecked: '#e52f2e'
@@ -121,6 +121,7 @@
                 :height="35"
                 :font-size="12"
                 @change="changeUserCreationPermission"
+                sync
               />
             </div>
             <div class="field">
@@ -236,9 +237,16 @@ export default {
         )
         .setPassword(vm.newUser.password)
         .set("allowAddingNewUsers", vm.newUser.allowAddingNewUsers)
-        .signUp()
+        .save()
         .then(() => {
           alert(`User Created with email address: ${vm.newUser.email}.`);
+          vm.newUser = {
+            fullName: "",
+            email: "",
+            mobilePhoneNumber: "",
+            password: "",
+            allowAddingNewUsers: false
+          };
         })
         .catch(error => {
           if (error.code === 125) {
