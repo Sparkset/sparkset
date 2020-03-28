@@ -17,21 +17,19 @@
                 <textarea rows="5" v-model="note.content" required></textarea>
               </label>
             </div>
-            <div>
+            <div class="field">
               <multiselect
-                v-model="value"
+                v-model="note.tags"
                 tag-placeholder="Add this as new tag"
-                placeholder="Search or add new tag (click to interact)"
+                placeholder="Search or add new tag"
                 label="name"
-                track-by="code"
-                :options="options"
+                track-by="name"
+                :options="note.tagOptions"
                 :multiple="true"
                 :taggable="true"
                 @tag="addTag"
               ></multiselect>
             </div>
-            <br />
-            <br />
             <div class="field">
               <button type="submit" class="primary">
                 Save
@@ -44,17 +42,14 @@
         <section v-for="note in notes" :key="note.id" class="fields">
           <div class="field">
             <h1>{{ note.get("title") }}</h1>
-            <p>{{ note.createdAt.toLocaleString("en-US") }}</p>
+            <p class="time">{{ note.createdAt.toLocaleString("en-US") }}</p>
             <p>{{ note.get("content") }}</p>
-            <h4>Tags</h4>
-            <ul>
-              <li v-for="(tag, index) in note.get('tags')" :key="index">
-                {{ tag.name }}
-              </li>
-            </ul>
+            <span v-for="tag in note.get('tags')" :key="tag" class="tag">
+              {{ tag }}
+            </span>
           </div>
           <div class="field">
-            <button class="close" @click="removeNote(note)">
+            <button class="danger" @click="removeNote(note)">
               Delete
             </button>
           </div>
@@ -74,14 +69,10 @@ export default {
   name: "NotesPage",
   data() {
     return {
-      value: [],
-      options: [
-        { name: "Meeting Note", code: "mn100" },
-        { name: "BOb", code: "bob100" }
-      ],
       note: {
         title: "",
         content: "",
+        tagOptions: [{ name: "Meeting note" }, { name: "Needs discussion" }],
         tags: []
       },
       notes: []
@@ -109,13 +100,20 @@ export default {
       note
         .set("title", vm.note.title)
         .set("content", vm.note.content)
-        .set("tags", vm.value)
+        .set(
+          "tags",
+          vm.note.tags.map(tag => tag.name)
+        )
         .save()
         .then(() => {
           vm.fetchNotes();
           vm.note = {
             title: "",
             content: "",
+            tagOptions: [
+              { name: "Meeting note" },
+              { name: "Needs discussion" }
+            ],
             tags: []
           };
         })
@@ -135,11 +133,10 @@ export default {
     addTag(newTag) {
       const vm = this;
       const tag = {
-        name: newTag,
-        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
+        name: newTag
       };
-      vm.options.push(tag);
-      vm.value.push(tag);
+      vm.note.tagOptions.push(tag);
+      vm.note.tags.push(tag);
     }
   },
   created() {
@@ -149,4 +146,45 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style>
+.multiselect__tags,
+.multiselect__tag,
+.multiselect__tag-icon {
+  border-radius: 2px;
+}
+.multiselect__tag,
+.multiselect__option--highlight,
+.multiselect__option--highlight::after {
+  background-color: #36d5d8;
+}
+.multiselect__tag-icon:hover {
+  background-color: #1b6b6c;
+}
+.multiselect__tag-icon::after {
+  color: #1b6b6c;
+}
+.multiselect__option--highlight.multiselect__option--selected,
+.multiselect__option--highlight.multiselect__option--selected::after {
+  background-color: #e52f2e;
+}
+.multiselect__content-wrapper {
+  border-radius: 0 0 2px 2px;
+}
+</style>
+
+<style scoped>
+.time {
+  font-size: 9pt;
+}
+.tag {
+  display: inline-block;
+  margin: 4px 4px 0 0;
+  padding: 4px 8px;
+  background-color: #36d5d822;
+  color: #36d5d8;
+  font-size: 9pt;
+  border-radius: 2px;
+}
+</style>
