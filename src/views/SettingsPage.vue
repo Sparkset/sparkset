@@ -73,15 +73,29 @@
             </div>
           </form>
         </section>
-        <section class="fields" v-if="includeAddUserTemplate">
+      </div>
+      <div class="card">
+        <section class="fields" v-if="allowAddingNewUsers">
           <h1>Add New User</h1>
           <form @submit.prevent="addNewUser">
             <div class="field field--half">
               <label>
-                <span>Email Address</span>
+                <span>Full Name</span>
+                <input v-model="newUser.fullName" type="text" required />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Email</span>
+                <input v-model="newUser.email" type="email" required />
+              </label>
+            </div>
+            <div class="field field--half">
+              <label>
+                <span>Phone Number</span>
                 <input
-                  v-model="pendingChanges.newEmailAddress"
-                  type="email"
+                  v-model="newUser.mobilePhoneNumber"
+                  type="tel"
                   required
                 />
               </label>
@@ -89,66 +103,31 @@
             <div class="field field--half">
               <label>
                 <span>Password</span>
-                <input
-                  v-model="pendingChanges.newUserPassword"
-                  type="password"
-                  autocomplete="new-user-password"
-                  required
-                />
-              </label>
-            </div>
-            <div class="field field--half">
-              <label>
-                <span>Full Name</span>
-                <input
-                  v-model="pendingChanges.newFullName"
-                  type="text"
-                  autocomplete="name"
-                  required
-                />
-              </label>
-            </div>
-            <div class="field field--half">
-              <label>
-                <span>Phone Number</span>
-                <input
-                  v-model="pendingChanges.newPhoneNumber"
-                  type="tel"
-                  autocomplete="tel"
-                  required
-                />
+                <input v-model="newUser.password" type="password" required />
               </label>
             </div>
             <div class="field field--half">
               <toggle-button
                 :value="false"
                 :color="{
-                  checked: '#00FF00',
-                  unchecked: '#FF0000',
-                  disabled: '#CCCCCC'
+                  checked: '#36d5d8',
+                  unchecked: '#e52f2e'
                 }"
                 :labels="{
-                  checked: 'Give ability to add users',
-                  unchecked: 'Do not give ability to add users'
+                  checked: 'Allow adding users',
+                  unchecked: 'Disallow adding users'
                 }"
-                :width="230"
+                :width="175"
                 :height="35"
                 :font-size="12"
                 @change="changeUserCreationPermission"
               />
             </div>
             <div class="field">
-              <button type="submit">Add New User</button>
+              <button type="submit" class="primary">Add New User</button>
             </div>
           </form>
         </section>
-        <!-- <section class="fields" v-else>
-          <h1>Add New User</h1>
-          <h4>
-            Current account does not have access to adding new users. Please
-            contact system administrator.
-          </h4>
-        </section> -->
       </div>
     </div>
   </div>
@@ -165,14 +144,16 @@ export default {
         email: "",
         mobilePhoneNumber: "",
         newPassword: "",
-        confirmPassword: "",
-        newEmailAddress: "",
-        newPhoneNumber: "",
-        newUserPassword: "",
-        newFullName: "",
-        allowCreationOfNewUsers: false
+        confirmPassword: ""
       },
-      includeAddUserTemplate: false
+      allowAddingNewUsers: false,
+      newUser: {
+        fullName: "",
+        email: "",
+        mobilePhoneNumber: "",
+        password: "",
+        allowAddingNewUsers: false
+      }
     };
   },
   created() {
@@ -182,19 +163,17 @@ export default {
     vm.pendingChanges.mobilePhoneNumber = AV.User.current().get(
       "mobilePhoneNumber"
     );
-    vm.includeAddUserTemplate = AV.User.current().get("addNewUsers");
+    vm.allowAddingNewUsers = AV.User.current().get("allowAddingNewUsers");
   },
   methods: {
     saveChanges() {
       const vm = this;
       AV.User.current()
         .set("fullName", vm.pendingChanges.fullName)
-        .set("email", vm.pendingChanges.email)
-        .set("username", vm.pendingChanges.email)
-        .set(
-          "mobilePhoneNumber",
-          vm.pendingChanges.mobilePhoneNumber &&
-            !vm.pendingChanges.mobilePhoneNumber.startsWith("+")
+        .setEmail(vm.pendingChanges.email)
+        .setUsername(vm.pendingChanges.email)
+        .setMobilePhoneNumber(
+          !vm.pendingChanges.mobilePhoneNumber.startsWith("+")
             ? `+1${vm.pendingChanges.mobilePhoneNumber}`
             : vm.pendingChanges.mobilePhoneNumber
         )
@@ -247,25 +226,45 @@ export default {
       const vm = this;
       const user = new AV.User();
       user
-        .setUsername(vm.pendingChanges.newEmailAddress)
-        .setPassword(vm.pendingChanges.newUserPassword)
-        .setEmail(vm.pendingChanges.newEmailAddress)
-        .setMobilePhoneNumber(vm.pendingChanges.newPhoneNumber)
-        .set("fullName", vm.pendingChanges.newFullName)
-        .set("addNewUsers", vm.pendingChanges.allowCreationOfNewUsers)
+        .set("fullName", vm.newUser.fullName)
+        .setEmail(vm.newUser.email)
+        .setUsername(vm.newUser.email)
+        .setMobilePhoneNumber(
+          !vm.newUser.mobilePhoneNumber.startsWith("+")
+            ? `+1${vm.newUser.mobilePhoneNumber}`
+            : vm.newUser.mobilePhoneNumber
+        )
+        .setPassword(vm.newUser.password)
+        .set("allowAddingNewUsers", vm.newUser.allowAddingNewUsers)
         .signUp()
-        .then(function() {
-          alert(
-            `User Created with email address: ${vm.pendingChanges.newEmailAddress}.`
-          );
+        .then(() => {
+          alert(`User Created with email address: ${vm.newUser.email}.`);
         })
-        .catch(function(error) {
-          alert(error);
+        .catch(error => {
+          if (error.code === 125) {
+            alert(
+              "The email address you entered is not a valid one. Please check your input."
+            );
+          } else if (error.code === 127) {
+            alert(
+              "The phone number you entered is not a valid one (non-US number should start with a plus sign). Please check your input."
+            );
+          } else if (error.code === 202 || error.code === 203) {
+            alert(
+              "The email address you entered is already used for another account."
+            );
+          } else if (error.code === 214) {
+            alert(
+              "The phone number you entered is already used for another account."
+            );
+          } else {
+            alert(error);
+          }
         });
     },
     changeUserCreationPermission(value) {
       const vm = this;
-      vm.pendingChanges.allowCreationOfNewUsers = value["value"];
+      vm.newUser.allowAddingNewUsers = value["value"];
     }
   }
 };

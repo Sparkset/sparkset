@@ -1,8 +1,13 @@
 import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
 import AV from "leancloud-storage";
+AV.init({
+  appId: "nLNpC0EXtPodRpoeEmjDFnHC-MdYXbMMI",
+  appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1"
+});
 import { library } from "@fortawesome/fontawesome-svg-core";
-import ToggleButton from "vue-js-toggle-button";
-Vue.use(ToggleButton);
 import {
   faBars,
   faLongArrowAltUp,
@@ -12,13 +17,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-AV.init({
-  appId: "nLNpC0EXtPodRpoeEmjDFnHC-MdYXbMMI",
-  appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1"
-});
 library.add(
   faBars,
   faLongArrowAltUp,
@@ -28,6 +26,8 @@ library.add(
   faSearch
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
+import ToggleButton from "vue-js-toggle-button";
+Vue.use(ToggleButton);
 Vue.config.productionTip = false;
 new Vue({
   router,
