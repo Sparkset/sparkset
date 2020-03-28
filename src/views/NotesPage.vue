@@ -17,6 +17,18 @@
                 <textarea rows="5" v-model="note.content" required></textarea>
               </label>
             </div>
+            <div>
+              <multiselect
+                v-model="value"
+                tag-placeholder="Add this as new tag"
+                label="name"
+                track-by="code"
+                :options="options"
+                :multiple="true"
+                :taggable="true"
+                @tag="addTag"
+              ></multiselect>
+            </div>
             <div class="field">
               <button type="submit" class="primary">
                 Save
@@ -31,6 +43,11 @@
             <h1>{{ note.get("title") }}</h1>
             <p>{{ note.createdAt.toLocaleString("en-US") }}</p>
             <p>{{ note.get("content") }}</p>
+            <h4>Tags</h4>
+            <p>{{ note.get("tags") }}</p>
+            <!-- <ul>
+              <li v-for="{ tag, index } in note.get("tags")" :key="index">{{ tag }}</li>
+            </ul> -->
           </div>
           <div class="field">
             <button class="close" @click="removeNote(note)">
@@ -45,13 +62,23 @@
 
 <script>
 import AV from "leancloud-storage";
+import Multiselect from "vue-multiselect";
 export default {
+  components: {
+    Multiselect
+  },
   name: "NotesPage",
   data() {
     return {
+      value: [],
+      options: [
+        { name: "Meeting Note", code: "mn100" },
+        { name: "BOb", code: "bob100" }
+      ],
       note: {
         title: "",
-        content: ""
+        content: "",
+        tags: []
       },
       notes: []
     };
@@ -78,12 +105,14 @@ export default {
       note
         .set("title", vm.note.title)
         .set("content", vm.note.content)
+        .set("tags", vm.value)
         .save()
         .then(() => {
           vm.fetchNotes();
           vm.note = {
             title: "",
-            content: ""
+            content: "",
+            tags: []
           };
         })
         .catch(error => {
@@ -98,6 +127,15 @@ export default {
         .catch(error => {
           alert(error);
         });
+    },
+    addTag(newTag) {
+      const vm = this;
+      const tag = {
+        name: newTag,
+        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
+      };
+      vm.options.push(tag);
+      vm.value.push(tag);
     }
   },
   created() {
