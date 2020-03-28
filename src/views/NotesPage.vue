@@ -24,7 +24,7 @@
                 placeholder="Search or add new tag"
                 label="name"
                 track-by="name"
-                :options="note.tagOptions"
+                :options="tagOptions"
                 :multiple="true"
                 :taggable="true"
                 @tag="addTag"
@@ -69,10 +69,10 @@ export default {
   name: "NotesPage",
   data() {
     return {
+      tagOptions: [],
       note: {
         title: "",
         content: "",
-        tagOptions: [{ name: "Meeting note" }, { name: "Needs discussion" }],
         tags: []
       },
       notes: []
@@ -89,6 +89,14 @@ export default {
         .find()
         .then(notes => {
           vm.notes = notes;
+          vm.tagOptions = Array.from(
+            new Set(
+              notes.reduce(
+                (accumulator, note) => [...accumulator, ...note.get("tags")],
+                []
+              )
+            )
+          ).map(tag => ({ name: tag }));
         })
         .catch(error => {
           alert(error);
@@ -110,10 +118,6 @@ export default {
           vm.note = {
             title: "",
             content: "",
-            tagOptions: [
-              { name: "Meeting note" },
-              { name: "Needs discussion" }
-            ],
             tags: []
           };
         })
@@ -135,7 +139,7 @@ export default {
       const tag = {
         name: newTag
       };
-      vm.note.tagOptions.push(tag);
+      vm.tagOptions.push(tag);
       vm.note.tags.push(tag);
     }
   },
