@@ -60,6 +60,17 @@ const routes = [
         component: () => import("../views/SettingsPage.vue")
       },
       {
+        path: "/users",
+        component: () => import("../views/UsersPage.vue"),
+        beforeEnter: (to, from, next) => {
+          if (AV.User.current().get("allowAddingNewUsers")) {
+            next();
+          } else {
+            next("/overview");
+          }
+        }
+      },
+      {
         path: "/overview",
         component: () => import("../views/OverviewPage.vue")
       },

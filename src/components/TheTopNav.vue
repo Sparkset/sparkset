@@ -14,6 +14,11 @@
               <span>Settings</span>
             </router-link>
           </li>
+          <li v-if="allowAddingNewUsers">
+            <router-link :to="'/users'">
+              <span>Manage Users</span>
+            </router-link>
+          </li>
           <li>
             <button @click="logOut">
               <span>Log out</span>
@@ -31,7 +36,8 @@ export default {
   name: "TheTopNav",
   data() {
     return {
-      fullName: AV.User.current().get("fullName")
+      fullName: AV.User.current().get("fullName"),
+      allowAddingNewUsers: AV.User.current().get("allowAddingNewUsers")
     };
   },
   created() {
