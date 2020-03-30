@@ -18,17 +18,21 @@
               </label>
             </div>
             <div class="field">
-              <multiselect
-                v-model="note.tags"
-                tag-placeholder="Add this as new tag"
-                placeholder="Search or add new tag"
-                label="name"
-                track-by="name"
-                :options="tagOptions"
-                :multiple="true"
-                :taggable="true"
-                @tag="addTag"
-              ></multiselect>
+              <label>
+                Tags
+                <multiselect
+                  v-model="note.tags"
+                  tag-placeholder="Add this as new tag"
+                  placeholder="Search or add new tag"
+                  label="name"
+                  track-by="name"
+                  :options="tagOptions"
+                  :multiple="true"
+                  :taggable="true"
+                  :hide-selected="true"
+                  @tag="addTag"
+                ></multiselect>
+              </label>
             </div>
             <div class="field">
               <button type="submit" class="primary">
@@ -158,23 +162,30 @@ export default {
 .multiselect__tag-icon {
   border-radius: 2px;
 }
-.multiselect__tag,
+.multiselect__tag {
+  padding: 4px 24px 4px 8px;
+  background-color: #36d5d822;
+  color: #36d5d8;
+  line-height: unset;
+  font-size: 9pt;
+}
+.multiselect__tag-icon {
+  border-radius: 0;
+  line-height: 24px;
+}
+.multiselect__tag-icon:hover {
+  background-color: #36d5d8;
+}
+.multiselect__tag-icon::after {
+  color: #36d5d8;
+}
+.multiselect__content-wrapper {
+  position: relative;
+  border-radius: 0 0 2px 2px;
+}
 .multiselect__option--highlight,
 .multiselect__option--highlight::after {
   background-color: #36d5d8;
-}
-.multiselect__tag-icon:hover {
-  background-color: #1b6b6c;
-}
-.multiselect__tag-icon::after {
-  color: #1b6b6c;
-}
-.multiselect__option--highlight.multiselect__option--selected,
-.multiselect__option--highlight.multiselect__option--selected::after {
-  background-color: #e52f2e;
-}
-.multiselect__content-wrapper {
-  border-radius: 0 0 2px 2px;
 }
 </style>
 

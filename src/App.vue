@@ -147,7 +147,8 @@ select:focus {
 }
 label > input,
 label > textarea,
-label > select {
+label > select,
+label > div {
   margin: 6px 0 0 0;
 }
 label > textarea {
@@ -357,7 +358,8 @@ td > button.danger:hover {
   }
   label > input,
   label > textarea,
-  label > select {
+  label > select,
+  label > div {
     margin: 8px 0 0 0;
   }
   .column {
