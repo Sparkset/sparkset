@@ -1,4 +1,8 @@
-<template> </template>
+<template>
+  <div>
+    <h1>{{ companyName }}</h1>
+  </div>
+</template>
 
 <script>
 import AV from "leancloud-storage";
@@ -23,14 +27,14 @@ export default {
       .find()
       .then(
         company =>
-          function(company) {
+          function() {
             vm.instagram = company.instagram;
             vm.facebook = company.facebook;
             vm.linkedin = company.linkedin;
             vm.id = company.objectId;
           }
       );
-    clientQuery = new AV.Query("Client");
+    const clientQuery = new AV.Query("Client");
     clientQuery
       .equalTo("company", vm.id)
       .find()

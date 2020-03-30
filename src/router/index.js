@@ -72,6 +72,10 @@ const routes = [
         component: () => import("../views/ClientsAddPage.vue")
       },
       {
+        path: "/company/:cName",
+        component: () => import("../views/CompanyPage.vue")
+      },
+      {
         path: "/client/:id",
         component: () => import("../views/ClientPage.vue"),
         children: [
