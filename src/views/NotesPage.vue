@@ -3,7 +3,7 @@
     <div class="column">
       <div class="card">
         <section class="fields">
-          <h1>Notes ({{ notes.length }})</h1>
+          <h1>New Note</h1>
           <form @submit.prevent="addNote">
             <div class="field">
               <label>
@@ -15,6 +15,20 @@
               <label>
                 Content
                 <textarea rows="5" v-model="note.content" required></textarea>
+              </label>
+            </div>
+            <div class="field">
+              <label>
+                Related Clients
+                <multiselect
+                  v-model="note.clients"
+                  placeholder="Search"
+                  label="name"
+                  track-by="id"
+                  :options="clientOptions"
+                  :multiple="true"
+                  :hide-selected="true"
+                ></multiselect>
               </label>
             </div>
             <div class="field">
@@ -42,15 +56,53 @@
           </form>
         </section>
       </div>
-      <div v-if="notes.length" class="card">
-        <section v-for="note in notes" :key="note.id" class="fields">
+      <div v-if="filteredNotes.length" class="card">
+        <section class="fields">
+          <h1>
+            Showing {{ filteredNotes.length }}
+            {{ filteredNotes.length === 1 ? "Note" : "Notes" }}
+          </h1>
+          <p>
+            Filter by:
+            <router-link
+              v-for="tag in tagOptions"
+              :key="tag.name"
+              :to="
+                $route.query.tag === tag.name
+                  ? '/notes'
+                  : `/notes?tag=${tag.name}`
+              "
+              :class="['tag', $route.query.tag === tag.name ? 'active' : null]"
+            >
+              {{ tag.name }}
+            </router-link>
+          </p>
+        </section>
+        <section v-for="note in filteredNotes" :key="note.id" class="fields">
           <div class="field">
             <h1>{{ note.get("title") }}</h1>
             <p class="time">{{ note.createdAt.toLocaleString("en-US") }}</p>
             <p>{{ note.get("content") }}</p>
-            <span v-for="tag in note.get('tags')" :key="tag" class="tag">
-              {{ tag }}
-            </span>
+            <p>
+              <router-link
+                v-for="client in note.get('clients')"
+                :key="client.id"
+                :to="`/client/${client.id}`"
+                class="client"
+              >
+                @{{ client.get("fullName") }}
+              </router-link>
+            </p>
+            <div>
+              <router-link
+                v-for="tag in note.get('tags')"
+                :key="tag"
+                :to="`/notes?tag=${tag}`"
+                class="tag"
+              >
+                {{ tag }}
+              </router-link>
+            </div>
           </div>
           <div class="field">
             <button class="danger" @click="removeNote(note)">
@@ -73,10 +125,12 @@ export default {
   name: "NotesPage",
   data() {
     return {
+      clientOptions: [],
       tagOptions: [],
       note: {
         title: "",
         content: "",
+        clients: [],
         tags: []
       },
       notes: []
@@ -88,6 +142,7 @@ export default {
       const noteQuery = new AV.Query("Note");
       noteQuery
         .equalTo("owner", AV.User.current())
+        .include("clients")
         .descending("createdAt")
         .limit(1000)
         .find()
@@ -106,12 +161,30 @@ export default {
           alert(error);
         });
     },
+    fetchClientOptions() {
+      const vm = this;
+      const clientQuery = new AV.Query("Client");
+      clientQuery
+        .limit(1000)
+        .find()
+        .then(clients => {
+          vm.clientOptions = clients.map(client => ({
+            name: client.get("fullName"),
+            id: client.id,
+            client
+          }));
+        });
+    },
     addNote() {
       const vm = this;
       const note = new AV.Object("Note");
       note
         .set("title", vm.note.title)
         .set("content", vm.note.content)
+        .set(
+          "clients",
+          vm.note.clients.map(client => client.client)
+        )
         .set(
           "tags",
           vm.note.tags.map(tag => tag.name)
@@ -122,6 +195,7 @@ export default {
           vm.note = {
             title: "",
             content: "",
+            clients: [],
             tags: []
           };
         })
@@ -131,12 +205,14 @@ export default {
     },
     removeNote(note) {
       const vm = this;
-      note
-        .destroy()
-        .then(vm.fetchNotes)
-        .catch(error => {
-          alert(error);
-        });
+      if (confirm(`Are you sure to delete "${note.get("title")}"?`)) {
+        note
+          .destroy()
+          .then(vm.fetchNotes)
+          .catch(error => {
+            alert(error);
+          });
+      }
     },
     addTag(newTag) {
       const vm = this;
@@ -150,6 +226,17 @@ export default {
   created() {
     const vm = this;
     vm.fetchNotes();
+    vm.fetchClientOptions();
+  },
+  computed: {
+    filteredNotes() {
+      const vm = this;
+      return vm.$route.query.tag
+        ? vm.notes.filter(note =>
+            note.get("tags").includes(vm.$route.query.tag)
+          )
+        : vm.notes;
+    }
   }
 };
 </script>
@@ -193,6 +280,9 @@ export default {
 .time {
   font-size: 9pt;
 }
+.client {
+  color: #36d5d8;
+}
 .tag {
   display: inline-block;
   margin: 4px 4px 0 0;
@@ -201,5 +291,9 @@ export default {
   color: #36d5d8;
   font-size: 9pt;
   border-radius: 2px;
+}
+.tag.active {
+  background-color: #36d5d8;
+  color: #fff;
 }
 </style>
