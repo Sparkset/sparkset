@@ -3,11 +3,7 @@
     <div class="column">
       <div class="card">
         <section class="fields">
-          <h1>
-            Showing {{ filteredNotes.length }}
-            {{ filteredNotes.length === 1 ? "Note" : "Notes" }}
-            {{ $route.query.tag ? `(Tag: ${$route.query.tag})` : null }}
-          </h1>
+          <h1>New Note</h1>
           <form @submit.prevent="addNote">
             <div class="field">
               <label>
@@ -61,6 +57,27 @@
         </section>
       </div>
       <div v-if="filteredNotes.length" class="card">
+        <section class="fields">
+          <h1>
+            Showing {{ filteredNotes.length }}
+            {{ filteredNotes.length === 1 ? "Note" : "Notes" }}
+          </h1>
+          <p>
+            Filter by:
+            <router-link
+              v-for="tag in tagOptions"
+              :key="tag.name"
+              :to="
+                $route.query.tag === tag.name
+                  ? '/notes'
+                  : `/notes?tag=${tag.name}`
+              "
+              :class="['tag', $route.query.tag === tag.name ? 'active' : null]"
+            >
+              {{ tag.name }}
+            </router-link>
+          </p>
+        </section>
         <section v-for="note in filteredNotes" :key="note.id" class="fields">
           <div class="field">
             <h1>{{ note.get("title") }}</h1>
@@ -274,5 +291,9 @@ export default {
   color: #36d5d8;
   font-size: 9pt;
   border-radius: 2px;
+}
+.tag.active {
+  background-color: #36d5d8;
+  color: #fff;
 }
 </style>
