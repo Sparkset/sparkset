@@ -2,27 +2,36 @@
   <div>
     <h1>{{ companyName }}</h1>
     <h2>Social Media</h2>
-    <a
-      v-if="linkedin"
-      :href="`https://www.linkedin.com/in/${linkedin}}`"
-      target="_blank"
-    >
-      <font-awesome-icon :icon="['fab', 'linkedin']" />
-    </a>
-    <a
-      v-if="facebook"
-      :href="`https://www.facebook.com/${facebook}}`"
-      target="_blank"
-    >
-      <font-awesome-icon :icon="['fab', 'facebook']" />
-    </a>
-    <a
-      v-if="instagram"
-      :href="`https://www.instagram.com/${instagram}}`"
-      target="_blank"
-    >
-      <font-awesome-icon :icon="['fab', 'instagram']" />
-    </a>
+    <div class="iconBlock">
+      <span class="icon">
+        <a
+          v-if="linkedin"
+          :href="`https://www.linkedin.com/in/${linkedin}}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'linkedin']" />
+        </a>
+      </span>
+
+      <span class="icon">
+        <a
+          v-if="facebook"
+          :href="`https://www.facebook.com/${facebook}}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'facebook']" />
+        </a>
+      </span>
+      <span class="icon">
+        <a
+          v-if="instagram"
+          :href="`https://www.instagram.com/${instagram}}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'instagram']" />
+        </a>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -66,3 +75,15 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.icon {
+  font-size: 30pt;
+  padding-right: 15pt;
+  padding-left: 0pt;
+}
+
+.iconBlock {
+  display: flex;
+}
+</style>
