@@ -16,25 +16,58 @@
       </div>
       <div class="field field--half">
         <label>
-          <span>Email</span>
+          <span>
+            Email
+            <a
+              v-if="client.get('email')"
+              :href="`mailto:${client.get('email')}`"
+            >
+              <font-awesome-icon :icon="['fas', 'paper-plane']" />
+            </a>
+          </span>
           <input v-model="email" type="email" required />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>LinkedIn</span>
+          <span>
+            LinkedIn
+            <a
+              v-if="client.get('linkedin')"
+              :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'linkedin']" />
+            </a>
+          </span>
           <input v-model="linkedin" type="text" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Cell Phone</span>
+          <span>
+            Cell Phone
+            <a
+              v-if="client.get('cellPhone')"
+              :href="`tel:${client.get('cellPhone')}`"
+            >
+              <font-awesome-icon :icon="['fas', 'phone-alt']" />
+            </a>
+          </span>
           <input v-model="cellPhone" type="tel" required />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Work Phone</span>
+          <span>
+            Work Phone
+            <a
+              v-if="client.get('workPhone')"
+              :href="`tel:${client.get('workPhone')}`"
+            >
+              <font-awesome-icon :icon="['fas', 'phone-alt']" />
+            </a>
+          </span>
           <input v-model="workPhone" type="tel" required />
         </label>
       </div>
@@ -64,7 +97,15 @@
       </div>
       <div class="field field--half field--with--dropdown">
         <label>
-          <span>Company</span>
+          <span>
+            Company
+            <router-link
+              v-if="client.get('company').id"
+              :to="`/company/${client.get('company').id}`"
+            >
+              <font-awesome-icon :icon="['fas', 'building']" />
+            </router-link>
+          </span>
           <input
             type="text"
             v-model="companyName"
@@ -96,20 +137,59 @@
       </div>
       <div class="field field--half">
         <label>
-          <span>Company Facebook</span>
+          <span>
+            Company LinkedIn
+            <a
+              v-if="client.get('company').get('linkedin')"
+              :href="
+                `https://www.linkedin.com/company/${client
+                  .get('company')
+                  .get('linkedin')}`
+              "
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'linkedin']" />
+            </a>
+          </span>
+          <input v-model="companyLinkedin" type="text" />
+        </label>
+      </div>
+      <div class="field field--half">
+        <label>
+          <span>
+            Company Facebook
+            <a
+              v-if="client.get('company').get('facebook')"
+              :href="
+                `https://www.facebook.com/${client
+                  .get('company')
+                  .get('facebook')}`
+              "
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'facebook-square']" />
+            </a>
+          </span>
           <input v-model="companyFacebook" type="text" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Company Instagram</span>
+          <span>
+            Company Instagram
+            <a
+              v-if="client.get('company').get('instagram')"
+              :href="
+                `https://www.instagram.com/${client
+                  .get('company')
+                  .get('instagram')}`
+              "
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'instagram-square']" />
+            </a>
+          </span>
           <input v-model="companyInstagram" type="text" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Company LinkedIn</span>
-          <input v-model="companyLinkedin" type="text" />
         </label>
       </div>
       <div class="field field--half">
@@ -161,9 +241,9 @@ export default {
       companyName: "",
       company: new AV.Object("Company"),
       companyPrediction: new AV.Object("Company"),
+      companyLinkedin: "",
       companyFacebook: "",
       companyInstagram: "",
-      companyLinkedin: "",
       jobTitle: "",
       jobDescription: ""
     };
@@ -205,17 +285,17 @@ export default {
     },
     completeCompany() {
       const vm = this;
+      vm.companyLinkedin = vm.company.get("linkedin");
       vm.companyFacebook = vm.company.get("facebook");
       vm.companyInstagram = vm.company.get("instagram");
-      vm.companyLinkedin = vm.company.get("linkedin");
     },
     go() {
       const vm = this;
       vm.company
         .set("name", vm.companyName)
+        .set("linkedin", vm.companyLinkedin)
         .set("facebook", vm.companyFacebook)
-        .set("instagram", vm.companyInstagram)
-        .set("linkedin", vm.companyLinkedin);
+        .set("instagram", vm.companyInstagram);
       if (vm.isNew && vm.$refs.picturesInput.files.length) {
         const picture = vm.$refs.picturesInput.files[0];
         const file = new AV.File(picture.name, picture);
@@ -256,9 +336,9 @@ export default {
     vm.commFrequencyPref = vm.client.get("commFrequencyPref");
     vm.companyName = vm.client.get("company").get("name");
     vm.company = vm.client.get("company");
+    vm.companyLinkedin = vm.client.get("company").get("linkedin");
     vm.companyFacebook = vm.client.get("company").get("facebook");
     vm.companyInstagram = vm.client.get("company").get("instagram");
-    vm.companyLinkedin = vm.client.get("company").get("linkedin");
     vm.jobTitle = vm.client.get("jobTitle");
     vm.jobDescription = vm.client.get("jobDescription");
   }

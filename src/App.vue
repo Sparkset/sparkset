@@ -153,6 +153,13 @@ section:last-of-type {
 label > span {
   color: #605e5e;
 }
+label > span > a {
+  color: #36d5d8;
+}
+label > span > a:focus,
+label > span > a:hover {
+  filter: brightness(1.05);
+}
 input,
 textarea,
 select {
