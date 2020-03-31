@@ -21,7 +21,7 @@ import {
 import {
   faLinkedin,
   faFacebookSquare,
-  faInstagramSquare
+  faInstagram
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -35,7 +35,7 @@ library.add(
   faBuilding,
   faLinkedin,
   faFacebookSquare,
-  faInstagramSquare
+  faInstagram
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import ToggleButton from "vue-js-toggle-button";

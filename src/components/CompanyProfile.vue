@@ -49,7 +49,7 @@
               :href="`https://www.instagram.com/${company.get('instagram')}`"
               target="_blank"
             >
-              <font-awesome-icon :icon="['fab', 'instagram-square']" />
+              <font-awesome-icon :icon="['fab', 'instagram']" />
             </a>
           </span>
           <input v-model="pendingChanges.instagram" type="text" />

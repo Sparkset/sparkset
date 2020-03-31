@@ -186,7 +186,7 @@
               "
               target="_blank"
             >
-              <font-awesome-icon :icon="['fab', 'instagram-square']" />
+              <font-awesome-icon :icon="['fab', 'instagram']" />
             </a>
           </span>
           <input v-model="companyInstagram" type="text" />
