@@ -5,7 +5,7 @@
       {{ clients.length === 1 ? "Client Belongs" : "Clients Belong" }} to
       {{ company.get("name") }}
     </h1>
-    <div class="field">
+    <div class="field field--superwide">
       <ClientsTable :clients="clients" />
     </div>
   </section>

@@ -143,6 +143,8 @@ section:last-of-type {
   float: left;
   margin: 0 0 12px 0;
   width: 100%;
+}
+.field--superwide {
   overflow-x: scroll;
 }
 .field--with--dropdown {

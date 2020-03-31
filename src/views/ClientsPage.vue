@@ -32,7 +32,7 @@
               Add Client
             </button>
           </div>
-          <div class="field">
+          <div class="field field--superwide">
             <ClientsTable :clients="clients" show-company />
           </div>
         </section>

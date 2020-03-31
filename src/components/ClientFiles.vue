@@ -16,7 +16,7 @@
       </button>
       <input type="file" @change="uploadFiles" ref="filesInput" multiple />
     </div>
-    <div class="field">
+    <div class="field field--superwide">
       <table>
         <thead>
           <tr>
