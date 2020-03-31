@@ -17,8 +17,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedin,
-  faInstagram,
-  faFacebook
+  faFacebook,
+  faInstagram
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(

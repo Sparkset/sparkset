@@ -73,7 +73,17 @@ const routes = [
       },
       {
         path: "/company/:id",
-        component: () => import("../views/CompanyPage.vue")
+        component: () => import("../views/CompanyPage.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("../components/CompanyProfile.vue")
+          },
+          {
+            path: "clients",
+            component: () => import("../components/CompanyClients.vue")
+          }
+        ]
       },
       {
         path: "/client/:id",

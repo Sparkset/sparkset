@@ -42,7 +42,7 @@
     <div class="column column--left">
       <div class="card">
         <section>
-          <ul class="tags">
+          <ul class="tabs">
             <li>
               <router-link :to="`/client/${$route.params.id}`">
                 <span>Profile</span>
@@ -143,35 +143,5 @@ export default {
 }
 #image + input[type="file"] {
   display: none;
-}
-.tags {
-  margin: 0 18px;
-  padding: 0;
-  list-style: none;
-}
-.tags > li {
-  display: inline-block;
-  margin: 0 24px 0 0;
-}
-.tags > li > a > span {
-  display: inline-block;
-  padding: 12px 0;
-  border-bottom: 2px solid transparent;
-}
-.tags > li > a:focus > span,
-.tags > li > a:hover > span {
-  color: #36d5d8;
-}
-.tags > li > a.router-link-exact-active > span {
-  border-bottom: 2px solid #36d5d8;
-  color: #36d5d8;
-}
-@media (min-width: 544px) {
-  .tags {
-    margin: 0 24px;
-  }
-  .tags > li {
-    margin: 0 32px 0 0;
-  }
 }
 </style>

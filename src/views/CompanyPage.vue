@@ -1,134 +1,31 @@
 <template>
   <div>
-    <h1>{{ companyName }}</h1>
-    <h2>Social Media</h2>
-    <div class="iconBlock">
-      <span class="icon">
-        <a
-          v-if="linkedin"
-          :href="`https://www.linkedin.com/in/${linkedin}}`"
-          target="_blank"
-        >
-          <font-awesome-icon :icon="['fab', 'linkedin']" />
-        </a>
-      </span>
-
-      <span class="icon">
-        <a
-          v-if="facebook"
-          :href="`https://www.facebook.com/${facebook}}`"
-          target="_blank"
-        >
-          <font-awesome-icon :icon="['fab', 'facebook']" />
-        </a>
-      </span>
-      <span class="icon">
-        <a
-          v-if="instagram"
-          :href="`https://www.instagram.com/${instagram}}`"
-          target="_blank"
-        >
-          <font-awesome-icon :icon="['fab', 'instagram']" />
-        </a>
-      </span>
-    </div>
-    <h2>Clients Associated with {{ companyName }}</h2>
-    <div class="tableText">
-      <table>
-        <thead>
-          <th>Name</th>
-          <th>Job Title</th>
-          <th>Email Address</th>
-          <th>Phone Number</th>
-        </thead>
-        <tbody>
-          <tr v-for="client in clients" :key="client.id">
-            <td>
-              <router-link :to="`/client/${client.id}`">
-                {{ client.name }}
+    <div class="column">
+      <div class="card">
+        <section>
+          <ul class="tabs">
+            <li>
+              <router-link :to="`/company/${$route.params.id}`">
+                <span>Profile</span>
               </router-link>
-            </td>
-            <td>
-              {{ client.client.get("jobTitle") }}
-            </td>
-            <td>
-              <a :href="`mailto:${client.client.get('email')}`">
-                {{ client.client.get("email") }}
-              </a>
-            </td>
-            <td>
-              <a :href="`tel:${client.client.get('cellPhone')}`">
-                {{ client.client.get("cellPhone") }}
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </li>
+            <li>
+              <router-link :to="`/company/${$route.params.id}/clients`">
+                <span>Clients</span>
+              </router-link>
+            </li>
+          </ul>
+        </section>
+        <router-view :key="$route.path"></router-view>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import AV from "leancloud-storage";
 export default {
-  name: "CompanyPage",
-  data() {
-    return {
-      companyName: "",
-      clients: [],
-      instagram: "",
-      facebook: "",
-      linkedin: "",
-      id: ""
-    };
-  },
-  created() {
-    const vm = this;
-    vm.id = vm.$route.params.id;
-    const companyQuery = new AV.Query("Company");
-    companyQuery.get(vm.id).then(company => {
-      vm.instagram = company.get("instagram");
-      vm.facebook = company.get("facebook");
-      vm.linkedin = company.get("linkedin");
-      vm.companyName = company.get("name");
-    });
-    const companyObject = AV.Object.createWithoutData("Company", vm.id);
-    const clientQuery = new AV.Query("Client");
-    clientQuery
-      .equalTo("company", companyObject)
-      .find()
-      .then(clients => {
-        vm.clients = clients.map(client => ({
-          name: client.get("fullName"),
-          id: client.id,
-          client
-        }));
-        console.log("Clients length = " + vm.clients.length);
-      });
-  }
+  name: "CompanyPage"
 };
 </script>
 
-<style scoped>
-.icon {
-  font-size: 30pt;
-  padding-right: 15pt;
-  padding-left: 0pt;
-}
-
-.iconBlock {
-  display: flex;
-}
-
-h2 {
-  font-size: 16pt;
-}
-
-h1 {
-  font-size: 20pt;
-}
-
-.tableText {
-  font-weight: normal;
-}
-</style>
+<style scoped></style>
