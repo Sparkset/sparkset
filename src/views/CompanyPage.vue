@@ -32,6 +32,39 @@
         </a>
       </span>
     </div>
+    <h2>Clients Associated with {{ companyName }}</h2>
+    <div class="tableText">
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>Job Title</th>
+          <th>Email Address</th>
+          <th>Phone Number</th>
+        </thead>
+        <tbody>
+          <tr v-for="client in clients" :key="client.id">
+            <td>
+              <router-link :to="`/client/${client.id}`">
+                {{ client.name }}
+              </router-link>
+            </td>
+            <td>
+              {{ client.client.get("jobTitle") }}
+            </td>
+            <td>
+              <a :href="`mailto:${client.client.get('email')}`">
+                {{ client.client.get("email") }}
+              </a>
+            </td>
+            <td>
+              <a :href="`tel:${client.client.get('cellPhone')}`">
+                {{ client.client.get("cellPhone") }}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -85,5 +118,17 @@ export default {
 
 .iconBlock {
   display: flex;
+}
+
+h2 {
+  font-size: 16pt;
+}
+
+h1 {
+  font-size: 20pt;
+}
+
+.tableText {
+  font-weight: normal;
 }
 </style>
