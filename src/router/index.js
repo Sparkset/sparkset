@@ -72,7 +72,7 @@ const routes = [
         component: () => import("../views/ClientsAddPage.vue")
       },
       {
-        path: "/company/:cName",
+        path: "/company/:id",
         component: () => import("../views/CompanyPage.vue")
       },
       {

@@ -139,9 +139,7 @@
                     </span>
                   </td>
                   <td>
-                    <router-link
-                      :to="`/company/${client.get('company').get('name')}`"
-                    >
+                    <router-link :to="`/company/${client.get('company').id}`">
                       {{ client.get("company").get("name") }}
                     </router-link>
                   </td>
