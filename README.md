@@ -8,6 +8,7 @@
 2. Add notes and any associated tags. Filter notes by selecting a certain tag.
 3. Create new users to use the system. It is possible to prevent new users from adding additional users to the system.
 4. A global search bar allows the user to find any information on the entire system with a few keywords. 
+5. See inforation for each individual company on a seperate page.
 
 ## Dependencies
 
@@ -41,5 +42,4 @@ The project is set up so that any commit made to this repository will automatica
 
 ## TODO
 
-1. Create individual company pages that will centralize all information for each company including social media links, clients associated, and any ongoing projects.
-2. Work on the creation of events for each client and user on the system.
+1. Work on the creation of events for each client and user on the system.
