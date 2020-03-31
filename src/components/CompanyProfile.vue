@@ -5,7 +5,12 @@
       <div class="field field--half">
         <label>
           <span>Company Name</span>
-          <input v-model="pendingChanges.name" type="text" required />
+          <input
+            v-model="pendingChanges.name"
+            type="text"
+            required
+            :disabled="!editing"
+          />
         </label>
       </div>
       <div class="field field--half">
@@ -13,7 +18,7 @@
           <span>
             Company LinkedIn
             <a
-              v-if="company.get('linkedin')"
+              v-if="!editing && company.get('linkedin')"
               :href="
                 `https://www.linkedin.com/company/${company.get('linkedin')}`
               "
@@ -22,7 +27,11 @@
               <font-awesome-icon :icon="['fab', 'linkedin']" />
             </a>
           </span>
-          <input v-model="pendingChanges.linkedin" type="text" />
+          <input
+            v-model="pendingChanges.linkedin"
+            type="text"
+            :disabled="!editing"
+          />
         </label>
       </div>
       <div class="field field--half">
@@ -30,14 +39,18 @@
           <span>
             Company Facebook
             <a
-              v-if="company.get('facebook')"
+              v-if="!editing && company.get('facebook')"
               :href="`https://www.facebook.com/${company.get('facebook')}`"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'facebook-square']" />
             </a>
           </span>
-          <input v-model="pendingChanges.facebook" type="text" />
+          <input
+            v-model="pendingChanges.facebook"
+            type="text"
+            :disabled="!editing"
+          />
         </label>
       </div>
       <div class="field field--half">
@@ -45,20 +58,29 @@
           <span>
             Company Instagram
             <a
-              v-if="company.get('instagram')"
+              v-if="!editing && company.get('instagram')"
               :href="`https://www.instagram.com/${company.get('instagram')}`"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'instagram']" />
             </a>
           </span>
-          <input v-model="pendingChanges.instagram" type="text" />
+          <input
+            v-model="pendingChanges.instagram"
+            type="text"
+            :disabled="!editing"
+          />
         </label>
       </div>
-      <div class="field">
+      <div v-if="editing" class="field">
         <button type="submit" class="primary">Save</button>
       </div>
     </form>
+    <div v-if="!editing" class="field">
+      <button @click="editing = true">
+        Edit
+      </button>
+    </div>
   </section>
 </template>
 
@@ -69,6 +91,7 @@ export default {
   data() {
     return {
       company: new AV.Object("Company"),
+      editing: false,
       pendingChanges: {
         name: "",
         linkedin: "",
@@ -104,6 +127,7 @@ export default {
         .save()
         .then(() => {
           alert("Profile updated.");
+          vm.editing = false;
         })
         .catch(error => {
           alert(error);

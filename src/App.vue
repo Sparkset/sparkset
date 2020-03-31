@@ -184,6 +184,11 @@ label > select,
 label > div {
   margin: 6px 0 0 0;
 }
+label > input:disabled,
+label > textarea:disabled,
+label > select:disabled {
+  border-style: dashed;
+}
 label > textarea {
   resize: vertical;
 }

@@ -5,13 +5,13 @@
       <div class="field field--half">
         <label>
           <span>Full Name</span>
-          <input v-model="fullName" type="text" required />
+          <input v-model="fullName" type="text" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Nickname</span>
-          <input v-model="nickname" type="text" />
+          <input v-model="nickname" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
@@ -19,13 +19,13 @@
           <span>
             Email
             <a
-              v-if="client.get('email')"
+              v-if="!editing && client.get('email')"
               :href="`mailto:${client.get('email')}`"
             >
               <font-awesome-icon :icon="['fas', 'paper-plane']" />
             </a>
           </span>
-          <input v-model="email" type="email" required />
+          <input v-model="email" type="email" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
@@ -33,14 +33,14 @@
           <span>
             LinkedIn
             <a
-              v-if="client.get('linkedin')"
+              v-if="!editing && client.get('linkedin')"
               :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'linkedin']" />
             </a>
           </span>
-          <input v-model="linkedin" type="text" />
+          <input v-model="linkedin" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
@@ -48,13 +48,13 @@
           <span>
             Cell Phone
             <a
-              v-if="client.get('cellPhone')"
+              v-if="!editing && client.get('cellPhone')"
               :href="`tel:${client.get('cellPhone')}`"
             >
               <font-awesome-icon :icon="['fas', 'phone-alt']" />
             </a>
           </span>
-          <input v-model="cellPhone" type="tel" required />
+          <input v-model="cellPhone" type="tel" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
@@ -62,37 +62,37 @@
           <span>
             Work Phone
             <a
-              v-if="client.get('workPhone')"
+              v-if="!editing && client.get('workPhone')"
               :href="`tel:${client.get('workPhone')}`"
             >
               <font-awesome-icon :icon="['fas', 'phone-alt']" />
             </a>
           </span>
-          <input v-model="workPhone" type="tel" required />
+          <input v-model="workPhone" type="tel" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Address</span>
-          <input v-model="address" type="text" />
+          <input v-model="address" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Communication Channel</span>
-          <input v-model="commChannelPref" type="text" />
+          <input v-model="commChannelPref" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Communication Time</span>
-          <input v-model="commTimePref" type="text" />
+          <input v-model="commTimePref" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Communication Frequency</span>
-          <input v-model="commFrequencyPref" type="text" />
+          <input v-model="commFrequencyPref" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half field--with--dropdown">
@@ -100,7 +100,7 @@
           <span>
             Company
             <router-link
-              v-if="client.get('company').id"
+              v-if="!editing && client.get('company').id"
               :to="`/company/${client.get('company').id}`"
             >
               <font-awesome-icon :icon="['fas', 'building']" />
@@ -113,6 +113,7 @@
             @keydown.down="completeCompanyWithPrediction"
             @blur="completeCompany"
             required
+            :disabled="!editing"
           />
           <div
             class="dropdown"
@@ -140,7 +141,7 @@
           <span>
             Company LinkedIn
             <a
-              v-if="client.get('company').get('linkedin')"
+              v-if="!editing && client.get('company').get('linkedin')"
               :href="
                 `https://www.linkedin.com/company/${client
                   .get('company')
@@ -151,7 +152,7 @@
               <font-awesome-icon :icon="['fab', 'linkedin']" />
             </a>
           </span>
-          <input v-model="companyLinkedin" type="text" />
+          <input v-model="companyLinkedin" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
@@ -159,7 +160,7 @@
           <span>
             Company Facebook
             <a
-              v-if="client.get('company').get('facebook')"
+              v-if="!editing && client.get('company').get('facebook')"
               :href="
                 `https://www.facebook.com/${client
                   .get('company')
@@ -170,7 +171,7 @@
               <font-awesome-icon :icon="['fab', 'facebook-square']" />
             </a>
           </span>
-          <input v-model="companyFacebook" type="text" />
+          <input v-model="companyFacebook" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
@@ -178,7 +179,7 @@
           <span>
             Company Instagram
             <a
-              v-if="client.get('company').get('instagram')"
+              v-if="!editing && client.get('company').get('instagram')"
               :href="
                 `https://www.instagram.com/${client
                   .get('company')
@@ -189,19 +190,19 @@
               <font-awesome-icon :icon="['fab', 'instagram']" />
             </a>
           </span>
-          <input v-model="companyInstagram" type="text" />
+          <input v-model="companyInstagram" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Job Title</span>
-          <input v-model="jobTitle" type="text" required />
+          <input v-model="jobTitle" type="text" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Job Description</span>
-          <input v-model="jobDescription" type="text" />
+          <input v-model="jobDescription" type="text" :disabled="!editing" />
         </label>
       </div>
       <div v-if="isNew" class="field field--half">
@@ -210,10 +211,15 @@
           <input type="file" ref="picturesInput" />
         </label>
       </div>
-      <div class="field">
+      <div v-if="editing" class="field">
         <button type="submit" class="primary">Save</button>
       </div>
     </form>
+    <div v-if="!editing" class="field">
+      <button @click="editing = true">
+        Edit
+      </button>
+    </div>
   </section>
 </template>
 
@@ -228,6 +234,7 @@ export default {
   },
   data() {
     return {
+      editing: false,
       fullName: "",
       nickname: "",
       email: "",
@@ -316,7 +323,10 @@ export default {
         .set("jobTitle", vm.jobTitle)
         .set("jobDescription", vm.jobDescription)
         .save()
-        .then(vm.callback)
+        .then(() => {
+          vm.callback();
+          vm.editing = false;
+        })
         .catch(error => {
           alert(error);
         });
@@ -324,6 +334,7 @@ export default {
   },
   created() {
     const vm = this;
+    vm.editing = vm.isNew;
     vm.fullName = vm.client.get("fullName");
     vm.nickname = vm.client.get("nickname");
     vm.email = vm.client.get("email");
