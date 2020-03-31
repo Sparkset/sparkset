@@ -15,13 +15,19 @@ import {
   faArrowDown,
   faSearch
 } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import {
+  faLinkedin,
+  faFacebook,
+  faInstagram
+} from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
   faBars,
   faLongArrowAltUp,
   faLongArrowAltDown,
   faLinkedin,
+  faFacebook,
+  faInstagram,
   faArrowDown,
   faSearch
 );

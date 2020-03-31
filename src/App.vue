@@ -106,6 +106,28 @@ section {
 section:last-of-type {
   border-bottom: none;
 }
+.tabs {
+  margin: 0 18px;
+  padding: 0;
+  list-style: none;
+}
+.tabs > li {
+  display: inline-block;
+  margin: 0 24px 0 0;
+}
+.tabs > li > a > span {
+  display: inline-block;
+  padding: 12px 0;
+  border-bottom: 2px solid transparent;
+}
+.tabs > li > a:focus > span,
+.tabs > li > a:hover > span {
+  color: #36d5d8;
+}
+.tabs > li > a.router-link-exact-active > span {
+  border-bottom: 2px solid #36d5d8;
+  color: #36d5d8;
+}
 .fields {
   width: 100%;
   padding: 18px 18px 6px 18px;
@@ -347,6 +369,12 @@ td > button.danger:hover {
   }
   .card--padded {
     padding: 16px 24px;
+  }
+  .tabs {
+    margin: 0 24px;
+  }
+  .tabs > li {
+    margin: 0 32px 0 0;
   }
   .fields {
     padding: 24px 24px 8px 24px;
