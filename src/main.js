@@ -13,11 +13,14 @@ import {
   faLongArrowAltUp,
   faLongArrowAltDown,
   faArrowDown,
-  faSearch
+  faSearch,
+  faPaperPlane,
+  faPhoneAlt,
+  faBuilding
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedin,
-  faFacebook,
+  faFacebookSquare,
   faInstagram
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -25,11 +28,14 @@ library.add(
   faBars,
   faLongArrowAltUp,
   faLongArrowAltDown,
-  faLinkedin,
-  faFacebook,
-  faInstagram,
   faArrowDown,
-  faSearch
+  faSearch,
+  faPaperPlane,
+  faPhoneAlt,
+  faBuilding,
+  faLinkedin,
+  faFacebookSquare,
+  faInstagram
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import ToggleButton from "vue-js-toggle-button";

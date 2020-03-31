@@ -5,66 +5,107 @@
       <div class="field field--half">
         <label>
           <span>Full Name</span>
-          <input v-model="fullName" type="text" required />
+          <input v-model="fullName" type="text" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Nickname</span>
-          <input v-model="nickname" type="text" />
+          <input v-model="nickname" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Email</span>
-          <input v-model="email" type="email" required />
+          <span>
+            Email
+            <a
+              v-if="!editing && client.get('email')"
+              :href="`mailto:${client.get('email')}`"
+            >
+              <font-awesome-icon :icon="['fas', 'paper-plane']" />
+            </a>
+          </span>
+          <input v-model="email" type="email" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>LinkedIn</span>
-          <input v-model="linkedin" type="text" />
+          <span>
+            LinkedIn
+            <a
+              v-if="!editing && client.get('linkedin')"
+              :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'linkedin']" />
+            </a>
+          </span>
+          <input v-model="linkedin" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Cell Phone</span>
-          <input v-model="cellPhone" type="tel" required />
+          <span>
+            Cell Phone
+            <a
+              v-if="!editing && client.get('cellPhone')"
+              :href="`tel:${client.get('cellPhone')}`"
+            >
+              <font-awesome-icon :icon="['fas', 'phone-alt']" />
+            </a>
+          </span>
+          <input v-model="cellPhone" type="tel" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Work Phone</span>
-          <input v-model="workPhone" type="tel" required />
+          <span>
+            Work Phone
+            <a
+              v-if="!editing && client.get('workPhone')"
+              :href="`tel:${client.get('workPhone')}`"
+            >
+              <font-awesome-icon :icon="['fas', 'phone-alt']" />
+            </a>
+          </span>
+          <input v-model="workPhone" type="tel" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Address</span>
-          <input v-model="address" type="text" />
+          <input v-model="address" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Communication Channel</span>
-          <input v-model="commChannelPref" type="text" />
+          <input v-model="commChannelPref" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Communication Time</span>
-          <input v-model="commTimePref" type="text" />
+          <input v-model="commTimePref" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Communication Frequency</span>
-          <input v-model="commFrequencyPref" type="text" />
+          <input v-model="commFrequencyPref" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half field--with--dropdown">
         <label>
-          <span>Company</span>
+          <span>
+            Company
+            <router-link
+              v-if="!editing && client.get('company').id"
+              :to="`/company/${client.get('company').id}`"
+            >
+              <font-awesome-icon :icon="['fas', 'building']" />
+            </router-link>
+          </span>
           <input
             type="text"
             v-model="companyName"
@@ -72,6 +113,7 @@
             @keydown.down="completeCompanyWithPrediction"
             @blur="completeCompany"
             required
+            :disabled="!editing"
           />
           <div
             class="dropdown"
@@ -96,32 +138,71 @@
       </div>
       <div class="field field--half">
         <label>
-          <span>Company Facebook</span>
-          <input v-model="companyFacebook" type="text" />
+          <span>
+            Company LinkedIn
+            <a
+              v-if="!editing && client.get('company').get('linkedin')"
+              :href="
+                `https://www.linkedin.com/company/${client
+                  .get('company')
+                  .get('linkedin')}`
+              "
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'linkedin']" />
+            </a>
+          </span>
+          <input v-model="companyLinkedin" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Company Instagram</span>
-          <input v-model="companyInstagram" type="text" />
+          <span>
+            Company Facebook
+            <a
+              v-if="!editing && client.get('company').get('facebook')"
+              :href="
+                `https://www.facebook.com/${client
+                  .get('company')
+                  .get('facebook')}`
+              "
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'facebook-square']" />
+            </a>
+          </span>
+          <input v-model="companyFacebook" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
-          <span>Company LinkedIn</span>
-          <input v-model="companyLinkedin" type="text" />
+          <span>
+            Company Instagram
+            <a
+              v-if="!editing && client.get('company').get('instagram')"
+              :href="
+                `https://www.instagram.com/${client
+                  .get('company')
+                  .get('instagram')}`
+              "
+              target="_blank"
+            >
+              <font-awesome-icon :icon="['fab', 'instagram']" />
+            </a>
+          </span>
+          <input v-model="companyInstagram" type="text" :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Job Title</span>
-          <input v-model="jobTitle" type="text" required />
+          <input v-model="jobTitle" type="text" required :disabled="!editing" />
         </label>
       </div>
       <div class="field field--half">
         <label>
           <span>Job Description</span>
-          <input v-model="jobDescription" type="text" />
+          <input v-model="jobDescription" type="text" :disabled="!editing" />
         </label>
       </div>
       <div v-if="isNew" class="field field--half">
@@ -130,10 +211,15 @@
           <input type="file" ref="picturesInput" />
         </label>
       </div>
-      <div class="field">
+      <div v-if="editing" class="field">
         <button type="submit" class="primary">Save</button>
       </div>
     </form>
+    <div v-if="!editing" class="field">
+      <button @click="editing = true">
+        Edit
+      </button>
+    </div>
   </section>
 </template>
 
@@ -148,6 +234,7 @@ export default {
   },
   data() {
     return {
+      editing: false,
       fullName: "",
       nickname: "",
       email: "",
@@ -161,9 +248,9 @@ export default {
       companyName: "",
       company: new AV.Object("Company"),
       companyPrediction: new AV.Object("Company"),
+      companyLinkedin: "",
       companyFacebook: "",
       companyInstagram: "",
-      companyLinkedin: "",
       jobTitle: "",
       jobDescription: ""
     };
@@ -205,17 +292,17 @@ export default {
     },
     completeCompany() {
       const vm = this;
+      vm.companyLinkedin = vm.company.get("linkedin");
       vm.companyFacebook = vm.company.get("facebook");
       vm.companyInstagram = vm.company.get("instagram");
-      vm.companyLinkedin = vm.company.get("linkedin");
     },
     go() {
       const vm = this;
       vm.company
         .set("name", vm.companyName)
+        .set("linkedin", vm.companyLinkedin)
         .set("facebook", vm.companyFacebook)
-        .set("instagram", vm.companyInstagram)
-        .set("linkedin", vm.companyLinkedin);
+        .set("instagram", vm.companyInstagram);
       if (vm.isNew && vm.$refs.picturesInput.files.length) {
         const picture = vm.$refs.picturesInput.files[0];
         const file = new AV.File(picture.name, picture);
@@ -236,7 +323,10 @@ export default {
         .set("jobTitle", vm.jobTitle)
         .set("jobDescription", vm.jobDescription)
         .save()
-        .then(vm.callback)
+        .then(() => {
+          vm.callback();
+          vm.editing = false;
+        })
         .catch(error => {
           alert(error);
         });
@@ -244,6 +334,7 @@ export default {
   },
   created() {
     const vm = this;
+    vm.editing = vm.isNew;
     vm.fullName = vm.client.get("fullName");
     vm.nickname = vm.client.get("nickname");
     vm.email = vm.client.get("email");
@@ -256,9 +347,9 @@ export default {
     vm.commFrequencyPref = vm.client.get("commFrequencyPref");
     vm.companyName = vm.client.get("company").get("name");
     vm.company = vm.client.get("company");
+    vm.companyLinkedin = vm.client.get("company").get("linkedin");
     vm.companyFacebook = vm.client.get("company").get("facebook");
     vm.companyInstagram = vm.client.get("company").get("instagram");
-    vm.companyLinkedin = vm.client.get("company").get("linkedin");
     vm.jobTitle = vm.client.get("jobTitle");
     vm.jobDescription = vm.client.get("jobDescription");
   }

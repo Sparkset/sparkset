@@ -153,6 +153,13 @@ section:last-of-type {
 label > span {
   color: #605e5e;
 }
+label > span > a {
+  color: #36d5d8;
+}
+label > span > a:focus,
+label > span > a:hover {
+  filter: brightness(1.05);
+}
 input,
 textarea,
 select {
@@ -176,6 +183,11 @@ label > textarea,
 label > select,
 label > div {
   margin: 6px 0 0 0;
+}
+label > input:disabled,
+label > textarea:disabled,
+label > select:disabled {
+  border-style: dashed;
 }
 label > textarea {
   resize: vertical;
