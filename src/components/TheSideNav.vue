@@ -70,14 +70,14 @@ export default {
 #search-button > button {
   width: 100%;
   padding: 8px;
-  background-color: rgba(204, 204, 204, 0.43);
+  background-color: #e5e5e5;
   color: #999;
   text-align: left;
   border-radius: 4px;
 }
 #search-button > button:focus,
 #search-button > button:hover {
-  filter: brightness(1.05);
+  background-color: #d8d8d8;
 }
 #pages {
   margin: 0;

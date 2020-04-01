@@ -266,6 +266,9 @@ export default {
 .multiselect__tag-icon::after {
   color: #36d5d8;
 }
+.multiselect__content * {
+  transition: unset;
+}
 .multiselect__content-wrapper {
   position: relative;
   border-radius: 0 0 2px 2px;

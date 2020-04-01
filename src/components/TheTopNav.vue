@@ -4,9 +4,7 @@
     <ul id="right">
       <li :class="[$store.state.openedTopNavItem === 'user' ? 'open' : '']">
         <button @click.stop="$store.commit('updateOpenedTopNavItem', 'user')">
-          <span>
-            <span id="right__name">{{ fullName }}</span>
-          </span>
+          <span id="right__name">{{ fullName }}</span>
         </button>
         <ul class="dialogue">
           <li>

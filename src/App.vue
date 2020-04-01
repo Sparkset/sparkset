@@ -36,6 +36,7 @@ export default {
   box-sizing: border-box;
   border-radius: 0;
   outline: none;
+  transition: all 0.1s linear;
 }
 body {
   margin: 0;
@@ -83,15 +84,12 @@ th.sortable > span > svg {
   width: 100%;
   background-color: #fff;
   color: #605e5e;
-  border: 1px solid rgba(204, 204, 204, 0.43);
+  border: 1px solid #e5e5e5;
   border-radius: 4px;
   overflow: hidden;
 }
 .card:last-of-type {
   margin: 0;
-}
-.card--padded {
-  padding: 12px 18px;
 }
 .card--center {
   text-align: center;
@@ -101,7 +99,7 @@ th.sortable > span > svg {
   border: none;
 }
 section {
-  border-bottom: 1px solid rgba(204, 204, 204, 0.43);
+  border-bottom: 1px solid #e5e5e5;
 }
 section:last-of-type {
   border-bottom: none;
@@ -153,17 +151,17 @@ section:last-of-type {
 label > span {
   color: #605e5e;
 }
-label > span > a {
+label > span > a > svg > path {
   color: #36d5d8;
 }
-label > span > a:focus,
-label > span > a:hover {
-  filter: brightness(1.05);
+label > span > a:focus > svg > path,
+label > span > a:hover > svg > path {
+  color: #29a0a2;
 }
 input,
 textarea,
 select {
-  border: 1px solid rgba(204, 204, 204, 0.43);
+  border: 1px solid #e5e5e5;
   width: 100%;
   padding: 8px;
   background-color: #fff;
@@ -235,17 +233,18 @@ button {
 }
 .field > button,
 td > button {
-  border: 1px solid #36d5d8;
-  padding: 8px;
-  background-color: #fff;
-  color: #36d5d8;
+  border: 1px solid #f7f5f5;
+  padding: 8px 12px;
+  background-color: #f7f5f5;
+  color: #605e5e;
   border-radius: 2px;
 }
 .field > button:focus,
 .field > button:hover,
 td > button:focus,
 td > button:hover {
-  background-color: #36d5d811;
+  border-color: #e5e3e3;
+  background-color: #e5e3e3;
 }
 .field > button.primary,
 td > button.primary,
@@ -256,23 +255,27 @@ td > button.danger {
 }
 .field > button.primary,
 td > button.primary {
-  border: 1px solid #36d5d8;
+  border-color: #36d5d8;
   background-color: #36d5d8;
-}
-.field > button.danger,
-td > button.danger {
-  border: 1px solid #e52f2e;
-  background-color: #e52f2e;
 }
 .field > button.primary:focus,
 .field > button.primary:hover,
 td > button.primary:focus,
-td > button.primary:hover,
+td > button.primary:hover {
+  border-color: #29a0a2;
+  background-color: #29a0a2;
+}
+.field > button.danger,
+td > button.danger {
+  border-color: #e52f2e;
+  background-color: #e52f2e;
+}
 .field > button.danger:focus,
 .field > button.danger:hover,
 td > button.danger:focus,
 td > button.danger:hover {
-  filter: brightness(1.05);
+  border-color: #ac2323;
+  background-color: #ac2323;
 }
 .column {
   float: right;
@@ -334,7 +337,7 @@ td > button.danger:hover {
 }
 .side-nav-toggle:focus,
 .side-nav-toggle:hover {
-  filter: brightness(1.05);
+  background-color: #29a0a2;
 }
 .top-nav {
   position: fixed;
@@ -380,9 +383,6 @@ td > button.danger:hover {
 @media (min-width: 544px) {
   .card {
     margin: 0 0 16px 0;
-  }
-  .card--padded {
-    padding: 16px 24px;
   }
   .tabs {
     margin: 0 24px;

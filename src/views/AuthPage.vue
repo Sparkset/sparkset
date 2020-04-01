@@ -102,5 +102,11 @@ export default {
 <style scoped>
 #logo {
   width: 100%;
+  max-width: 240px;
+}
+@media (min-width: 800px) {
+  #logo {
+    margin-top: 120px;
+  }
 }
 </style>

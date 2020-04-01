@@ -140,7 +140,7 @@ export default {
   border-radius: 4px;
 }
 #main > input.has-results {
-  border-bottom: 1px solid rgba(204, 204, 204, 0.43);
+  border-bottom: 1px solid #e5e5e5;
   border-radius: 4px 4px 0 0;
 }
 #results {
@@ -148,6 +148,9 @@ export default {
   background-color: #fff;
   border-radius: 0 0 4px 4px;
   overflow: hidden;
+}
+#results * {
+  transition: unset;
 }
 .result {
   display: block;

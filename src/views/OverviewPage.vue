@@ -16,13 +16,6 @@
       <div class="card">
         <section class="fields">
           <h1>UI Demo</h1>
-          <div class="field">
-            <p>
-              Below are some basic UI elements.
-            </p>
-          </div>
-        </section>
-        <section class="fields">
           <div class="field field--half">
             <label>
               Text Input
