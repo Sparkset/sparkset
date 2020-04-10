@@ -122,7 +122,7 @@
                 companyPrediction.get('name') &&
                 companyName !== companyPrediction.get('name')
                   ? null
-                  : 'none'
+                  : 'none',
             }"
           >
             <span class="dropdown__left">
@@ -205,6 +205,14 @@
           <input v-model="jobDescription" type="text" :disabled="!editing" />
         </label>
       </div>
+      <div v-for="(att, index) in uniqueAttributes" :key="index">
+        <div class="field field--half">
+          <label>
+            <span>{{ att.key }}</span>
+            <span>{{ att.value }}</span>
+          </label>
+        </div>
+      </div>
       <div v-if="isNew" class="field field--half">
         <label>
           <span>Profile Picture</span>
@@ -220,6 +228,18 @@
         Edit
       </button>
     </div>
+    <button @click="bringUpNewKeyPrompt = true">New Unique Attribute</button>
+    <div v-if="bringUpNewKeyPrompt" class="field field--half">
+      <form @submit.prevent="newUniqueAttribute">
+        <label>
+          <span>New Key</span>
+          <input v-model="newKey" type="text" required />
+          <span>New Value</span>
+          <input v-model="newValue" type="text" required />
+          <button type="submit" class="primary">Add Unique Key</button>
+        </label>
+      </form>
+    </div>
   </section>
 </template>
 
@@ -234,6 +254,10 @@ export default {
   },
   data() {
     return {
+      bringUpNewKeyPrompt: false,
+      uniqueAttributes: [],
+      newKey: "",
+      newValue: "",
       editing: false,
       fullName: "",
       nickname: "",
@@ -252,7 +276,7 @@ export default {
       companyFacebook: "",
       companyInstagram: "",
       jobTitle: "",
-      jobDescription: ""
+      jobDescription: "",
     };
   },
   methods: {
@@ -263,20 +287,20 @@ export default {
         companyQuery
           .equalTo("name", vm.companyName)
           .first()
-          .then(company => {
+          .then((company) => {
             vm.company = company || new AV.Object("Company");
           })
-          .catch(error => {
+          .catch((error) => {
             alert(error);
           });
         const companyQueryForPrediction = new AV.Query("Company");
         companyQueryForPrediction
           .startsWith("name", vm.companyName)
           .first()
-          .then(company => {
+          .then((company) => {
             vm.companyPrediction = company || new AV.Object("Company");
           })
-          .catch(error => {
+          .catch((error) => {
             alert(error);
           });
       } else {
@@ -289,6 +313,27 @@ export default {
       vm.company = vm.companyPrediction;
       vm.companyName = vm.company.get("name");
       vm.completeCompany();
+    },
+    newUniqueAttribute() {
+      const vm = this;
+      vm.bringUpNewKeyPrompt = false;
+      var newAtt = new AV.Object("ClientAttributes");
+      //var clientPointer = AV.Object.createWithoutData('Client', vm.client.id);
+      newAtt
+        .set("client", vm.client)
+        .set("key", vm.newKey)
+        .set("value", vm.newValue)
+        .save()
+        .then(
+          function(newAtt) {
+            alert("New Unique Attribute Added: " + newAtt.id);
+          },
+          function(error) {
+            alert(error);
+          }
+        );
+      vm.newKey = "";
+      vm.newValue = "";
     },
     completeCompany() {
       const vm = this;
@@ -327,10 +372,10 @@ export default {
           vm.callback();
           vm.editing = false;
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
-    }
+    },
   },
   created() {
     const vm = this;
@@ -352,7 +397,7 @@ export default {
     vm.companyInstagram = vm.client.get("company").get("instagram");
     vm.jobTitle = vm.client.get("jobTitle");
     vm.jobDescription = vm.client.get("jobDescription");
-  }
+  },
 };
 </script>
 
