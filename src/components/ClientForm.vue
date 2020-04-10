@@ -205,14 +205,6 @@
           <input v-model="jobDescription" type="text" :disabled="!editing" />
         </label>
       </div>
-      <div v-for="(att, index) in uniqueAttributes" :key="index">
-        <div class="field field--half">
-          <label>
-            <span>{{ att.key }}</span>
-            <span>{{ att.value }}</span>
-          </label>
-        </div>
-      </div>
       <div v-if="isNew" class="field field--half">
         <label>
           <span>Profile Picture</span>
@@ -228,7 +220,14 @@
         Edit
       </button>
     </div>
-    <button @click="bringUpNewKeyPrompt = true">New Unique Attribute</button>
+    <h2>Unique Attributes</h2>
+    <button
+      v-if="!bringUpNewKeyPrompt"
+      @click="bringUpNewKeyPrompt = true"
+      class="newAttButton"
+    >
+      New Unique Attribute
+    </button>
     <div v-if="bringUpNewKeyPrompt" class="field field--half">
       <form @submit.prevent="newUniqueAttribute">
         <label>
@@ -236,10 +235,28 @@
           <input v-model="newKey" type="text" required />
           <span>New Value</span>
           <input v-model="newValue" type="text" required />
-          <button type="submit" class="primary">Add Unique Key</button>
+          <button type="submit" class="newAttButton">Add Unique Key</button>
         </label>
       </form>
     </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(att, index) in uniqueAttributes" :key="index">
+          <td>
+            {{ att.get("key") }}
+          </td>
+          <td>
+            {{ att.get("value") }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 </template>
 
@@ -250,7 +267,7 @@ export default {
   props: {
     client: AV.Object,
     isNew: Boolean,
-    callback: Function
+    callback: Function,
   },
   data() {
     return {
@@ -318,15 +335,13 @@ export default {
       const vm = this;
       vm.bringUpNewKeyPrompt = false;
       var newAtt = new AV.Object("ClientAttributes");
-      //var clientPointer = AV.Object.createWithoutData('Client', vm.client.id);
       newAtt
         .set("client", vm.client)
         .set("key", vm.newKey)
         .set("value", vm.newValue)
         .save()
         .then(
-          function(newAtt) {
-            alert("New Unique Attribute Added: " + newAtt.id);
+          function() {
           },
           function(error) {
             alert(error);
@@ -334,12 +349,21 @@ export default {
         );
       vm.newKey = "";
       vm.newValue = "";
+      vm.uniqueAttributes = vm.getUniqueAtts();
     },
     completeCompany() {
       const vm = this;
       vm.companyLinkedin = vm.company.get("linkedin");
       vm.companyFacebook = vm.company.get("facebook");
       vm.companyInstagram = vm.company.get("instagram");
+    },
+    getUniqueAtts(){
+      const vm = this;
+      var uniqueAttsQuery = new AV.Query("ClientAttributes");
+      uniqueAttsQuery.equalTo("client", vm.client);
+      uniqueAttsQuery.find().then(function(atts) {
+        vm.uniqueAttributes = atts;
+      });
     },
     go() {
       const vm = this;
@@ -379,6 +403,7 @@ export default {
   },
   created() {
     const vm = this;
+    vm.uniqueAttributes = vm.getUniqueAtts();
     vm.editing = vm.isNew;
     vm.fullName = vm.client.get("fullName");
     vm.nickname = vm.client.get("nickname");
@@ -401,4 +426,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.newAttButton {
+  width: 200px;
+  height: 30px;
+  background-color: #36d5d8;
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+</style>
