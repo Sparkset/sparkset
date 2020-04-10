@@ -10,23 +10,17 @@
 
 <script>
 import EventForm from "@/components/EventForm.vue";
-// import AV from "leancloud-storage";
 export default {
   name: "EventsAddPage",
   components: {
     EventForm
   },
-//   data() {
-//     return {
-//       client: new AV.Object("Client").set("company", new AV.Object("Company"))
-//     };
-//   },
-    methods: {
+  methods: {
     callback() {
-    const vm = this;
-    vm.$router.push(`/client/${vm.client.id}`);
+      const vm = this;
+      vm.$router.push(`/client/${vm.client.id}`);
     }
-    }
+  }
 };
 </script>
 
