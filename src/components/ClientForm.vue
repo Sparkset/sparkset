@@ -122,7 +122,7 @@
                 companyPrediction.get('name') &&
                 companyName !== companyPrediction.get('name')
                   ? null
-                  : 'none',
+                  : 'none'
             }"
           >
             <span class="dropdown__left">
@@ -267,7 +267,7 @@ export default {
   props: {
     client: AV.Object,
     isNew: Boolean,
-    callback: Function,
+    callback: Function
   },
   data() {
     return {
@@ -293,7 +293,7 @@ export default {
       companyFacebook: "",
       companyInstagram: "",
       jobTitle: "",
-      jobDescription: "",
+      jobDescription: ""
     };
   },
   methods: {
@@ -304,20 +304,20 @@ export default {
         companyQuery
           .equalTo("name", vm.companyName)
           .first()
-          .then((company) => {
+          .then(company => {
             vm.company = company || new AV.Object("Company");
           })
-          .catch((error) => {
+          .catch(error => {
             alert(error);
           });
         const companyQueryForPrediction = new AV.Query("Company");
         companyQueryForPrediction
           .startsWith("name", vm.companyName)
           .first()
-          .then((company) => {
+          .then(company => {
             vm.companyPrediction = company || new AV.Object("Company");
           })
-          .catch((error) => {
+          .catch(error => {
             alert(error);
           });
       } else {
@@ -341,8 +341,7 @@ export default {
         .set("value", vm.newValue)
         .save()
         .then(
-          function() {
-          },
+          function() {},
           function(error) {
             alert(error);
           }
@@ -357,7 +356,7 @@ export default {
       vm.companyFacebook = vm.company.get("facebook");
       vm.companyInstagram = vm.company.get("instagram");
     },
-    getUniqueAtts(){
+    getUniqueAtts() {
       const vm = this;
       var uniqueAttsQuery = new AV.Query("ClientAttributes");
       uniqueAttsQuery.equalTo("client", vm.client);
@@ -396,10 +395,10 @@ export default {
           vm.callback();
           vm.editing = false;
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
-    },
+    }
   },
   created() {
     const vm = this;
@@ -422,7 +421,7 @@ export default {
     vm.companyInstagram = vm.client.get("company").get("instagram");
     vm.jobTitle = vm.client.get("jobTitle");
     vm.jobDescription = vm.client.get("jobDescription");
-  },
+  }
 };
 </script>
 
