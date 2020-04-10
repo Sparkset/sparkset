@@ -82,6 +82,8 @@ const routes = [
         path: "/clients/add",
         component: () => import("../views/ClientsAddPage.vue")
       },
+
+
       {
         path: "/company/:id",
         component: () => import("../views/CompanyPage.vue"),
@@ -108,6 +110,12 @@ const routes = [
             path: "events",
             component: () => import("../components/ClientEvents.vue")
           },
+
+          {
+            path: "/events/add",
+            component: () => import("../views/EventsAddPage.vue")
+          },
+
           {
             path: "files",
             component: () => import("../components/ClientFiles.vue")
