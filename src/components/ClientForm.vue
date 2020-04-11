@@ -1,263 +1,297 @@
 <template>
-  <section class="fields">
-    <h1>{{ isNew ? "New Client" : fullName || client.get("fullName") }}</h1>
-    <form @submit.prevent="go">
-      <div class="field field--half">
-        <label>
-          <span>Full Name</span>
-          <input v-model="fullName" type="text" required :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Nickname</span>
-          <input v-model="nickname" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>
-            Email
-            <a
-              v-if="!editing && client.get('email')"
-              :href="`mailto:${client.get('email')}`"
-            >
-              <font-awesome-icon :icon="['fas', 'paper-plane']" />
-            </a>
-          </span>
-          <input v-model="email" type="email" required :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>
-            LinkedIn
-            <a
-              v-if="!editing && client.get('linkedin')"
-              :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
-              target="_blank"
-            >
-              <font-awesome-icon :icon="['fab', 'linkedin']" />
-            </a>
-          </span>
-          <input v-model="linkedin" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>
-            Cell Phone
-            <a
-              v-if="!editing && client.get('cellPhone')"
-              :href="`tel:${client.get('cellPhone')}`"
-            >
-              <font-awesome-icon :icon="['fas', 'phone-alt']" />
-            </a>
-          </span>
-          <input v-model="cellPhone" type="tel" required :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>
-            Work Phone
-            <a
-              v-if="!editing && client.get('workPhone')"
-              :href="`tel:${client.get('workPhone')}`"
-            >
-              <font-awesome-icon :icon="['fas', 'phone-alt']" />
-            </a>
-          </span>
-          <input v-model="workPhone" type="tel" required :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Address</span>
-          <input v-model="address" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Communication Channel</span>
-          <input v-model="commChannelPref" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Communication Time</span>
-          <input v-model="commTimePref" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Communication Frequency</span>
-          <input v-model="commFrequencyPref" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half field--with--dropdown">
-        <label>
-          <span>
-            Company
-            <router-link
-              v-if="!editing && client.get('company').id"
-              :to="`/company/${client.get('company').id}`"
-            >
-              <font-awesome-icon :icon="['fas', 'building']" />
-            </router-link>
-          </span>
-          <input
-            type="text"
-            v-model="companyName"
-            @input="findCompany"
-            @keydown.down="completeCompanyWithPrediction"
-            @blur="completeCompany"
-            required
-            :disabled="!editing"
-          />
-          <div
-            class="dropdown"
-            :style="{
-              display:
-                companyPrediction.get('name') &&
-                companyName !== companyPrediction.get('name')
-                  ? null
-                  : 'none'
-            }"
-          >
-            <span class="dropdown__left">
-              {{ companyPrediction.get("name") }}
+  <div>
+    <section class="fields">
+      <h1>{{ isNew ? "New Client" : fullName || client.get("fullName") }}</h1>
+      <form @submit.prevent="go">
+        <div class="field field--half">
+          <label>
+            <span>Full Name</span>
+            <input
+              v-model="fullName"
+              type="text"
+              required
+              :disabled="!editing"
+            />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>Nickname</span>
+            <input v-model="nickname" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>
+              Email
+              <a
+                v-if="!editing && client.get('email')"
+                :href="`mailto:${client.get('email')}`"
+              >
+                <font-awesome-icon :icon="['fas', 'paper-plane']" />
+              </a>
             </span>
-            <span class="dropdown__right">
-              <kbd>
-                <font-awesome-icon :icon="['fas', 'arrow-down']" />
-              </kbd>
+            <input v-model="email" type="email" required :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>
+              LinkedIn
+              <a
+                v-if="!editing && client.get('linkedin')"
+                :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
+                target="_blank"
+              >
+                <font-awesome-icon :icon="['fab', 'linkedin']" />
+              </a>
             </span>
-          </div>
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>
-            Company LinkedIn
-            <a
-              v-if="!editing && client.get('company').get('linkedin')"
-              :href="
-                `https://www.linkedin.com/company/${client
-                  .get('company')
-                  .get('linkedin')}`
-              "
-              target="_blank"
+            <input v-model="linkedin" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>
+              Cell Phone
+              <a
+                v-if="!editing && client.get('cellPhone')"
+                :href="`tel:${client.get('cellPhone')}`"
+              >
+                <font-awesome-icon :icon="['fas', 'phone-alt']" />
+              </a>
+            </span>
+            <input
+              v-model="cellPhone"
+              type="tel"
+              required
+              :disabled="!editing"
+            />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>
+              Work Phone
+              <a
+                v-if="!editing && client.get('workPhone')"
+                :href="`tel:${client.get('workPhone')}`"
+              >
+                <font-awesome-icon :icon="['fas', 'phone-alt']" />
+              </a>
+            </span>
+            <input
+              v-model="workPhone"
+              type="tel"
+              required
+              :disabled="!editing"
+            />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>Address</span>
+            <input v-model="address" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>Communication Channel</span>
+            <input v-model="commChannelPref" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>Communication Time</span>
+            <input v-model="commTimePref" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>Communication Frequency</span>
+            <input
+              v-model="commFrequencyPref"
+              type="text"
+              :disabled="!editing"
+            />
+          </label>
+        </div>
+        <div class="field field--half field--with--dropdown">
+          <label>
+            <span>
+              Company
+              <router-link
+                v-if="!editing && client.get('company').id"
+                :to="`/company/${client.get('company').id}`"
+              >
+                <font-awesome-icon :icon="['fas', 'building']" />
+              </router-link>
+            </span>
+            <input
+              type="text"
+              v-model="companyName"
+              @input="findCompany"
+              @keydown.down="completeCompanyWithPrediction"
+              @blur="completeCompany"
+              required
+              :disabled="!editing"
+            />
+            <div
+              class="dropdown"
+              :style="{
+                display:
+                  companyPrediction.get('name') &&
+                  companyName !== companyPrediction.get('name')
+                    ? null
+                    : 'none'
+              }"
             >
-              <font-awesome-icon :icon="['fab', 'linkedin']" />
-            </a>
-          </span>
-          <input v-model="companyLinkedin" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>
-            Company Facebook
-            <a
-              v-if="!editing && client.get('company').get('facebook')"
-              :href="
-                `https://www.facebook.com/${client
-                  .get('company')
-                  .get('facebook')}`
-              "
-              target="_blank"
-            >
-              <font-awesome-icon :icon="['fab', 'facebook-square']" />
-            </a>
-          </span>
-          <input v-model="companyFacebook" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>
-            Company Instagram
-            <a
-              v-if="!editing && client.get('company').get('instagram')"
-              :href="
-                `https://www.instagram.com/${client
-                  .get('company')
-                  .get('instagram')}`
-              "
-              target="_blank"
-            >
-              <font-awesome-icon :icon="['fab', 'instagram']" />
-            </a>
-          </span>
-          <input v-model="companyInstagram" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Job Title</span>
-          <input v-model="jobTitle" type="text" required :disabled="!editing" />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Job Description</span>
-          <input v-model="jobDescription" type="text" :disabled="!editing" />
-        </label>
-      </div>
-      <div v-if="isNew" class="field field--half">
-        <label>
-          <span>Profile Picture</span>
-          <input type="file" ref="picturesInput" />
-        </label>
-      </div>
-      <div v-if="editing" class="field">
-        <button type="submit" class="primary">Save</button>
-      </div>
-    </form>
-    <div v-if="!editing" class="field">
-      <button @click="editing = true">
-        Edit
-      </button>
-    </div>
-    <h2>Unique Attributes</h2>
-    <button
-      v-if="!bringUpNewKeyPrompt"
-      @click="bringUpNewKeyPrompt = true"
-      class="newAttButton"
-    >
-      New Unique Attribute
-    </button>
-    <div v-if="bringUpNewKeyPrompt" class="field field--half">
-      <form @submit.prevent="newUniqueAttribute">
-        <label>
-          <span>New Key</span>
-          <input v-model="newKey" type="text" required />
-          <span>New Value</span>
-          <input v-model="newValue" type="text" required />
-          <button type="submit" class="newAttButton">Add Unique Key</button>
-        </label>
+              <span class="dropdown__left">
+                {{ companyPrediction.get("name") }}
+              </span>
+              <span class="dropdown__right">
+                <kbd>
+                  <font-awesome-icon :icon="['fas', 'arrow-down']" />
+                </kbd>
+              </span>
+            </div>
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>
+              Company LinkedIn
+              <a
+                v-if="!editing && client.get('company').get('linkedin')"
+                :href="
+                  `https://www.linkedin.com/company/${client
+                    .get('company')
+                    .get('linkedin')}`
+                "
+                target="_blank"
+              >
+                <font-awesome-icon :icon="['fab', 'linkedin']" />
+              </a>
+            </span>
+            <input v-model="companyLinkedin" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>
+              Company Facebook
+              <a
+                v-if="!editing && client.get('company').get('facebook')"
+                :href="
+                  `https://www.facebook.com/${client
+                    .get('company')
+                    .get('facebook')}`
+                "
+                target="_blank"
+              >
+                <font-awesome-icon :icon="['fab', 'facebook-square']" />
+              </a>
+            </span>
+            <input v-model="companyFacebook" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>
+              Company Instagram
+              <a
+                v-if="!editing && client.get('company').get('instagram')"
+                :href="
+                  `https://www.instagram.com/${client
+                    .get('company')
+                    .get('instagram')}`
+                "
+                target="_blank"
+              >
+                <font-awesome-icon :icon="['fab', 'instagram']" />
+              </a>
+            </span>
+            <input
+              v-model="companyInstagram"
+              type="text"
+              :disabled="!editing"
+            />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>Job Title</span>
+            <input
+              v-model="jobTitle"
+              type="text"
+              required
+              :disabled="!editing"
+            />
+          </label>
+        </div>
+        <div class="field field--half">
+          <label>
+            <span>Job Description</span>
+            <input v-model="jobDescription" type="text" :disabled="!editing" />
+          </label>
+        </div>
+        <div v-if="isNew" class="field field--half">
+          <label>
+            <span>Profile Picture</span>
+            <input type="file" ref="picturesInput" />
+          </label>
+        </div>
+        <div v-if="editing" class="field">
+          <button type="submit" class="primary">Save</button>
+        </div>
       </form>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(att, index) in uniqueAttributes" :key="index">
-          <td>
-            {{ att.get("key") }}
-          </td>
-          <td>
-            {{ att.get("value") }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+      <div v-if="!editing" class="field">
+        <button @click="editing = true">
+          Edit
+        </button>
+      </div>
+    </section>
+    <section class="field" style="margin-left: 20px;">
+      <h2>Unique Attributes</h2>
+      <div class="field">
+        <button v-if="!bringUpNewKeyPrompt" @click="bringUpNewKeyPrompt = true">
+          New Unique Attribute
+        </button>
+      </div>
+      <div v-if="bringUpNewKeyPrompt" class="field field--half">
+        <form @submit.prevent="newUniqueAttribute">
+          <label>
+            <span>New Key</span>
+            <input v-model="newKey" type="text" required />
+          </label>
+          <label>
+            <span>New Value</span>
+            <input v-model="newValue" type="text" required />
+          </label>
+          <div class="field" style="margin-top:10px;">
+            <button type="submit" class="primary">Add Unique Key</button>
+          </div>
+        </form>
+      </div>
+      <table style="padding-right: 20px;">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(att, index) in uniqueAttributes" :key="index">
+            <td>
+              {{ att.get("key") }}
+            </td>
+            <td>
+              {{ att.get("value") }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -341,14 +375,15 @@ export default {
         .set("value", vm.newValue)
         .save()
         .then(
-          function() {},
+          function() {
+            vm.newKey = "";
+            vm.newValue = "";
+            vm.uniqueAttributes = vm.getUniqueAtts();
+          },
           function(error) {
             alert(error);
           }
         );
-      vm.newKey = "";
-      vm.newValue = "";
-      vm.uniqueAttributes = vm.getUniqueAtts();
     },
     completeCompany() {
       const vm = this;
