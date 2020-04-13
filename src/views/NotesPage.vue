@@ -78,14 +78,20 @@
             </router-link>
           </p>
         </section>
-        <section v-for="note in filteredNotes" :key="note.id" class="fields">
+        <section
+          v-for="note in filteredNotes"
+          :key="note.note.id"
+          class="fields"
+        >
           <div class="field">
-            <h1>{{ note.get("title") }}</h1>
-            <p class="time">{{ note.createdAt.toLocaleString("en-US") }}</p>
-            <p>{{ note.get("content") }}</p>
+            <h1>{{ note.note.get("title") }}</h1>
+            <p class="time">
+              {{ note.note.createdAt.toLocaleString("en-US") }}
+            </p>
+            <p>{{ note.note.get("content") }}</p>
             <p>
               <router-link
-                v-for="client in note.get('clients')"
+                v-for="client in note.note.get('clients')"
                 :key="client.id"
                 :to="`/client/${client.id}`"
                 class="client"
@@ -95,7 +101,7 @@
             </p>
             <div>
               <router-link
-                v-for="tag in note.get('tags')"
+                v-for="tag in note.note.get('tags')"
                 :key="tag"
                 :to="`/notes?tag=${tag}`"
                 class="tag"
@@ -103,6 +109,17 @@
                 {{ tag }}
               </router-link>
             </div>
+          </div>
+          <div class="field">
+            <button @click="showEdit = !showEdit" v-if="!showEdit">
+              Edit
+            </button>
+            <button @click="save" v-if="showEdit">
+              Save
+            </button>
+            <button v-if="showEdit" @click="showEdit = false">
+              Cancel
+            </button>
           </div>
           <div class="field">
             <button class="danger" @click="removeNote(note)">
@@ -147,7 +164,16 @@ export default {
         .limit(1000)
         .find()
         .then(notes => {
-          vm.notes = notes;
+          vm.notes = notes.map(note => ({
+            note,
+            showEdit: false,
+            changes: {
+              title: note.get("title"),
+              content: note.get("content"),
+              clients: note.get("clients"),
+              tags: note.get("tags")
+            }
+          }));
           vm.tagOptions = Array.from(
             new Set(
               notes.reduce(
@@ -205,8 +231,8 @@ export default {
     },
     removeNote(note) {
       const vm = this;
-      if (confirm(`Are you sure to delete "${note.get("title")}"?`)) {
-        note
+      if (confirm(`Are you sure to delete "${note.note.get("title")}"?`)) {
+        note.note
           .destroy()
           .then(vm.fetchNotes)
           .catch(error => {
