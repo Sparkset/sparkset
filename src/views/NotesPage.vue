@@ -151,6 +151,9 @@ export default {
             id: client.id,
             client
           }));
+        })
+        .catch(error => {
+          alert(error);
         });
     },
     addNote() {
