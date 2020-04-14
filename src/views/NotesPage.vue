@@ -170,7 +170,9 @@ export default {
       if (confirm(`Are you sure to delete "${note.note.get("title")}"?`)) {
         note.note
           .destroy()
-          .then(vm.fetchNotes)
+          .then(() => {
+            vm.notes.splice(vm.notes.indexOf(note), 1);
+          })
           .catch(error => {
             alert(error);
           });
