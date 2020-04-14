@@ -234,6 +234,12 @@
             <input v-model="jobDescription" type="text" :disabled="!editing" />
           </label>
         </div>
+        <div v-for="(att,index) in uniqueAttributes" v-bind:key="index" class="field field--half">
+          <label>
+            <span>{{att.get("key")}}</span>
+            <input v-model="newValue" type="text" :disable="!editing" required/>
+          </label>
+        </div>
         <div v-if="isNew" class="field field--half">
           <label>
             <span>Profile Picture</span>
@@ -468,5 +474,9 @@ export default {
   color: white;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+span{
+  font-weight:550;
 }
 </style>
