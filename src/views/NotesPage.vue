@@ -4,56 +4,13 @@
       <div class="card">
         <section class="fields">
           <h1>New Note</h1>
-          <form @submit.prevent="addNote">
-            <div class="field">
-              <label>
-                Title
-                <input type="text" v-model="note.title" required />
-              </label>
-            </div>
-            <div class="field">
-              <label>
-                Content
-                <textarea rows="5" v-model="note.content" required></textarea>
-              </label>
-            </div>
-            <div class="field">
-              <label>
-                Related Clients
-                <multiselect
-                  v-model="note.clients"
-                  placeholder="Search"
-                  label="name"
-                  track-by="id"
-                  :options="clientOptions"
-                  :multiple="true"
-                  :hide-selected="true"
-                ></multiselect>
-              </label>
-            </div>
-            <div class="field">
-              <label>
-                Tags
-                <multiselect
-                  v-model="note.tags"
-                  tag-placeholder="Add this as new tag"
-                  placeholder="Search or add new tag"
-                  label="name"
-                  track-by="name"
-                  :options="tagOptions"
-                  :multiple="true"
-                  :taggable="true"
-                  :hide-selected="true"
-                  @tag="addTag"
-                ></multiselect>
-              </label>
-            </div>
-            <div class="field">
-              <button type="submit" class="primary">
-                Save
-              </button>
-            </div>
-          </form>
+          <NoteForm
+            :client-options="clientOptions"
+            :tag-options="tagOptions"
+            :note="newNote"
+            :callback="addNote"
+            :key="lastAddedNote.id"
+          />
         </section>
       </div>
       <div v-if="filteredNotes.length" class="card">
@@ -83,7 +40,7 @@
           :key="note.note.id"
           class="fields"
         >
-          <div class="field">
+          <div v-if="!note.editing" class="field">
             <h1>{{ note.note.get("title") }}</h1>
             <p class="time">
               {{ note.note.createdAt.toLocaleString("en-US") }}
@@ -110,18 +67,23 @@
               </router-link>
             </div>
           </div>
-          <div class="field">
-            <button @click="showEdit = !showEdit" v-if="!showEdit">
+          <NoteForm
+            v-else
+            :client-options="clientOptions"
+            :tag-options="tagOptions"
+            :note="note.note"
+            :callback="
+              () => {
+                updateNote(note);
+              }
+            "
+          />
+          <div v-if="!note.editing" class="field">
+            <button @click="note.editing = true">
               Edit
             </button>
-            <button @click="save" v-if="showEdit">
-              Save
-            </button>
-            <button v-if="showEdit" @click="showEdit = false">
-              Cancel
-            </button>
           </div>
-          <div class="field">
+          <div v-if="!note.editing" class="field">
             <button class="danger" @click="removeNote(note)">
               Delete
             </button>
@@ -134,22 +96,18 @@
 
 <script>
 import AV from "leancloud-storage";
-import Multiselect from "vue-multiselect";
+import NoteForm from "@/components/NoteForm.vue";
 export default {
-  components: {
-    Multiselect
-  },
   name: "NotesPage",
+  components: {
+    NoteForm
+  },
   data() {
     return {
       clientOptions: [],
       tagOptions: [],
-      note: {
-        title: "",
-        content: "",
-        clients: [],
-        tags: []
-      },
+      lastAddedNote: new AV.Object("Note").set("clients", []).set("tags", []),
+      newNote: new AV.Object("Note").set("clients", []).set("tags", []),
       notes: []
     };
   },
@@ -166,13 +124,7 @@ export default {
         .then(notes => {
           vm.notes = notes.map(note => ({
             note,
-            showEdit: false,
-            changes: {
-              title: note.get("title"),
-              content: note.get("content"),
-              clients: note.get("clients"),
-              tags: note.get("tags")
-            }
+            editing: false
           }));
           vm.tagOptions = Array.from(
             new Set(
@@ -203,31 +155,15 @@ export default {
     },
     addNote() {
       const vm = this;
-      const note = new AV.Object("Note");
-      note
-        .set("title", vm.note.title)
-        .set("content", vm.note.content)
-        .set(
-          "clients",
-          vm.note.clients.map(client => client.client)
-        )
-        .set(
-          "tags",
-          vm.note.tags.map(tag => tag.name)
-        )
-        .save()
-        .then(() => {
-          vm.fetchNotes();
-          vm.note = {
-            title: "",
-            content: "",
-            clients: [],
-            tags: []
-          };
-        })
-        .catch(error => {
-          alert(error);
-        });
+      vm.notes.unshift({
+        note: vm.newNote,
+        editing: false
+      });
+      vm.lastAddedNote = vm.newNote;
+      vm.newNote = new AV.Object("Note").set("clients", []).set("tags", []);
+    },
+    updateNote(note) {
+      note.editing = false;
     },
     removeNote(note) {
       const vm = this;
@@ -239,14 +175,6 @@ export default {
             alert(error);
           });
       }
-    },
-    addTag(newTag) {
-      const vm = this;
-      const tag = {
-        name: newTag
-      };
-      vm.tagOptions.push(tag);
-      vm.note.tags.push(tag);
     }
   },
   created() {
@@ -259,51 +187,13 @@ export default {
       const vm = this;
       return vm.$route.query.tag
         ? vm.notes.filter(note =>
-            note.get("tags").includes(vm.$route.query.tag)
+            note.note.get("tags").includes(vm.$route.query.tag)
           )
         : vm.notes;
     }
   }
 };
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
-<style>
-.multiselect__tags,
-.multiselect__tag,
-.multiselect__tag-icon {
-  border-radius: 2px;
-}
-.multiselect__tag {
-  padding: 4px 24px 4px 8px;
-  background-color: #36d5d822;
-  color: #36d5d8;
-  line-height: unset;
-  font-size: 9pt;
-}
-.multiselect__tag-icon {
-  border-radius: 0;
-  line-height: 24px;
-}
-.multiselect__tag-icon:hover {
-  background-color: #36d5d8;
-}
-.multiselect__tag-icon::after {
-  color: #36d5d8;
-}
-.multiselect__content * {
-  transition: unset;
-}
-.multiselect__content-wrapper {
-  position: relative;
-  border-radius: 0 0 2px 2px;
-}
-.multiselect__option--highlight,
-.multiselect__option--highlight::after {
-  background-color: #36d5d8;
-}
-</style>
 
 <style scoped>
 .time {
