@@ -15,6 +15,8 @@ export default {
   components: {
     EventForm
   },
+//   data() {
+//   },
   methods: {
     callback() {
       const vm = this;

@@ -111,7 +111,7 @@ const routes = [
           },
 
           {
-            path: "/events/add",
+            path: "events/add",
             component: () => import("../views/EventsAddPage.vue")
           },
 

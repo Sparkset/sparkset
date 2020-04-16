@@ -1,6 +1,6 @@
 <template>
   <section class="fields">
-    <h1>ADDING EVENT</h1>
+    <h1>Adding Event</h1>
     <form @submit.prevent="go">
       <div class="field field--half">
         <label>
