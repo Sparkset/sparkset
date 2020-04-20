@@ -61,10 +61,10 @@ table {
   table-layout: fixed;
 }
 thead {
-  background-color: #00000009;
+  background-color: #00000008;
 }
 tbody {
-  background-color: #00000006;
+  background-color: #00000004;
 }
 th,
 td {
