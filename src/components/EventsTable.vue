@@ -12,7 +12,6 @@
           Client
         </ThWithSort>
         <ThWithSort
-          v-if="showClient"
           by="name"
           :sorted-by="sortedBy"
           :sort-order="sortOrder"
@@ -21,7 +20,6 @@
           Event
         </ThWithSort>
         <ThWithSort
-          v-if="showClient"
           by="time"
           :sorted-by="sortedBy"
           :sort-order="sortOrder"
