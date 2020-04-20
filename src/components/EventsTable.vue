@@ -2,79 +2,40 @@
   <table>
     <thead>
       <tr>
-        <th v-if="showClient" class="sortable" @click="sortBy('client')">
+        <ThWithSort
+          v-if="showClient"
+          by="client"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Client
-          <span v-if="sortedBy === 'client'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
-        <th class="sortable" @click="sortBy('name')">
+        </ThWithSort>
+        <ThWithSort
+          v-if="showClient"
+          by="name"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Event
-          <span v-if="sortedBy === 'name'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
-        <th class="sortable" @click="sortBy('time')">
+        </ThWithSort>
+        <ThWithSort
+          v-if="showClient"
+          by="time"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Time
-          <span v-if="sortedBy === 'time'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
+        </ThWithSort>
         <th>Option</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="event in sortedEvents" :key="event.event.id">
         <td v-if="showClient">
-          <span class="picture-name-combo">
-            <img
-              :src="
-                event.event.get('client').get('picture')
-                  ? event.event
-                      .get('client')
-                      .get('picture')
-                      .url()
-                  : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-              "
-            />
-            <span>
-              <span>
-                <router-link :to="`/client/${event.event.get('client').id}`">
-                  {{ event.event.get("client").get("fullName") }}
-                </router-link>
-                <a
-                  v-if="event.event.get('client').get('linkedin')"
-                  :href="
-                    `https://www.linkedin.com/in/${event.event
-                      .get('client')
-                      .get('linkedin')}`
-                  "
-                  target="_blank"
-                >
-                  <font-awesome-icon :icon="['fab', 'linkedin']" />
-                </a>
-              </span>
-              <br />
-              <span class="nickname">
-                {{ event.event.get("client").get("nickname") }}
-              </span>
-            </span>
-          </span>
+          <ClientCombo :client="event.event.get('client')" />
         </td>
         <td>{{ event.event.get("name") }}</td>
         <td>
@@ -123,9 +84,15 @@
 </template>
 
 <script>
+import ThWithSort from "@/components/ThWithSort.vue";
+import ClientCombo from "@/components/ClientCombo.vue";
 import AV from "leancloud-storage";
 export default {
   name: "EventsTable",
+  components: {
+    ThWithSort,
+    ClientCombo
+  },
   props: {
     events: Array,
     showClient: Boolean,
@@ -198,20 +165,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.picture-name-combo {
-  display: flex;
-  align-items: center;
-}
-.picture-name-combo > img {
-  margin: 0 1rem 0 0;
-  border-radius: 50%;
-  width: 30pt;
-  height: 30pt;
-  object-fit: cover;
-}
-.nickname {
-  font-size: 9pt;
-  opacity: 0.6;
-}
-</style>
+<style scoped></style>

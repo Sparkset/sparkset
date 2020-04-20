@@ -71,12 +71,6 @@ td {
   padding: 8px;
   width: 192px;
 }
-th.sortable {
-  cursor: pointer;
-}
-th.sortable > span > svg {
-  opacity: 0.4;
-}
 .card {
   position: relative;
   float: left;
