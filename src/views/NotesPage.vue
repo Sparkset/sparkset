@@ -4,56 +4,13 @@
       <div class="card">
         <section class="fields">
           <h1>New Note</h1>
-          <form @submit.prevent="addNote">
-            <div class="field">
-              <label>
-                Title
-                <input type="text" v-model="note.title" required />
-              </label>
-            </div>
-            <div class="field">
-              <label>
-                Content
-                <textarea rows="5" v-model="note.content" required></textarea>
-              </label>
-            </div>
-            <div class="field">
-              <label>
-                Related Clients
-                <multiselect
-                  v-model="note.clients"
-                  placeholder="Search"
-                  label="name"
-                  track-by="id"
-                  :options="clientOptions"
-                  :multiple="true"
-                  :hide-selected="true"
-                ></multiselect>
-              </label>
-            </div>
-            <div class="field">
-              <label>
-                Tags
-                <multiselect
-                  v-model="note.tags"
-                  tag-placeholder="Add this as new tag"
-                  placeholder="Search or add new tag"
-                  label="name"
-                  track-by="name"
-                  :options="tagOptions"
-                  :multiple="true"
-                  :taggable="true"
-                  :hide-selected="true"
-                  @tag="addTag"
-                ></multiselect>
-              </label>
-            </div>
-            <div class="field">
-              <button type="submit" class="primary">
-                Save
-              </button>
-            </div>
-          </form>
+          <NoteForm
+            :client-options="clientOptions"
+            :tag-options="tagOptions"
+            :note="newNote"
+            :callback="addNote"
+            :key="lastAddedNote.id"
+          />
         </section>
       </div>
       <div v-if="filteredNotes.length" class="card">
@@ -78,14 +35,20 @@
             </router-link>
           </p>
         </section>
-        <section v-for="note in filteredNotes" :key="note.id" class="fields">
-          <div class="field">
-            <h1>{{ note.get("title") }}</h1>
-            <p class="time">{{ note.createdAt.toLocaleString("en-US") }}</p>
-            <p>{{ note.get("content") }}</p>
+        <section
+          v-for="note in filteredNotes"
+          :key="note.note.id"
+          class="fields"
+        >
+          <div v-if="!note.editing" class="field">
+            <h1>{{ note.note.get("title") }}</h1>
+            <p class="time">
+              {{ note.note.createdAt.toLocaleString("en-US") }}
+            </p>
+            <p>{{ note.note.get("content") }}</p>
             <p>
               <router-link
-                v-for="client in note.get('clients')"
+                v-for="client in note.note.get('clients')"
                 :key="client.id"
                 :to="`/client/${client.id}`"
                 class="client"
@@ -95,7 +58,7 @@
             </p>
             <div>
               <router-link
-                v-for="tag in note.get('tags')"
+                v-for="tag in note.note.get('tags')"
                 :key="tag"
                 :to="`/notes?tag=${tag}`"
                 class="tag"
@@ -104,7 +67,23 @@
               </router-link>
             </div>
           </div>
-          <div class="field">
+          <NoteForm
+            v-else
+            :client-options="clientOptions"
+            :tag-options="tagOptions"
+            :note="note.note"
+            :callback="
+              () => {
+                updateNote(note);
+              }
+            "
+          />
+          <div v-if="!note.editing" class="field">
+            <button @click="note.editing = true">
+              Edit
+            </button>
+          </div>
+          <div v-if="!note.editing" class="field">
             <button class="danger" @click="removeNote(note)">
               Delete
             </button>
@@ -117,22 +96,18 @@
 
 <script>
 import AV from "leancloud-storage";
-import Multiselect from "vue-multiselect";
+import NoteForm from "@/components/NoteForm.vue";
 export default {
-  components: {
-    Multiselect
-  },
   name: "NotesPage",
+  components: {
+    NoteForm
+  },
   data() {
     return {
       clientOptions: [],
       tagOptions: [],
-      note: {
-        title: "",
-        content: "",
-        clients: [],
-        tags: []
-      },
+      lastAddedNote: new AV.Object("Note").set("clients", []).set("tags", []),
+      newNote: new AV.Object("Note").set("clients", []).set("tags", []),
       notes: []
     };
   },
@@ -147,7 +122,10 @@ export default {
         .limit(1000)
         .find()
         .then(notes => {
-          vm.notes = notes;
+          vm.notes = notes.map(note => ({
+            note,
+            editing: false
+          }));
           vm.tagOptions = Array.from(
             new Set(
               notes.reduce(
@@ -173,54 +151,35 @@ export default {
             id: client.id,
             client
           }));
-        });
-    },
-    addNote() {
-      const vm = this;
-      const note = new AV.Object("Note");
-      note
-        .set("title", vm.note.title)
-        .set("content", vm.note.content)
-        .set(
-          "clients",
-          vm.note.clients.map(client => client.client)
-        )
-        .set(
-          "tags",
-          vm.note.tags.map(tag => tag.name)
-        )
-        .save()
-        .then(() => {
-          vm.fetchNotes();
-          vm.note = {
-            title: "",
-            content: "",
-            clients: [],
-            tags: []
-          };
         })
         .catch(error => {
           alert(error);
         });
     },
+    addNote() {
+      const vm = this;
+      vm.notes.unshift({
+        note: vm.newNote,
+        editing: false
+      });
+      vm.lastAddedNote = vm.newNote;
+      vm.newNote = new AV.Object("Note").set("clients", []).set("tags", []);
+    },
+    updateNote(note) {
+      note.editing = false;
+    },
     removeNote(note) {
       const vm = this;
-      if (confirm(`Are you sure to delete "${note.get("title")}"?`)) {
-        note
+      if (confirm(`Are you sure to delete "${note.note.get("title")}"?`)) {
+        note.note
           .destroy()
-          .then(vm.fetchNotes)
+          .then(() => {
+            vm.notes.splice(vm.notes.indexOf(note), 1);
+          })
           .catch(error => {
             alert(error);
           });
       }
-    },
-    addTag(newTag) {
-      const vm = this;
-      const tag = {
-        name: newTag
-      };
-      vm.tagOptions.push(tag);
-      vm.note.tags.push(tag);
     }
   },
   created() {
@@ -233,51 +192,13 @@ export default {
       const vm = this;
       return vm.$route.query.tag
         ? vm.notes.filter(note =>
-            note.get("tags").includes(vm.$route.query.tag)
+            note.note.get("tags").includes(vm.$route.query.tag)
           )
         : vm.notes;
     }
   }
 };
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
-<style>
-.multiselect__tags,
-.multiselect__tag,
-.multiselect__tag-icon {
-  border-radius: 2px;
-}
-.multiselect__tag {
-  padding: 4px 24px 4px 8px;
-  background-color: #36d5d822;
-  color: #36d5d8;
-  line-height: unset;
-  font-size: 9pt;
-}
-.multiselect__tag-icon {
-  border-radius: 0;
-  line-height: 24px;
-}
-.multiselect__tag-icon:hover {
-  background-color: #36d5d8;
-}
-.multiselect__tag-icon::after {
-  color: #36d5d8;
-}
-.multiselect__content * {
-  transition: unset;
-}
-.multiselect__content-wrapper {
-  position: relative;
-  border-radius: 0 0 2px 2px;
-}
-.multiselect__option--highlight,
-.multiselect__option--highlight::after {
-  background-color: #36d5d8;
-}
-</style>
 
 <style scoped>
 .time {
