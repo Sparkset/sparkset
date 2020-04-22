@@ -34,11 +34,11 @@
           :value="newEvent.recurringEvent"
           :color="{
             checked: '#36d5d8',
-            unchecked: '#e52f2e',
+            unchecked: '#e52f2e'
           }"
           :labels="{
             checked: 'Recurring Event',
-            unchecked: 'Single Event',
+            unchecked: 'Single Event'
           }"
           :width="150"
           :height="35"
@@ -50,7 +50,12 @@
       <br />
       <div v-if="newEvent.recurringEvent" style="padding-top: 50px;">
         <h3>Days Between Events</h3>
-        <input type="number" min="1" v-model.number="newEvent.daysBetween" required />
+        <input
+          type="number"
+          min="1"
+          v-model.number="newEvent.daysBetween"
+          required
+        />
       </div>
       <div class="field" style="padding-top: 10px;">
         <button class="primary">
@@ -70,7 +75,7 @@ import AV from "leancloud-storage";
 export default {
   name: "ClientEvents",
   components: {
-    EventsTable,
+    EventsTable
   },
   data() {
     return {
@@ -83,8 +88,8 @@ export default {
         date: "",
         time: "",
         recurringEvent: false,
-        daysBetween: 0,
-      },
+        daysBetween: 0
+      }
     };
   },
   created() {
@@ -104,8 +109,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then((upcomingEvents) => {
-          vm.upcomingEvents = upcomingEvents.map((event) => ({
+        .then(upcomingEvents => {
+          vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
             pendingChanges: {
@@ -116,11 +121,11 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
-            },
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
           }));
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
       const lastEventQuery = new AV.Query("Event");
@@ -134,8 +139,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then((lastEvents) => {
-          vm.suggestedEvents = lastEvents.map((lastEvent) => {
+        .then(lastEvents => {
+          vm.suggestedEvents = lastEvents.map(lastEvent => {
             const rawTime = new Date(
               new Date(lastEvent.get("time")).setDate(
                 lastEvent.get("time").getDate() + lastEvent.get("recursIn")
@@ -152,13 +157,13 @@ export default {
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
                 time: `${`0${rawTime.getHours()}`.slice(
                   -2
-                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`,
+                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
               },
-              lastEvent,
+              lastEvent
             };
           });
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
       const pastEventQuery = new AV.Query("Event");
@@ -171,8 +176,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then((pastEvents) => {
-          vm.pastEvents = pastEvents.map((event) => ({
+        .then(pastEvents => {
+          vm.pastEvents = pastEvents.map(event => ({
             event,
             editing: false,
             pendingChanges: {
@@ -183,11 +188,11 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
-            },
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
           }));
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -207,7 +212,7 @@ export default {
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
         .then(vm.fetchEvents)
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -263,8 +268,8 @@ export default {
       vm.newEvent.date = "";
       vm.newEvent.time = "";
       vm.newEvent.recurringEvent = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
