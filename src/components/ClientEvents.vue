@@ -286,7 +286,7 @@ export default {
         date: "",
         time: "",
         recurringEvent: false,
-        daysBetween: 0
+        daysBetween: 1
       };
     }
   }
