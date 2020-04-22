@@ -75,7 +75,17 @@
                 {{ file.metaData("description") }}
               </span>
             </td>
-            <td>{{ file.createdAt.toLocaleString("en-US") }}</td>
+            <td>
+              {{
+                file.createdAt.toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric"
+                })
+              }}
+            </td>
             <td>{{ addUnitToSize(file.size()) }}</td>
             <td>
               <button class="danger" @click="deleteFile(file)">Delete</button>

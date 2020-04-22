@@ -2,95 +2,53 @@
   <table>
     <thead>
       <tr>
-        <th class="sortable" @click="sortBy('fullName')">
+        <ThWithSort
+          by="fullName"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Name
-          <span v-if="sortedBy === 'fullName'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
-        <th v-if="showCompany" class="sortable" @click="sortBy('company')">
+        </ThWithSort>
+        <ThWithSort
+          v-if="showCompany"
+          by="company"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Company
-          <span v-if="sortedBy === 'company'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
-        <th class="sortable" @click="sortBy('jobTitle')">
+        </ThWithSort>
+        <ThWithSort
+          by="jobTitle"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Job Title
-          <span v-if="sortedBy === 'jobTitle'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
-        <th class="sortable" @click="sortBy('email')">
+        </ThWithSort>
+        <ThWithSort
+          by="email"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Email
-          <span v-if="sortedBy === 'email'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
-        <th class="sortable" @click="sortBy('cellPhone')">
+        </ThWithSort>
+        <ThWithSort
+          by="cellPhone"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
           Cell Phone
-          <span v-if="sortedBy === 'cellPhone'">
-            <font-awesome-icon
-              :icon="[
-                'fas',
-                sortOrder === 1 ? 'long-arrow-alt-up' : 'long-arrow-alt-down'
-              ]"
-            />
-          </span>
-        </th>
+        </ThWithSort>
       </tr>
     </thead>
     <tbody>
       <tr v-for="client in sortedClients" :key="client.id">
         <td>
-          <span class="picture-name-combo">
-            <img
-              :src="
-                client.get('picture')
-                  ? client.get('picture').url()
-                  : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-              "
-            />
-            <span>
-              <span>
-                <router-link :to="`/client/${client.id}`">
-                  {{ client.get("fullName") }}
-                </router-link>
-                <a
-                  v-if="client.get('linkedin')"
-                  :href="
-                    `https://www.linkedin.com/in/${client.get('linkedin')}`
-                  "
-                  target="_blank"
-                >
-                  <font-awesome-icon :icon="['fab', 'linkedin']" />
-                </a>
-              </span>
-              <br />
-              <span class="nickname">
-                {{ client.get("nickname") }}
-              </span>
-            </span>
-          </span>
+          <ClientCombo :client="client" />
         </td>
         <td v-if="showCompany">
           <router-link :to="`/company/${client.get('company').id}`">
@@ -114,8 +72,14 @@
 </template>
 
 <script>
+import ThWithSort from "@/components/ThWithSort.vue";
+import ClientCombo from "@/components/ClientCombo.vue";
 export default {
   name: "ClientsTable",
+  components: {
+    ThWithSort,
+    ClientCombo
+  },
   props: {
     clients: Array,
     showCompany: Boolean
@@ -152,20 +116,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.picture-name-combo {
-  display: flex;
-  align-items: center;
-}
-.picture-name-combo > img {
-  margin: 0 1rem 0 0;
-  border-radius: 50%;
-  width: 30pt;
-  height: 30pt;
-  object-fit: cover;
-}
-.nickname {
-  font-size: 9pt;
-  opacity: 0.6;
-}
-</style>
+<style scoped></style>
