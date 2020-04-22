@@ -262,6 +262,7 @@ export default {
         .save()
         .then(() => {
           alert("New Event has been saved.");
+          vm.fetchEvents();
           vm.resetNewEventValues();
           vm.creatingCustomEvent = false;
         })
