@@ -4,7 +4,7 @@
 
 ## Current Abilities
 
-1. The user can create clients and the system will automatically add the predefined one-time events and recurring events for the client. The system will also suggest events that can be scheduled.
+1. The user can create clients and the system will automatically add the predefined one-time events and recurring events for the client. The system will also suggest events that can be scheduled. User can also create custom events and set a recurrance if needed.
 2. The system will automatically create a company page when a new client with a new company is created. There can be multiple clients associated with the same company.
 3. The user can upload files that are associated with a client.
 4. The user can add notes with relative clients and tags associated with them. The user can filter notes by selecting a certain tag.
