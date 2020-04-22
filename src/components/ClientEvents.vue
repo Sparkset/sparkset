@@ -1,170 +1,158 @@
 <template>
   <section class="fields">
-    <h1>Client Milestones</h1>
-    <div>
-      <div class="columns">
-        <div class="column">
-          <div class="field">
-            <button class="primary" @click="$router.push('events/add')">
-              Add Event
-            </button>
-          </div>
-
-          <div class="card">
-            <section class="fields">
-              <form @submit.prevent="go">
-                <h1>Welcome Email with steps</h1>
-                <div class="field">
-                  <label>Last updated on: </label>
-                  <input v-model="lastUpdated" type="date" style="width:70%" />
-                </div>
-                <div class="field">
-                  <label> Status: </label>
-                  <select v-model="status" style="width:80%">
-                    <option value="done" selected>Done</option>
-                    <option value="inprogress"> In Progress </option>
-                    <option value="notdone">Not Done</option>
-                  </select>
-                </div>
-                <div v-if="editing" class="field">
-                  <button type="submit" class="primary">Save</button>
-                </div>
-              </form>
-              <div v-if="!editing" class="field">
-                <button @click="editing = true">Edit</button>
-              </div>
-            </section>
-          </div>
-
-          <div class="card">
-            <div class="fields">
-              <h1>Welcome package</h1>
-              <div class="field">
-                <label>Last updated on: </label>
-                <input v-model="lastUpdated" type="date" style="width:70%" />
-              </div>
-              <div class="field">
-                <label> Status: </label>
-                <select v-model="selected" style="width:80%">
-                  <option value="done" selected>Done</option>
-                  <option value="inprogress"> In Progress </option>
-                  <option value="notdone">Not Done</option>
-                </select>
-              </div>
-              <div v-if="editing" class="field">
-                <button class="primary">Save</button>
-              </div>
-              <div v-if="!editing" class="field">
-                <button @click="editing = true">Edit</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="fields">
-              <h1>Kickoff meeting</h1>
-              <div class="field">
-                <label>Last updated on: </label>
-                <input v-model="lastUpdated" type="date" style="width:70%" />
-              </div>
-              <div class="field">
-                <label> Status: </label>
-                <select v-model="selected" style="width:80%">
-                  <option value="done" selected>Done</option>
-                  <option value="inprogress"> In Progress </option>
-                  <option value="notdone">Not Done</option>
-                </select>
-              </div>
-              <div v-if="editing" class="field">
-                <button class="primary">Save</button>
-              </div>
-              <div v-if="!editing" class="field">
-                <button @click="editing = true">Edit</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- <div class="card">
-            <div class="fields">
-              <h1>Monthly status, Report and Budget reports</h1>
-              <div class="field">
-                <p>Last updated on:</p>
-                <input v-model="lastUpdated" type="date" style="width:80%" />
-                <button class="primary" style="margin-left:5px">Save</button>
-              </div>
-              <div>
-                <label> Status: </label>
-                <select v-model="selected" style="width:80%">
-                  <option>Done</option>
-                  <option> In Progress </option>
-                  <option selected>Not Done</option>
-                </select>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- <div class="card">
-            <div class="fields">
-              <h1>Account health check</h1>
-              <div class="field">
-                <p>Last updated on:</p>
-                <input v-model="lastUpdated" type="date" style="width:80%" />
-                <button class="primary" style="margin-left:5px">Save</button>
-              </div>
-              <div>
-                <label> Status: </label>
-                <select v-model="selected" style="width:80%">
-                  <option>Done</option>
-                  <option> In Progress </option>
-                  <option selected>Not Done</option>
-                </select>
-              </div>
-            </div>
-          </div> -->
-
-        </div>
-      </div>
+    <h1>Upcoming</h1>
+    <div class="field field--superwide">
+      <EventsTable :events="upcomingEvents" :fetch-events="fetchEvents" />
+    </div>
+    <h1>Suggested</h1>
+    <div class="field field--superwide">
+      <EventsTable :events="suggestedEvents" :fetch-events="fetchEvents" />
+    </div>
+    <h1>Past</h1>
+    <div class="field field--superwide">
+      <EventsTable :events="pastEvents" :fetch-events="fetchEvents" />
     </div>
   </section>
 </template>
 
 <script>
+import EventsTable from "@/components/EventsTable.vue";
 import AV from "leancloud-storage";
 export default {
   name: "ClientEvents",
-  props: {
-    client: AV.Object,
-    isNew: Boolean,
-    callback: Function
+  components: {
+    EventsTable
   },
   data() {
     return {
-      editing: false,
-      lastUpdated: "",
-      status: ""
+      upcomingEvents: [],
+      suggestedEvents: [],
+      pastEvents: []
     };
   },
+  created() {
+    const vm = this;
+    vm.fetchEvents();
+  },
   methods: {
-    go() {
-      const vm= this;
-      vm.client
-        .set("lastUpdated", vm.lastUpdated)
-        .set("status", vm.status)
-        .save()
-        .then(() => {
-          vm.callback();
-          vm.editing = false;
+    fetchEvents() {
+      const vm = this;
+      const upcomingEventQuery = new AV.Query("Event");
+      upcomingEventQuery
+        .equalTo(
+          "client",
+          AV.Object.createWithoutData("Client", vm.$route.params.id)
+        )
+        .equalTo("done", false)
+        .include("client")
+        .limit(1000)
+        .find()
+        .then(upcomingEvents => {
+          vm.upcomingEvents = upcomingEvents.map(event => ({
+            event,
+            editing: false,
+            pendingChanges: {
+              date: `${event.get("time").getFullYear()}-${`0${event
+                .get("time")
+                .getMonth() + 1}`.slice(-2)}-${`0${event
+                .get("time")
+                .getDate()}`.slice(-2)}`,
+              time: `${`0${event.get("time").getHours()}`.slice(
+                -2
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
+          }));
+        })
+        .catch(error => {
+          alert(error);
+        });
+      const lastEventQuery = new AV.Query("Event");
+      lastEventQuery
+        .equalTo(
+          "client",
+          AV.Object.createWithoutData("Client", vm.$route.params.id)
+        )
+        .equalTo("done", true)
+        .exists("recursIn")
+        .include("client")
+        .limit(1000)
+        .find()
+        .then(lastEvents => {
+          vm.suggestedEvents = lastEvents.map(lastEvent => {
+            const rawTime = new Date(
+              new Date(lastEvent.get("time")).setDate(
+                lastEvent.get("time").getDate() + lastEvent.get("recursIn")
+              )
+            );
+            return {
+              event: new AV.Object("Event")
+                .set("name", lastEvent.get("name"))
+                .set("client", lastEvent.get("client"))
+                .set("recursIn", lastEvent.get("recursIn")),
+              editing: true,
+              pendingChanges: {
+                date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
+                  1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
+                time: `${`0${rawTime.getHours()}`.slice(
+                  -2
+                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
+              },
+              lastEvent
+            };
+          });
+        })
+        .catch(error => {
+          alert(error);
+        });
+      const pastEventQuery = new AV.Query("Event");
+      pastEventQuery
+        .equalTo(
+          "client",
+          AV.Object.createWithoutData("Client", vm.$route.params.id)
+        )
+        .equalTo("done", true)
+        .include("client")
+        .limit(1000)
+        .find()
+        .then(pastEvents => {
+          vm.pastEvents = pastEvents.map(event => ({
+            event,
+            editing: false,
+            pendingChanges: {
+              date: `${event.get("time").getFullYear()}-${`0${event
+                .get("time")
+                .getMonth() + 1}`.slice(-2)}-${`0${event
+                .get("time")
+                .getDate()}`.slice(-2)}`,
+              time: `${`0${event.get("time").getHours()}`.slice(
+                -2
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
+          }));
         })
         .catch(error => {
           alert(error);
         });
     },
-    created() {
+    add(event) {
       const vm = this;
-      vm.editing= vm.isNew;
-      vm.lastUpdated = vm.client.get("lastUpdated");
-      vm.status = vm.client.get("status");
-
+      event.event.set(
+        "time",
+        new Date(
+          event.pendingChanges.date.slice(0, 4),
+          event.pendingChanges.date.slice(5, 7) - 1,
+          event.pendingChanges.date.slice(8, 10),
+          event.pendingChanges.time.slice(0, 2),
+          event.pendingChanges.time.slice(3, 5),
+          0
+        )
+      );
+      event.lastEvent.unset("recursIn");
+      AV.Object.saveAll([event.event, event.lastEvent])
+        .then(vm.fetchEvents)
+        .catch(error => {
+          alert(error);
+        });
     }
   }
 };

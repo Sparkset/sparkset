@@ -43,7 +43,15 @@
           <div v-if="!note.editing" class="field">
             <h1>{{ note.note.get("title") }}</h1>
             <p class="time">
-              {{ note.note.createdAt.toLocaleString("en-US") }}
+              {{
+                note.note.createdAt.toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric"
+                })
+              }}
             </p>
             <p>{{ note.note.get("content") }}</p>
             <p>

@@ -61,21 +61,15 @@ table {
   table-layout: fixed;
 }
 thead {
-  background-color: #00000009;
+  background-color: #00000008;
 }
 tbody {
-  background-color: #00000006;
+  background-color: #00000004;
 }
 th,
 td {
   padding: 8px;
   width: 192px;
-}
-th.sortable {
-  cursor: pointer;
-}
-th.sortable > span > svg {
-  opacity: 0.4;
 }
 .card {
   position: relative;
