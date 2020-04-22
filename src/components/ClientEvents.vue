@@ -218,7 +218,6 @@ export default {
     },
     createEvent() {
       const vm = this;
-      console.log(vm.newEvent.date);
       var ne = new AV.Object("Event");
       ne.set("done", false);
       ne.set("name", vm.newEvent.name);
@@ -240,7 +239,6 @@ export default {
       ne.set("client", clientPointer);
       if (vm.newEvent.recurringEvent == true) {
         ne.set("recursIn", vm.newEvent.daysBetween);
-        console.log(vm.newEvent.daysBetween);
       }
       ne.save().then(
         function(event) {
