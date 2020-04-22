@@ -2,19 +2,19 @@
   <form @submit.prevent="go">
     <div class="field">
       <label>
-        Title
+        <span>Title</span>
         <input type="text" v-model="title" required />
       </label>
     </div>
     <div class="field">
       <label>
-        Content
+        <span>Content</span>
         <textarea rows="5" v-model="content" required></textarea>
       </label>
     </div>
     <div class="field">
       <label>
-        Related Clients
+        <span>Related Clients</span>
         <multiselect
           v-model="clients"
           placeholder="Search"
@@ -28,7 +28,7 @@
     </div>
     <div class="field">
       <label>
-        Tags
+        <span>Tags</span>
         <multiselect
           v-model="tags"
           tag-placeholder="Add this as new tag"

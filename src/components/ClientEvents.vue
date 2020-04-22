@@ -15,54 +15,75 @@
     <div class="field">
       <button
         class="primary"
-        v-if="!createCustomEvent"
-        @click="createCustomEvent = true"
+        v-if="!creatingCustomEvent"
+        @click="creatingCustomEvent = true"
       >
         Create Custom Event
       </button>
     </div>
-    <form v-if="createCustomEvent" @submit.prevent="createEvent">
-      <h3>Event Name</h3>
-      <input type="text" v-model="newEvent.name" required />
-      <h3>Event Date</h3>
-      <input type="date" v-model="newEvent.date" required />
-      <h3>Event Time</h3>
-      <input type="time" v-model="newEvent.time" required />
-      <br />
-      <div class="field field--half" style="padding-top: 20px;">
-        <toggle-button
-          :value="newEvent.recurringEvent"
-          :color="{
-            checked: '#36d5d8',
-            unchecked: '#e52f2e'
-          }"
-          :labels="{
-            checked: 'Recurring Event',
-            unchecked: 'Single Event'
-          }"
-          :width="150"
-          :height="35"
-          :font-size="12"
-          @change="changeUserCreationPermission"
-          sync
-        />
+    <form v-if="creatingCustomEvent" @submit.prevent="createEvent">
+      <div class="field field--half">
+        <label>
+          <span>Name</span>
+          <input type="text" v-model="newEvent.name" required />
+        </label>
       </div>
-      <br />
-      <div v-if="newEvent.recurringEvent" style="padding-top: 50px;">
-        <h3>Days Between Events</h3>
-        <input
-          type="number"
-          min="1"
-          v-model.number="newEvent.daysBetween"
-          required
-        />
+      <div class="field field--half">
+        <label>
+          <span>Date</span>
+          <input
+            type="date"
+            max="2099-12-31"
+            v-model="newEvent.date"
+            required
+          />
+        </label>
       </div>
-      <div class="field" style="padding-top: 10px;">
+      <div class="field field--half">
+        <label>
+          <span>Time</span>
+          <input type="time" v-model="newEvent.time" required />
+        </label>
+      </div>
+      <div class="field field--half">
+        <label>
+          <span>Recur</span>
+          <toggle-button
+            :value="newEvent.recurringEvent"
+            :color="{
+              checked: '#36d5d8',
+              unchecked: '#e52f2e'
+            }"
+            :labels="{
+              checked: 'Yes',
+              unchecked: 'No'
+            }"
+            :width="72"
+            :height="42"
+            :font-size="12"
+            @change="changeRecurringEvent"
+            sync
+          />
+        </label>
+      </div>
+      <div v-if="newEvent.recurringEvent" class="field field--half">
+        <label>
+          <span>Days Between Events</span>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            v-model.number="newEvent.daysBetween"
+            required
+          />
+        </label>
+      </div>
+      <div class="field">
         <button class="primary">
           Save
         </button>
       </div>
-      <div class="field" style="padding-top: 10px;">
+      <div class="field">
         <button @click="cancel">Cancel</button>
       </div>
     </form>
@@ -82,13 +103,13 @@ export default {
       upcomingEvents: [],
       suggestedEvents: [],
       pastEvents: [],
-      createCustomEvent: false,
+      creatingCustomEvent: false,
       newEvent: {
         name: "",
         date: "",
         time: "",
         recurringEvent: false,
-        daysBetween: 0
+        daysBetween: 1
       }
     };
   },
@@ -218,54 +239,54 @@ export default {
     },
     createEvent() {
       const vm = this;
-      var ne = new AV.Object("Event");
-      ne.set("done", false);
-      ne.set("name", vm.newEvent.name);
-      ne.set(
-        "time",
-        new Date(
-          vm.newEvent.date.slice(0, 4),
-          vm.newEvent.date.slice(5, 7) - 1,
-          vm.newEvent.date.slice(8, 10),
-          vm.newEvent.time.slice(0, 2),
-          vm.newEvent.time.slice(3, 5),
-          0
-        )
-      );
-      var clientPointer = AV.Object.createWithoutData(
-        "Client",
-        vm.$route.params.id
-      );
-      ne.set("client", clientPointer);
-      if (vm.newEvent.recurringEvent == true) {
-        ne.set("recursIn", vm.newEvent.daysBetween);
+      const client = AV.Object.createWithoutData("Client", vm.$route.params.id);
+      const event = new AV.Object("Event");
+      event
+        .set("client", client)
+        .set("name", vm.newEvent.name)
+        .set(
+          "time",
+          new Date(
+            vm.newEvent.date.slice(0, 4),
+            vm.newEvent.date.slice(5, 7) - 1,
+            vm.newEvent.date.slice(8, 10),
+            vm.newEvent.time.slice(0, 2),
+            vm.newEvent.time.slice(3, 5),
+            0
+          )
+        );
+      if (vm.newEvent.recurringEvent) {
+        event.set("recursIn", vm.newEvent.daysBetween);
       }
-      ne.save().then(
-        function(event) {
-          alert("New Event has been saved: " + event.id);
+      event
+        .save()
+        .then(() => {
+          alert("New Event has been saved.");
           vm.resetNewEventValues();
-          vm.createCustomEvent = false;
-        },
-        function(error) {
+          vm.creatingCustomEvent = false;
+        })
+        .catch(error => {
           alert(error);
-        }
-      );
+        });
     },
-    changeUserCreationPermission(e) {
+    changeRecurringEvent(e) {
       const vm = this;
       vm.newEvent.recurringEvent = e.value;
     },
     cancel() {
       const vm = this;
       vm.resetNewEventValues();
+      vm.creatingCustomEvent = false;
     },
     resetNewEventValues() {
       const vm = this;
-      vm.createCustomEvent = false;
-      vm.newEvent.name = "";
-      vm.newEvent.date = "";
-      vm.newEvent.time = "";
-      vm.newEvent.recurringEvent = false;
+      vm.newEvent = {
+        name: "",
+        date: "",
+        time: "",
+        recurringEvent: false,
+        daysBetween: 0
+      };
     }
   }
 };
