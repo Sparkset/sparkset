@@ -54,6 +54,11 @@
               </router-link>
             </li>
             <li>
+              <router-link :to="`/client/${$route.params.id}/preferences`">
+                <span>Preferences</span>
+              </router-link>
+            </li>
+            <li>
               <router-link :to="`/client/${$route.params.id}/files`">
                 <span>Files</span>
               </router-link>

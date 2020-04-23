@@ -109,6 +109,10 @@ const routes = [
             component: () => import("../components/ClientEvents.vue")
           },
           {
+            path: "preferences",
+            component: () => import("../components/ClientPreferences.vue")
+          },
+          {
             path: "files",
             component: () => import("../components/ClientFiles.vue")
           }

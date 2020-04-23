@@ -16,12 +16,24 @@ import {
   faSearch,
   faPaperPlane,
   faPhoneAlt,
-  faBuilding
+  faBuilding,
+  faHamburger,
+  faCity,
+  faHome,
+  faFootballBall,
+  faBook,
+  faTrophy,
+  faExclamationTriangle,
+  faUmbrellaBeach,
+  faGraduationCap,
+  faHistory,
+  faClipboard,
+  faCrown
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedin,
   faFacebookSquare,
-  faInstagram
+  faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -33,9 +45,21 @@ library.add(
   faPaperPlane,
   faPhoneAlt,
   faBuilding,
+  faHamburger,
   faLinkedin,
   faFacebookSquare,
-  faInstagram
+  faInstagram,
+  faCity,
+  faHome,
+  faFootballBall,
+  faBook,
+  faTrophy,
+  faExclamationTriangle,
+  faUmbrellaBeach,
+  faGraduationCap,
+  faHistory,
+  faClipboard,
+  faCrown
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import ToggleButton from "vue-js-toggle-button";
