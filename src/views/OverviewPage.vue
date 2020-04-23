@@ -55,6 +55,51 @@
         </section>
       </div>
     </div>
+
+    <div class="column">
+      <div class="card">
+        <section class="fields">
+          <h1>Recent Notes</h1>
+          <div class="card" v-for="note in recentNotes" :key="note.id">
+            <div class="textInside">
+              <h1>{{ note.get("title") }}</h1>
+              <p class="time">
+                {{
+                  note.createdAt.toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  })
+                }}
+              </p>
+              <p>{{ note.get("content") }}</p>
+              <p>
+                <router-link
+                  v-for="client in note.get('clients')"
+                  :key="client.id"
+                  :to="`/client/${client.id}`"
+                  class="client"
+                >
+                  @{{ client.get("fullName") }}
+                </router-link>
+              </p>
+              <div>
+                <router-link
+                  v-for="tag in note.get('tags')"
+                  :key="tag"
+                  :to="`/notes?tag=${tag}`"
+                  class="tag"
+                >
+                  {{ tag }}
+                </router-link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -64,17 +109,21 @@ import AV from "leancloud-storage";
 export default {
   name: "OverviewPage",
   components: {
-    EventsTable
+    EventsTable,
   },
   data() {
     return {
       upcomingEvents: [],
-      suggestedEvents: []
+      suggestedEvents: [],
+      recentNotes: [],
+      clients: [],
+      clientOptions: [],
     };
   },
   created() {
     const vm = this;
     vm.fetchEvents();
+    vm.fetchNotes();
   },
   methods: {
     fetchEvents() {
@@ -85,8 +134,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then(upcomingEvents => {
-          vm.upcomingEvents = upcomingEvents.map(event => ({
+        .then((upcomingEvents) => {
+          vm.upcomingEvents = upcomingEvents.map((event) => ({
             event,
             editing: false,
             pendingChanges: {
@@ -97,11 +146,11 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-            }
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
+            },
           }));
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
       const lastEventQuery = new AV.Query("Event");
@@ -112,8 +161,8 @@ export default {
         .ascending("time")
         .limit(1000)
         .find()
-        .then(lastEvents => {
-          vm.suggestedEvents = lastEvents.map(lastEvent => {
+        .then((lastEvents) => {
+          vm.suggestedEvents = lastEvents.map((lastEvent) => {
             const rawTime = new Date(
               new Date(lastEvent.get("time")).setDate(
                 lastEvent.get("time").getDate() + lastEvent.get("recursIn")
@@ -129,13 +178,28 @@ export default {
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
                 time: `${`0${rawTime.getHours()}`.slice(
                   -2
-                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
+                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`,
               },
-              lastEvent
+              lastEvent,
             };
           });
         })
-        .catch(error => {
+        .catch((error) => {
+          alert(error);
+        });
+    },
+    fetchNotes() {
+      const vm = this;
+      var notesQuery = new AV.Query("Note");
+      var currentUser = AV.User.current();
+      notesQuery.equalTo("owner", currentUser);
+      notesQuery.include("clients");
+      notesQuery
+        .find()
+        .then(function(notes) {
+          vm.recentNotes = notes;
+        })
+        .catch((error) => {
           alert(error);
         });
     },
@@ -155,12 +219,40 @@ export default {
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
         .then(vm.fetchEvents)
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.client {
+  color: #36d5d8;
+}
+
+.column {
+  display: flex;
+}
+
+.tag {
+  display: inline-block;
+  margin: 4px 4px 0 0;
+  padding: 4px 8px;
+  background-color: #36d5d822;
+  color: #36d5d8;
+  font-size: 9pt;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.tag.active {
+  background-color: #36d5d8;
+  color: #fff;
+}
+
+.textInside {
+  margin-left: 5px;
+}
+</style>
