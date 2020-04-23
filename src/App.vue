@@ -143,6 +143,7 @@ section:last-of-type {
   position: relative;
 }
 label > span {
+  display: block;
   color: #605e5e;
 }
 label > span > a > svg > path {
@@ -173,7 +174,8 @@ select:focus {
 label > input,
 label > textarea,
 label > select,
-label > div {
+label > div,
+label > .vue-js-switch {
   margin: 6px 0 0 0;
 }
 label > input:disabled,
@@ -397,7 +399,8 @@ td > button.danger:hover {
   label > input,
   label > textarea,
   label > select,
-  label > div {
+  label > div,
+  label > .vue-js-switch {
     margin: 8px 0 0 0;
   }
   .column {
