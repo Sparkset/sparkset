@@ -82,6 +82,7 @@ td {
   border-radius: 4px;
   overflow: hidden;
 }
+
 .card:last-of-type {
   margin: 0;
 }

@@ -60,40 +60,42 @@
       <div class="card">
         <section class="fields">
           <h1>Recent Notes</h1>
-          <div class="card" v-for="note in recentNotes" :key="note.id">
-            <div class="textInside">
-              <h1>{{ note.get("title") }}</h1>
-              <p class="time">
-                {{
-                  note.createdAt.toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                  })
-                }}
-              </p>
-              <p>{{ note.get("content") }}</p>
-              <p>
-                <router-link
-                  v-for="client in note.get('clients')"
-                  :key="client.id"
-                  :to="`/client/${client.id}`"
-                  class="client"
-                >
-                  @{{ client.get("fullName") }}
-                </router-link>
-              </p>
-              <div>
-                <router-link
-                  v-for="tag in note.get('tags')"
-                  :key="tag"
-                  :to="`/notes?tag=${tag}`"
-                  class="tag"
-                >
-                  {{ tag }}
-                </router-link>
+          <div class="cardModified" v-for="note in recentNotes" :key="note.id">
+            <div class="allCards">
+              <div class="textInside">
+                <h1>{{ note.get("title") }}</h1>
+                <p class="time">
+                  {{
+                    note.createdAt.toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                    })
+                  }}
+                </p>
+                <p>{{ note.get("content") }}</p>
+                <p>
+                  <router-link
+                    v-for="client in note.get('clients')"
+                    :key="client.id"
+                    :to="`/client/${client.id}`"
+                    class="client"
+                  >
+                    @{{ client.get("fullName") }}
+                  </router-link>
+                </p>
+                <div>
+                  <router-link
+                    v-for="tag in note.get('tags')"
+                    :key="tag"
+                    :to="`/notes?tag=${tag}`"
+                    class="tag"
+                  >
+                    {{ tag }}
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
@@ -233,7 +235,7 @@ export default {
 }
 
 .column {
-  display: flex;
+  display: table;
 }
 
 .tag {
@@ -247,6 +249,20 @@ export default {
   margin-bottom: 10px;
 }
 
+.cardModified {
+  display: table-cell;
+  position: relative;
+  float: left;
+  margin: 0 0 12px 0;
+  width: 250px;
+  margin-right: 10px;
+  background-color: #fff;
+  color: #605e5e;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
 .tag.active {
   background-color: #36d5d8;
   color: #fff;
@@ -254,5 +270,9 @@ export default {
 
 .textInside {
   margin-left: 5px;
+}
+
+.allCards {
+  display: table-cell;
 }
 </style>
