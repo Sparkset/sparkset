@@ -61,41 +61,7 @@
         <h1 style="margin-left: 10px;">Recent Notes</h1>
         <section class="fieldsModified">
           <div class="cardModified" v-for="note in recentNotes" :key="note.id">
-            <div class="textInside">
-              <h1>{{ note.get("title") }}</h1>
-              <p class="time">
-                {{
-                  note.createdAt.toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric"
-                  })
-                }}
-              </p>
-              <p>{{ note.get("content") }}</p>
-              <p>
-                <router-link
-                  v-for="client in note.get('clients')"
-                  :key="client.id"
-                  :to="`/client/${client.id}`"
-                  class="client"
-                >
-                  @{{ client.get("fullName") }}
-                </router-link>
-              </p>
-              <div>
-                <router-link
-                  v-for="tag in note.get('tags')"
-                  :key="tag"
-                  :to="`/notes?tag=${tag}`"
-                  class="tag"
-                >
-                  {{ tag }}
-                </router-link>
-              </div>
-            </div>
+            <NoteCard :note="note" :homePage="true"></NoteCard>
           </div>
         </section>
       </div>
@@ -105,19 +71,20 @@
 
 <script>
 import EventsTable from "@/components/EventsTable.vue";
+import NoteCard from "@/components/NoteCard.vue";
 import AV from "leancloud-storage";
 export default {
   name: "OverviewPage",
   components: {
-    EventsTable
+    EventsTable,
+    NoteCard
   },
   data() {
     return {
       upcomingEvents: [],
       suggestedEvents: [],
       recentNotes: [],
-      clients: [],
-      clientOptions: []
+      clients: []
     };
   },
   created() {
@@ -190,11 +157,11 @@ export default {
     },
     fetchNotes() {
       const vm = this;
-      var notesQuery = new AV.Query("Note");
-      var currentUser = AV.User.current();
-      notesQuery.equalTo("owner", currentUser);
-      notesQuery.include("clients");
+      const notesQuery = new AV.Query("Note");
+      const currentUser = AV.User.current();
       notesQuery
+        .equalTo("owner", currentUser)
+        .include("clients")
         .find()
         .then(function(notes) {
           vm.recentNotes = notes;
@@ -228,21 +195,6 @@ export default {
 </script>
 
 <style scoped>
-.client {
-  color: #36d5d8;
-}
-
-.tag {
-  display: inline-block;
-  margin: 4px 4px 0 0;
-  padding: 4px 8px;
-  background-color: #36d5d822;
-  color: #36d5d8;
-  font-size: 9pt;
-  border-radius: 2px;
-  margin-bottom: 10px;
-}
-
 .cardModified {
   position: relative;
   float: left;
@@ -255,18 +207,6 @@ export default {
   border-radius: 4px;
   overflow: hidden;
   display: table-cell;
-}
-
-.tag.active {
-  background-color: #36d5d8;
-  color: #fff;
-}
-
-.textInside {
-  margin-left: 10px;
-  flex: 1;
-  padding: 10px;
-  padding-top: 5px;
 }
 
 .fieldsModified {

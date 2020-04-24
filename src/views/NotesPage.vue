@@ -41,39 +41,7 @@
           class="fields"
         >
           <div v-if="!note.editing" class="field">
-            <h1>{{ note.note.get("title") }}</h1>
-            <p class="time">
-              {{
-                note.note.createdAt.toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric"
-                })
-              }}
-            </p>
-            <p>{{ note.note.get("content") }}</p>
-            <p>
-              <router-link
-                v-for="client in note.note.get('clients')"
-                :key="client.id"
-                :to="`/client/${client.id}`"
-                class="client"
-              >
-                @{{ client.get("fullName") }}
-              </router-link>
-            </p>
-            <div>
-              <router-link
-                v-for="tag in note.note.get('tags')"
-                :key="tag"
-                :to="`/notes?tag=${tag}`"
-                class="tag"
-              >
-                {{ tag }}
-              </router-link>
-            </div>
+            <NoteCard :note="note.note" :homePage="false"></NoteCard>
           </div>
           <NoteForm
             v-else
@@ -105,10 +73,12 @@
 <script>
 import AV from "leancloud-storage";
 import NoteForm from "@/components/NoteForm.vue";
+import NoteCard from "@/components/NoteCard.vue";
 export default {
   name: "NotesPage",
   components: {
-    NoteForm
+    NoteForm,
+    NoteCard
   },
   data() {
     return {
@@ -208,24 +178,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.time {
-  font-size: 9pt;
-}
-.client {
-  color: #36d5d8;
-}
-.tag {
-  display: inline-block;
-  margin: 4px 4px 0 0;
-  padding: 4px 8px;
-  background-color: #36d5d822;
-  color: #36d5d8;
-  font-size: 9pt;
-  border-radius: 2px;
-}
-.tag.active {
-  background-color: #36d5d8;
-  color: #fff;
-}
-</style>
+<style scoped></style>
