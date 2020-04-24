@@ -60,7 +60,6 @@
       <div class="card">
         <h1 style="margin-left: 10px;">Recent Notes</h1>
         <section class="fieldsModified">
-          
           <div class="cardModified" v-for="note in recentNotes" :key="note.id">
             <div class="textInside">
               <h1>{{ note.get("title") }}</h1>
