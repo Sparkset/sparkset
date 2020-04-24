@@ -12,16 +12,13 @@
     <div class="field field--superwide">
       <EventsTable :events="pastEvents" :fetch-events="fetchEvents" />
     </div>
-    <div class="field">
-      <button
-        class="primary"
-        v-if="!creatingCustomEvent"
-        @click="creatingCustomEvent = true"
-      >
+    <div v-if="!creatingCustomEvent" class="field">
+      <button class="primary" @click="creatingCustomEvent = true">
         Create Custom Event
       </button>
     </div>
-    <form v-if="creatingCustomEvent" @submit.prevent="createEvent">
+    <form v-else @submit.prevent="createEvent">
+      <h1>Create Custom Event</h1>
       <div class="field field--half">
         <label>
           <span>Name</span>
