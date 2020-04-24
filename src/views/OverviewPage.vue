@@ -77,14 +77,14 @@ export default {
   name: "OverviewPage",
   components: {
     EventsTable,
-    NoteCard
+    NoteCard,
   },
   data() {
     return {
       upcomingEvents: [],
       suggestedEvents: [],
       recentNotes: [],
-      clients: []
+      clients: [],
     };
   },
   created() {
@@ -101,8 +101,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then(upcomingEvents => {
-          vm.upcomingEvents = upcomingEvents.map(event => ({
+        .then((upcomingEvents) => {
+          vm.upcomingEvents = upcomingEvents.map((event) => ({
             event,
             editing: false,
             pendingChanges: {
@@ -113,11 +113,11 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-            }
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
+            },
           }));
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
       const lastEventQuery = new AV.Query("Event");
@@ -128,8 +128,8 @@ export default {
         .ascending("time")
         .limit(1000)
         .find()
-        .then(lastEvents => {
-          vm.suggestedEvents = lastEvents.map(lastEvent => {
+        .then((lastEvents) => {
+          vm.suggestedEvents = lastEvents.map((lastEvent) => {
             const rawTime = new Date(
               new Date(lastEvent.get("time")).setDate(
                 lastEvent.get("time").getDate() + lastEvent.get("recursIn")
@@ -145,13 +145,13 @@ export default {
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
                 time: `${`0${rawTime.getHours()}`.slice(
                   -2
-                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
+                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`,
               },
-              lastEvent
+              lastEvent,
             };
           });
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -162,11 +162,13 @@ export default {
       notesQuery
         .equalTo("owner", currentUser)
         .include("clients")
+        .descending("createdAt")
+        .limit(1000)
         .find()
         .then(function(notes) {
           vm.recentNotes = notes;
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -186,11 +188,11 @@ export default {
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
         .then(vm.fetchEvents)
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
