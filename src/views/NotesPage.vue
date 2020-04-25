@@ -78,7 +78,7 @@ export default {
   name: "NotesPage",
   components: {
     NoteForm,
-    NoteCard
+    NoteCard,
   },
   data() {
     return {
@@ -86,7 +86,7 @@ export default {
       tagOptions: [],
       lastAddedNote: new AV.Object("Note").set("clients", []).set("tags", []),
       newNote: new AV.Object("Note").set("clients", []).set("tags", []),
-      notes: []
+      notes: [],
     };
   },
   methods: {
@@ -99,10 +99,10 @@ export default {
         .descending("createdAt")
         .limit(1000)
         .find()
-        .then(notes => {
-          vm.notes = notes.map(note => ({
+        .then((notes) => {
+          vm.notes = notes.map((note) => ({
             note,
-            editing: false
+            editing: false,
           }));
           vm.tagOptions = Array.from(
             new Set(
@@ -111,9 +111,9 @@ export default {
                 []
               )
             )
-          ).map(tag => ({ name: tag }));
+          ).map((tag) => ({ name: tag }));
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -123,14 +123,14 @@ export default {
       clientQuery
         .limit(1000)
         .find()
-        .then(clients => {
-          vm.clientOptions = clients.map(client => ({
+        .then((clients) => {
+          vm.clientOptions = clients.map((client) => ({
             name: client.get("fullName"),
             id: client.id,
-            client
+            client,
           }));
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -138,7 +138,7 @@ export default {
       const vm = this;
       vm.notes.unshift({
         note: vm.newNote,
-        editing: false
+        editing: false,
       });
       vm.lastAddedNote = vm.newNote;
       vm.newNote = new AV.Object("Note").set("clients", []).set("tags", []);
@@ -154,11 +154,11 @@ export default {
           .then(() => {
             vm.notes.splice(vm.notes.indexOf(note), 1);
           })
-          .catch(error => {
+          .catch((error) => {
             alert(error);
           });
       }
-    }
+    },
   },
   created() {
     const vm = this;
@@ -169,12 +169,12 @@ export default {
     filteredNotes() {
       const vm = this;
       return vm.$route.query.tag
-        ? vm.notes.filter(note =>
+        ? vm.notes.filter((note) =>
             note.note.get("tags").includes(vm.$route.query.tag)
           )
         : vm.notes;
-    }
-  }
+    },
+  },
 };
 </script>
 

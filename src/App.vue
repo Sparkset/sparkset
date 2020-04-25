@@ -452,4 +452,15 @@ td > button.danger:hover {
     width: calc(70% - 8px);
   }
 }
+
+.tag {
+  display: inline-block;
+  margin: 4px 4px 0 0;
+  padding: 4px 8px;
+  background-color: #36d5d822;
+  color: #36d5d8;
+  font-size: 9pt;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
 </style>

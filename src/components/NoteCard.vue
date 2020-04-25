@@ -9,19 +9,19 @@
             month: "numeric",
             day: "numeric",
             hour: "numeric",
-            minute: "numeric"
+            minute: "numeric",
           })
         }}
       </p>
       <p>{{ note.get("content") }}</p>
-      <ul>
+      <ul class="fa-ul">
         <router-link
           v-for="client in note.get('clients')"
           :key="client.id"
           :to="`/client/${client.id}`"
           class="client"
         >
-          <li>@{{ client.get("fullName") }}</li>
+          <li><font-awesome-icon :icon="['fas', 'arrow-right']" /> {{ client.get("fullName") }}</li>
         </router-link>
       </ul>
       <div>
@@ -43,8 +43,8 @@ export default {
   name: "NoteCard",
   props: {
     note: Object,
-    homePage: Boolean
-  }
+    homePage: Boolean,
+  },
 };
 </script>
 
@@ -84,5 +84,10 @@ export default {
 
 .time {
   font-size: 9pt;
+}
+
+ul{
+  margin-left: 0px;
+  padding-left: 0px;
 }
 </style>

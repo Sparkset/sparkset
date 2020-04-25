@@ -5,7 +5,7 @@ import store from "./store";
 import AV from "leancloud-storage";
 AV.init({
   appId: "nLNpC0EXtPodRpoeEmjDFnHC-MdYXbMMI",
-  appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1"
+  appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1",
 });
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -16,12 +16,13 @@ import {
   faSearch,
   faPaperPlane,
   faPhoneAlt,
-  faBuilding
+  faBuilding,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedin,
   faFacebookSquare,
-  faInstagram
+  faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -35,7 +36,8 @@ library.add(
   faBuilding,
   faLinkedin,
   faFacebookSquare,
-  faInstagram
+  faInstagram,
+  faArrowRight
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import ToggleButton from "vue-js-toggle-button";
@@ -44,5 +46,5 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

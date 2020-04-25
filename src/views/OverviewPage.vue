@@ -163,7 +163,7 @@ export default {
         .equalTo("owner", currentUser)
         .include("clients")
         .descending("createdAt")
-        .limit(1000)
+        .limit(4)
         .find()
         .then(function(notes) {
           vm.recentNotes = notes;

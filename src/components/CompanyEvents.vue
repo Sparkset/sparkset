@@ -37,10 +37,11 @@ export default {
       const eventsQuery = new AV.Query("Event");
       eventsQuery
         .matchesQuery("client", clientsQuery)
+        .equalTo("done", false)
         .include("client")
         .descending("createdAt")
         .find()
-        .then(function(e) {
+        .then(e => {
           vm.events = e.map(event => ({
             event,
             editing: false,
