@@ -2,7 +2,7 @@
   <section class="fields">
     <h1>{{ companyName }} Events</h1>
     <div class="field field--superwide">
-      <EventsTable :events="events" :fetch-events="fetchEvents"></EventsTable>
+      <EventsTable :events="events" :fetch-events="fetchEvents" />
     </div>
   </section>
 </template>
@@ -40,9 +40,10 @@ export default {
         .equalTo("done", false)
         .include("client")
         .descending("createdAt")
+        .limit(1000)
         .find()
-        .then(e => {
-          vm.events = e.map(event => ({
+        .then(events => {
+          vm.events = events.map(event => ({
             event,
             editing: false,
             pendingChanges: {
@@ -66,7 +67,7 @@ export default {
       const companyQuery = new AV.Query("Company");
       companyQuery
         .get(vm.$route.params.id)
-        .then(function(company) {
+        .then(company => {
           vm.companyName = company.get("name");
         })
         .catch(error => {

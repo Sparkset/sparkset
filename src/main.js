@@ -5,7 +5,7 @@ import store from "./store";
 import AV from "leancloud-storage";
 AV.init({
   appId: "nLNpC0EXtPodRpoeEmjDFnHC-MdYXbMMI",
-  appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1",
+  appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1"
 });
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -17,12 +17,12 @@ import {
   faPaperPlane,
   faPhoneAlt,
   faBuilding,
-  faArrowRight,
+  faArrowRight
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedin,
   faFacebookSquare,
-  faInstagram,
+  faInstagram
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -46,5 +46,5 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount("#app");

@@ -54,14 +54,19 @@
           </div>
         </section>
       </div>
-    </div>
-
-    <div class="column ">
       <div class="card">
-        <h1 style="margin-left: 25px;">Recent Notes</h1>
-        <section class="fieldsModified">
-          <div class="cardModified" v-for="note in recentNotes" :key="note.id">
-            <NoteCard :note="note" :homePage="true"></NoteCard>
+        <section class="fields">
+          <h1>Recent Notes</h1>
+          <div class="field horizontal-items">
+            <div
+              v-for="note in recentNotes"
+              :key="note.id"
+              class="horizontal-item"
+            >
+              <div class="card">
+                <NoteCard :note="note" />
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -165,7 +170,7 @@ export default {
         .descending("createdAt")
         .limit(4)
         .find()
-        .then(function(notes) {
+        .then(notes => {
           vm.recentNotes = notes;
         })
         .catch(error => {
@@ -197,26 +202,36 @@ export default {
 </script>
 
 <style scoped>
-.cardModified {
+.horizontal-items {
   display: flex;
   position: relative;
-  float: left;
-  margin: 0 0 12px 0;
-  width: 250px;
-  margin-left: 10px;
-  margin-right: 10px;
-  background-color: #fff;
-  color: #605e5e;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  display: table-cell;
-}
-
-.fieldsModified {
-  display: flex;
-  margin-left: 10px;
-  width: 100%;
-  padding-top: 10px;
+  left: -18px;
+  width: calc(100% + 36px);
+  margin-top: 0.3em;
+  padding: 0 18px;
   overflow-x: scroll;
+}
+.horizontal-item > .card {
+  margin: 0 12px 0 0;
+  width: 256px;
+  padding: 12px;
+  height: 100%;
+}
+.horizontal-item:last-of-type > .card {
+  margin: 0 18px 0 0;
+}
+@media (min-width: 544px) {
+  .horizontal-items {
+    left: -24px;
+    width: calc(100% + 48px);
+    padding: 0 24px;
+  }
+  .horizontal-item > .card {
+    margin: 0 16px 0 0;
+    padding: 16px;
+  }
+  .horizontal-item:last-of-type > .card {
+    margin: 0 24px 0 0;
+  }
 }
 </style>

@@ -49,10 +49,17 @@ a {
   color: currentColor;
   cursor: pointer;
 }
-h1 {
+h1,
+h2 {
   font-weight: 600;
-  font-size: 18pt;
   color: #36d5d8;
+}
+h1 {
+  font-size: 18pt;
+}
+h2 {
+  font-size: 16pt;
+  margin-block-start: 0.3em;
 }
 table {
   width: 100%;
@@ -82,7 +89,6 @@ td {
   border-radius: 4px;
   overflow: hidden;
 }
-
 .card:last-of-type {
   margin: 0;
 }
@@ -142,6 +148,20 @@ section:last-of-type {
 }
 .field--with--dropdown {
   position: relative;
+}
+.tag {
+  display: inline-block;
+  margin: 4px 4px 0 0;
+  padding: 4px 8px;
+  background-color: #36d5d822;
+  color: #36d5d8;
+  font-size: 9pt;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+.tag.active {
+  background-color: #36d5d8;
+  color: #fff;
 }
 label > span {
   display: block;
@@ -451,16 +471,5 @@ td > button.danger:hover {
     margin: 64px 16px 0 auto;
     width: calc(70% - 8px);
   }
-}
-
-.tag {
-  display: inline-block;
-  margin: 4px 4px 0 0;
-  padding: 4px 8px;
-  background-color: #36d5d822;
-  color: #36d5d8;
-  font-size: 9pt;
-  border-radius: 2px;
-  margin-bottom: 10px;
 }
 </style>

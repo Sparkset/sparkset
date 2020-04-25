@@ -1,7 +1,9 @@
 <template>
   <nav>
     <ul id="left">
-      <p>Welcome {{ fullName }}</p>
+      <li>
+        <span>Welcome {{ fullName }}</span>
+      </li>
     </ul>
     <ul id="right">
       <li :class="[$store.state.openedTopNavItem === 'user' ? 'open' : '']">
@@ -92,8 +94,10 @@ export default {
 #right > li {
   margin: 8px 0 8px 8px;
 }
+#left > li > span,
 #left > li > a > span,
 #left > li > button > span,
+#right > li > span,
 #right > li > a > span,
 #right > li > button > span {
   display: inline-block;
@@ -101,10 +105,6 @@ export default {
   line-height: 16px;
   color: #605e5e;
   border-radius: 2px;
-}
-#left {
-  color: #605e5e;
-  margin-left: 15px;
 }
 #left > li.open > a > span,
 #left > li.open > button > span,
