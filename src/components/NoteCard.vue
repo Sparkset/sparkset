@@ -16,7 +16,7 @@
     <ul class="fa-ul">
       <li v-for="client in note.get('clients')" :key="client.id">
         <router-link :to="`/client/${client.id}`" class="client">
-          <font-awesome-icon :icon="['fas', 'arrow-right']" />
+          <font-awesome-icon :icon="['fas', 'arrow-right']" size="xs" />
           {{ client.get("fullName") }}
         </router-link>
       </li>
