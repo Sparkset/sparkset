@@ -56,9 +56,9 @@
       </div>
     </div>
 
-    <div class="column">
+    <div class="column ">
       <div class="card">
-        <h1 style="margin-left: 10px;">Recent Notes</h1>
+        <h1 style="margin-left: 25px;">Recent Notes</h1>
         <section class="fieldsModified">
           <div class="cardModified" v-for="note in recentNotes" :key="note.id">
             <NoteCard :note="note" :homePage="true"></NoteCard>

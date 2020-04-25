@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <h1>Events</h1>
-    <EventsTable :events="events"></EventsTable>
-  </div>
+  <section class="fields">
+    <h1>{{ companyName }} Events</h1>
+    <div class="field field--superwide">
+      <EventsTable :events="events" :fetch-events="fetchEvents"></EventsTable>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -12,7 +14,7 @@ export default {
   name: "CompanyEvents",
   data() {
     return {
-      companyClients: [],
+      companyName: "",
       events: []
     };
   },
@@ -21,38 +23,55 @@ export default {
   },
   created() {
     const vm = this;
-    const clientsQuery = new AV.Query("Client");
-    clientsQuery.equalTo(
-      "company",
-      AV.Object.createWithoutData("Company", vm.$route.params.id)
-    );
-    clientsQuery
-      .find()
-      .then(function(clients) {
-        vm.companyClients = clients;
-        for (const client in vm.companyClients) {
-          console.log(typeof clients);
-          console.log(typeof client);
-          const eventsQuery = new AV.Query("Event");
-          eventsQuery.equalTo("client", client);
-          eventsQuery.equalTo("done", false);
-          eventsQuery
-            .descending("createdAt")
-            .limit(1000)
-            .find()
-            .then(function(events) {
-              for (const event in events) {
-                vm.events.push(event);
-              }
-            })
-            .catch(error => {
-              alert(error);
-            });
-        }
-      })
-      .catch(error => {
-        alert(error);
-      });
+    vm.getCompanyName();
+    vm.fetchEvents();
+  },
+  methods: {
+    fetchEvents() {
+      const vm = this;
+      const clientsQuery = new AV.Query("Client");
+      clientsQuery.equalTo(
+        "company",
+        AV.Object.createWithoutData("Company", vm.$route.params.id)
+      );
+      const eventsQuery = new AV.Query("Event");
+      eventsQuery
+        .matchesQuery("client", clientsQuery)
+        .include("client")
+        .descending("createdAt")
+        .find()
+        .then(function(e) {
+          vm.events = e.map(event => ({
+            event,
+            editing: false,
+            pendingChanges: {
+              date: `${event.get("time").getFullYear()}-${`0${event
+                .get("time")
+                .getMonth() + 1}`.slice(-2)}-${`0${event
+                .get("time")
+                .getDate()}`.slice(-2)}`,
+              time: `${`0${event.get("time").getHours()}`.slice(
+                -2
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
+          }));
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
+    getCompanyName() {
+      const vm = this;
+      const companyQuery = new AV.Query("Company");
+      companyQuery
+        .get(vm.$route.params.id)
+        .then(function(company) {
+          vm.companyName = company.get("name");
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
   }
 };
 </script>
