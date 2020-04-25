@@ -75,6 +75,7 @@ export default {
   padding: 10px;
   padding-top: 5px;
   margin-left: 5px;
+  width: 250px;
 }
 
 .client {
