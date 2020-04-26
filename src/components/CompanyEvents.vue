@@ -7,6 +7,7 @@
   </section>
 </template>
 
+
 <script>
 import AV from "leancloud-storage";
 import EventsTable from "@/components/EventsTable.vue";
