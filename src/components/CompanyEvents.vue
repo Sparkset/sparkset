@@ -10,7 +10,7 @@
       </button>
     </div>
     <div v-else>
-      <AddEvent @cancel-event="cancel" @create-event="createEvent"></AddEvent>
+      <AddEvent @cancel-event="cancel" @create-event="createEvent" ></AddEvent>
     </div>
   </section>
 </template>
