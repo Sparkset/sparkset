@@ -31,7 +31,7 @@ export default {
   name: "ClientEvents",
   components: {
     EventsTable,
-    AddEvent
+    AddEvent,
   },
   data() {
     return {
@@ -44,8 +44,8 @@ export default {
         date: "",
         time: "",
         recurringEvent: false,
-        daysBetween: 1
-      }
+        daysBetween: 1,
+      },
     };
   },
   created() {
@@ -65,8 +65,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then(upcomingEvents => {
-          vm.upcomingEvents = upcomingEvents.map(event => ({
+        .then((upcomingEvents) => {
+          vm.upcomingEvents = upcomingEvents.map((event) => ({
             event,
             editing: false,
             pendingChanges: {
@@ -77,11 +77,11 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-            }
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
+            },
           }));
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
       const lastEventQuery = new AV.Query("Event");
@@ -95,8 +95,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then(lastEvents => {
-          vm.suggestedEvents = lastEvents.map(lastEvent => {
+        .then((lastEvents) => {
+          vm.suggestedEvents = lastEvents.map((lastEvent) => {
             const rawTime = new Date(
               new Date(lastEvent.get("time")).setDate(
                 lastEvent.get("time").getDate() + lastEvent.get("recursIn")
@@ -113,13 +113,13 @@ export default {
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
                 time: `${`0${rawTime.getHours()}`.slice(
                   -2
-                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
+                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`,
               },
-              lastEvent
+              lastEvent,
             };
           });
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
       const pastEventQuery = new AV.Query("Event");
@@ -132,8 +132,8 @@ export default {
         .include("client")
         .limit(1000)
         .find()
-        .then(pastEvents => {
-          vm.pastEvents = pastEvents.map(event => ({
+        .then((pastEvents) => {
+          vm.pastEvents = pastEvents.map((event) => ({
             event,
             editing: false,
             pendingChanges: {
@@ -144,11 +144,11 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-            }
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
+            },
           }));
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -168,7 +168,7 @@ export default {
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
         .then(vm.fetchEvents)
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -179,6 +179,7 @@ export default {
       event
         .set("client", client)
         .set("name", newEvent.name)
+        .set("companyWide", false)
         .set(
           "time",
           new Date(
@@ -200,15 +201,15 @@ export default {
           vm.fetchEvents();
           vm.creatingCustomEvent = false;
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
     cancel() {
       const vm = this;
       vm.creatingCustomEvent = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
