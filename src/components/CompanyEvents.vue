@@ -43,6 +43,7 @@ export default {
     const vm = this;
     vm.getCompanyName();
     vm.fetchEvents();
+    vm.getCompanyClients();
   },
   methods: {
     fetchEvents() {
@@ -90,7 +91,10 @@ export default {
       const eventsQuery = new AV.Query("CompanyEvent");
       eventsQuery
         .equalTo("done", false)
-        .equalTo("company", AV.Object.createWithoutData("Company", vm.$route.params.id))
+        .equalTo(
+          "company",
+          AV.Object.createWithoutData("Company", vm.$route.params.id)
+        )
         .descending("createdAt")
         .limit(1000)
         .find()
@@ -126,39 +130,61 @@ export default {
           alert(error);
         });
     },
+    getCompanyClients() {
+      const vm = this;
+      const clientQuery = new AV.Query("Client");
+      clientQuery.equalTo(
+        "company",
+        AV.Object.createWithoutData("Company", vm.$route.params.id)
+      );
+      clientQuery
+        .find()
+        .then((clients) => {
+          vm.companyClients = clients;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
     createEvent(newEvent) {
       alert("inside company createEvent");
       const vm = this;
-      const event = new AV.Object("CompanyEvent");
-      event
-        .set(
-          "company",
-          AV.Object.createWithoutData("Company", vm.$route.params.id)
-        )
-        .set("name", newEvent.name)
-        .set(
-          "time",
-          new Date(
-            newEvent.date.slice(0, 4),
-            newEvent.date.slice(5, 7) - 1,
-            newEvent.date.slice(8, 10),
-            newEvent.time.slice(0, 2),
-            newEvent.time.slice(3, 5),
-            0
-          )
-        );
-      if (newEvent.recurringEvent) {
-        event.set("recursIn", newEvent.daysBetween);
+      console.log(vm.companyClients[0].id);
+      const eventObjects = [];
+      console.log("vm.comapnyClients length: " +  vm.companyClients.length);
+      for (const client in vm.companyClients) {
+        console.log("client id: " + client.id); 
+        const event = new AV.Object("Event");
+        event
+          .set("client", AV.Object.createWithoutData("Client", client.id))
+          .set("name", newEvent.name)
+          .set("companyWide", true)
+          .set("done", false)
+          .set(
+            "time",
+            new Date(
+              newEvent.date.slice(0, 4),
+              newEvent.date.slice(5, 7) - 1,
+              newEvent.date.slice(8, 10),
+              newEvent.time.slice(0, 2),
+              newEvent.time.slice(3, 5),
+              0
+            )
+          );
+        if (newEvent.recurringEvent) {
+          event.set("recursIn", newEvent.daysBetween);
+        }
+        eventObjects.push(event);
       }
       alert("before save");
-      event
-        .save()
+      AV.Object.saveAll(eventObjects)
         .then(() => {
-          alert("New Event has been saved.");
+          alert("Events have been created and saved");
           vm.fetchEvents();
           vm.creatingCustomEvent = false;
         })
         .catch((error) => {
+          alert("inside catch");
           alert(error);
         });
     },
