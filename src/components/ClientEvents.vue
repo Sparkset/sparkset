@@ -17,83 +17,21 @@
         Create Custom Event
       </button>
     </div>
-    <form v-else @submit.prevent="createEvent">
-      <h1>Create Custom Event</h1>
-      <div class="field field--half">
-        <label>
-          <span>Name</span>
-          <input type="text" v-model="newEvent.name" required />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Date</span>
-          <input
-            type="date"
-            max="2099-12-31"
-            v-model="newEvent.date"
-            required
-          />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Time</span>
-          <input type="time" v-model="newEvent.time" required />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Recur</span>
-          <toggle-button
-            :value="newEvent.recurringEvent"
-            :color="{
-              checked: '#36d5d8',
-              unchecked: '#e52f2e'
-            }"
-            :labels="{
-              checked: 'Yes',
-              unchecked: 'No'
-            }"
-            :width="72"
-            :height="42"
-            :font-size="12"
-            @change="changeRecurringEvent"
-            sync
-          />
-        </label>
-      </div>
-      <div v-if="newEvent.recurringEvent" class="field field--half">
-        <label>
-          <span>Days Between Events</span>
-          <input
-            type="number"
-            min="1"
-            step="1"
-            v-model.number="newEvent.daysBetween"
-            required
-          />
-        </label>
-      </div>
-      <div class="field">
-        <button class="primary">
-          Save
-        </button>
-      </div>
-      <div class="field">
-        <button @click="cancel">Cancel</button>
-      </div>
-    </form>
+    <div v-else>
+      <AddEvent @cancel-event="cancel" @create-event="createEvent"></AddEvent>
+    </div>
   </section>
 </template>
 
 <script>
 import EventsTable from "@/components/EventsTable.vue";
 import AV from "leancloud-storage";
+import AddEvent from "@/components/AddEvent.vue";
 export default {
   name: "ClientEvents",
   components: {
-    EventsTable
+    EventsTable,
+    AddEvent
   },
   data() {
     return {
@@ -234,57 +172,41 @@ export default {
           alert(error);
         });
     },
-    createEvent() {
+    createEvent(newEvent) {
       const vm = this;
       const client = AV.Object.createWithoutData("Client", vm.$route.params.id);
       const event = new AV.Object("Event");
       event
         .set("client", client)
-        .set("name", vm.newEvent.name)
+        .set("name", newEvent.name)
         .set(
           "time",
           new Date(
-            vm.newEvent.date.slice(0, 4),
-            vm.newEvent.date.slice(5, 7) - 1,
-            vm.newEvent.date.slice(8, 10),
-            vm.newEvent.time.slice(0, 2),
-            vm.newEvent.time.slice(3, 5),
+            newEvent.date.slice(0, 4),
+            newEvent.date.slice(5, 7) - 1,
+            newEvent.date.slice(8, 10),
+            newEvent.time.slice(0, 2),
+            newEvent.time.slice(3, 5),
             0
           )
         );
-      if (vm.newEvent.recurringEvent) {
-        event.set("recursIn", vm.newEvent.daysBetween);
+      if (newEvent.recurringEvent) {
+        event.set("recursIn", newEvent.daysBetween);
       }
       event
         .save()
         .then(() => {
           alert("New Event has been saved.");
           vm.fetchEvents();
-          vm.resetNewEventValues();
           vm.creatingCustomEvent = false;
         })
         .catch(error => {
           alert(error);
         });
     },
-    changeRecurringEvent(e) {
-      const vm = this;
-      vm.newEvent.recurringEvent = e.value;
-    },
     cancel() {
       const vm = this;
-      vm.resetNewEventValues();
       vm.creatingCustomEvent = false;
-    },
-    resetNewEventValues() {
-      const vm = this;
-      vm.newEvent = {
-        name: "",
-        date: "",
-        time: "",
-        recurringEvent: false,
-        daysBetween: 1
-      };
     }
   }
 };
