@@ -16,7 +16,8 @@ import {
   faSearch,
   faPaperPlane,
   faPhoneAlt,
-  faBuilding
+  faBuilding,
+  faArrowRight
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedin,
@@ -35,7 +36,8 @@ library.add(
   faBuilding,
   faLinkedin,
   faFacebookSquare,
-  faInstagram
+  faInstagram,
+  faArrowRight
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import ToggleButton from "vue-js-toggle-button";

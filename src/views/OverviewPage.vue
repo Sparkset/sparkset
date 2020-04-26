@@ -54,27 +54,48 @@
           </div>
         </section>
       </div>
+      <div class="card">
+        <section class="fields">
+          <h1>Recent Notes</h1>
+          <div class="field horizontal-items">
+            <div
+              v-for="note in recentNotes"
+              :key="note.id"
+              class="horizontal-item"
+            >
+              <div class="card">
+                <NoteCard :note="note" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import EventsTable from "@/components/EventsTable.vue";
+import NoteCard from "@/components/NoteCard.vue";
 import AV from "leancloud-storage";
 export default {
   name: "OverviewPage",
   components: {
-    EventsTable
+    EventsTable,
+    NoteCard
   },
   data() {
     return {
       upcomingEvents: [],
-      suggestedEvents: []
+      suggestedEvents: [],
+      recentNotes: [],
+      clients: []
     };
   },
   created() {
     const vm = this;
     vm.fetchEvents();
+    vm.fetchNotes();
   },
   methods: {
     fetchEvents() {
@@ -139,6 +160,23 @@ export default {
           alert(error);
         });
     },
+    fetchNotes() {
+      const vm = this;
+      const notesQuery = new AV.Query("Note");
+      const currentUser = AV.User.current();
+      notesQuery
+        .equalTo("owner", currentUser)
+        .include("clients")
+        .descending("createdAt")
+        .limit(4)
+        .find()
+        .then(notes => {
+          vm.recentNotes = notes;
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
     add(event) {
       const vm = this;
       event.event.set(
@@ -163,4 +201,37 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.horizontal-items {
+  display: flex;
+  position: relative;
+  left: -18px;
+  width: calc(100% + 36px);
+  margin-top: 0.3em;
+  padding: 0 18px;
+  overflow-x: scroll;
+}
+.horizontal-item > .card {
+  margin: 0 12px 0 0;
+  width: 256px;
+  padding: 12px;
+  height: 100%;
+}
+.horizontal-item:last-of-type > .card {
+  margin: 0 18px 0 0;
+}
+@media (min-width: 544px) {
+  .horizontal-items {
+    left: -24px;
+    width: calc(100% + 48px);
+    padding: 0 24px;
+  }
+  .horizontal-item > .card {
+    margin: 0 16px 0 0;
+    padding: 16px;
+  }
+  .horizontal-item:last-of-type > .card {
+    margin: 0 24px 0 0;
+  }
+}
+</style>

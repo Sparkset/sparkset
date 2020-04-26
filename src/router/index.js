@@ -93,6 +93,10 @@ const routes = [
           {
             path: "clients",
             component: () => import("../components/CompanyClients.vue")
+          },
+          {
+            path: "events",
+            component: () => import("../components/CompanyEvents.vue")
           }
         ]
       },
