@@ -12,6 +12,7 @@
     <div class="field field--superwide">
       <EventsTable :events="pastEvents" :fetch-events="fetchEvents" />
     </div>
+    <h1>Company Wide Events</h1>
     <div v-if="!creatingCustomEvent" class="field">
       <button class="primary" @click="creatingCustomEvent = true">
         Create Custom Event
@@ -31,44 +32,53 @@ export default {
   name: "ClientEvents",
   components: {
     EventsTable,
-    AddEvent,
+    AddEvent
   },
   data() {
     return {
       upcomingEvents: [],
       suggestedEvents: [],
       pastEvents: [],
+      companyEvents: [],
       creatingCustomEvent: false,
+      company: null,
       newEvent: {
         name: "",
         date: "",
         time: "",
         recurringEvent: false,
-        daysBetween: 1,
-      },
+        daysBetween: 1
+      }
     };
   },
   created() {
     const vm = this;
-    vm.fetchEvents();
+    vm.fetchCompany();
   },
   methods: {
     fetchEvents() {
       const vm = this;
-      const upcomingEventQuery = new AV.Query("Event");
-      upcomingEventQuery
+      const innerClientQuery = new AV.Query("Event");
+      innerClientQuery
         .equalTo(
           "client",
           AV.Object.createWithoutData("Client", vm.$route.params.id)
         )
-        .equalTo("done", false)
         .include("client")
+        .equalTo("done", false);
+      const innerCompanyQuery = new AV.Query("Event");
+      innerCompanyQuery
+        .equalTo("company", vm.company)
+        .equalTo("done", false)
+        .include("client");
+      AV.Query.or(innerClientQuery, innerCompanyQuery)
         .limit(1000)
         .find()
-        .then((upcomingEvents) => {
-          vm.upcomingEvents = upcomingEvents.map((event) => ({
+        .then(upcomingEvents => {
+          vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
+            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -77,26 +87,21 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
-            },
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
           }));
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
-      const lastEventQuery = new AV.Query("Event");
-      lastEventQuery
-        .equalTo(
-          "client",
-          AV.Object.createWithoutData("Client", vm.$route.params.id)
-        )
+      AV.Query.or(innerClientQuery, innerCompanyQuery)
         .equalTo("done", true)
         .exists("recursIn")
         .include("client")
         .limit(1000)
         .find()
-        .then((lastEvents) => {
-          vm.suggestedEvents = lastEvents.map((lastEvent) => {
+        .then(lastEvents => {
+          vm.suggestedEvents = lastEvents.map(lastEvent => {
             const rawTime = new Date(
               new Date(lastEvent.get("time")).setDate(
                 lastEvent.get("time").getDate() + lastEvent.get("recursIn")
@@ -108,34 +113,31 @@ export default {
                 .set("client", lastEvent.get("client"))
                 .set("recursIn", lastEvent.get("recursIn")),
               editing: true,
+              companyWide: lastEvent.get("company") ? true : false,
               pendingChanges: {
                 date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
                 time: `${`0${rawTime.getHours()}`.slice(
                   -2
-                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`,
+                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
               },
-              lastEvent,
+              lastEvent
             };
           });
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
-      const pastEventQuery = new AV.Query("Event");
-      pastEventQuery
-        .equalTo(
-          "client",
-          AV.Object.createWithoutData("Client", vm.$route.params.id)
-        )
+      AV.Query.or(innerClientQuery, innerCompanyQuery)
         .equalTo("done", true)
         .include("client")
         .limit(1000)
         .find()
-        .then((pastEvents) => {
-          vm.pastEvents = pastEvents.map((event) => ({
+        .then(pastEvents => {
+          vm.pastEvents = pastEvents.map(event => ({
             event,
             editing: false,
+            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -144,11 +146,24 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
-            },
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
           }));
         })
-        .catch((error) => {
+        .catch(error => {
+          alert(error);
+        });
+    },
+    fetchCompany() {
+      const vm = this;
+      const companyQuery = new AV.Query("Client");
+      companyQuery
+        .get(vm.$route.params.id)
+        .then(client => {
+          vm.company = client.get("company");
+          vm.fetchEvents();
+        })
+        .catch(error => {
           alert(error);
         });
     },
@@ -168,7 +183,7 @@ export default {
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
         .then(vm.fetchEvents)
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -201,15 +216,15 @@ export default {
           vm.fetchEvents();
           vm.creatingCustomEvent = false;
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
     cancel() {
       const vm = this;
       vm.creatingCustomEvent = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

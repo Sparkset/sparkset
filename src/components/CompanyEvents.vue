@@ -32,24 +32,22 @@ export default {
       clientEvents: [],
       companyEvents: [],
       creatingCustomEvent: false,
-      companyClients: [],
+      companyClients: []
     };
   },
   components: {
     EventsTable,
-    AddEvent,
+    AddEvent
   },
   created() {
     const vm = this;
     vm.getCompanyName();
     vm.fetchEvents();
-    vm.getCompanyClients();
   },
   methods: {
     fetchEvents() {
       const vm = this;
       vm.fetchClientEvents();
-      vm.fetchCompanyEvents();
     },
     fetchClientEvents() {
       const vm = this;
@@ -62,12 +60,13 @@ export default {
       eventsQuery
         .matchesQuery("client", clientsQuery)
         .equalTo("done", false)
+        .equalTo("companyWide", false)
         .include("client")
         .descending("createdAt")
         .limit(1000)
         .find()
-        .then((events) => {
-          vm.clientEvents = events.map((event) => ({
+        .then(events => {
+          vm.clientEvents = events.map(event => ({
             event,
             editing: false,
             pendingChanges: {
@@ -78,28 +77,27 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
-            },
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
           }));
+          vm.fetchCompanyEvents();
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
     fetchCompanyEvents() {
       const vm = this;
-      const eventsQuery = new AV.Query("CompanyEvent");
+      const eventsQuery = new AV.Query("Event");
       eventsQuery
         .equalTo("done", false)
         .equalTo(
           "company",
           AV.Object.createWithoutData("Company", vm.$route.params.id)
         )
-        .descending("createdAt")
-        .limit(1000)
         .find()
-        .then((events) => {
-          vm.companyEvents = events.map((event) => ({
+        .then(events => {
+          vm.companyEvents = events.map(event => ({
             event,
             editing: false,
             pendingChanges: {
@@ -110,11 +108,11 @@ export default {
                 .getDate()}`.slice(-2)}`,
               time: `${`0${event.get("time").getHours()}`.slice(
                 -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`,
-            },
+              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+            }
           }));
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -123,76 +121,54 @@ export default {
       const companyQuery = new AV.Query("Company");
       companyQuery
         .get(vm.$route.params.id)
-        .then((company) => {
+        .then(company => {
           vm.companyName = company.get("name");
         })
-        .catch((error) => {
-          alert(error);
-        });
-    },
-    getCompanyClients() {
-      const vm = this;
-      const clientQuery = new AV.Query("Client");
-      clientQuery.equalTo(
-        "company",
-        AV.Object.createWithoutData("Company", vm.$route.params.id)
-      );
-      clientQuery
-        .find()
-        .then((clients) => {
-          vm.companyClients = clients;
-        })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
     createEvent(newEvent) {
-      alert("inside company createEvent");
       const vm = this;
-      console.log(vm.companyClients[0].id);
-      const eventObjects = [];
-      console.log("vm.comapnyClients length: " +  vm.companyClients.length);
-      for (const client in vm.companyClients) {
-        console.log("client id: " + client.id); 
-        const event = new AV.Object("Event");
-        event
-          .set("client", AV.Object.createWithoutData("Client", client.id))
-          .set("name", newEvent.name)
-          .set("companyWide", true)
-          .set("done", false)
-          .set(
-            "time",
-            new Date(
-              newEvent.date.slice(0, 4),
-              newEvent.date.slice(5, 7) - 1,
-              newEvent.date.slice(8, 10),
-              newEvent.time.slice(0, 2),
-              newEvent.time.slice(3, 5),
-              0
-            )
-          );
-        if (newEvent.recurringEvent) {
-          event.set("recursIn", newEvent.daysBetween);
-        }
-        eventObjects.push(event);
+      const event = new AV.Object("Event");
+      event
+        .set(
+          "company",
+          AV.Object.createWithoutData("Company", vm.$route.params.id)
+        )
+        .set("name", newEvent.name)
+        .set("companyWide", true)
+        .set("done", false)
+        .set(
+          "time",
+          new Date(
+            newEvent.date.slice(0, 4),
+            newEvent.date.slice(5, 7) - 1,
+            newEvent.date.slice(8, 10),
+            newEvent.time.slice(0, 2),
+            newEvent.time.slice(3, 5),
+            0
+          )
+        );
+      if (newEvent.recurringEvent) {
+        event.set("recursIn", newEvent.daysBetween);
       }
-      alert("before save");
-      AV.Object.saveAll(eventObjects)
+      event
+        .save()
         .then(() => {
-          alert("Events have been created and saved");
+          alert("Event has been created");
           vm.fetchEvents();
           vm.creatingCustomEvent = false;
         })
-        .catch((error) => {
-          alert("inside catch");
+        .catch(error => {
           alert(error);
         });
     },
     cancel() {
       const vm = this;
       vm.creatingCustomEvent = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

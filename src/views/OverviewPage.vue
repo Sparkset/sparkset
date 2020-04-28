@@ -95,7 +95,6 @@ export default {
   created() {
     const vm = this;
     vm.fetchEvents();
-    vm.fetchNotes();
   },
   methods: {
     fetchEvents() {
@@ -110,6 +109,7 @@ export default {
           vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
+            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -145,6 +145,7 @@ export default {
                 .set("name", lastEvent.get("name"))
                 .set("client", lastEvent.get("client"))
                 .set("recursIn", lastEvent.get("recursIn")),
+              companyWide: lastEvent.get("companyWide"),
               pendingChanges: {
                 date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
@@ -155,6 +156,7 @@ export default {
               lastEvent
             };
           });
+          vm.fetchNotes();
         })
         .catch(error => {
           alert(error);

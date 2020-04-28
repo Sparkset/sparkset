@@ -32,10 +32,24 @@
     </thead>
     <tbody>
       <tr v-for="event in sortedEvents" :key="event.event.id">
-        <td v-if="showClient">
-          <ClientCombo :client="event.event.get('client')" />
+        <div v-if="showClient">
+          <td v-if="!event.companyWide">
+            <ClientCombo :client="event.event.get('client')" />
+          </td>
+          <td v-if="event.event.get('company')">
+            <CompanyCombo :company="event.event.get('company')" />
+          </td>
+        </div>
+        <td>
+          <label>
+            <span>
+              {{ event.event.get("name") }}
+              <div v-if="event.event.get('company')" class="icon">
+                <font-awesome-icon :icon="['fas', 'building']" />
+              </div>
+            </span>
+          </label>
         </td>
-        <td>{{ event.event.get("name") }}</td>
         <td>
           <form v-if="event.editing" @submit.prevent="update(event)">
             <div class="field">
@@ -84,12 +98,14 @@
 <script>
 import ThWithSort from "@/components/ThWithSort.vue";
 import ClientCombo from "@/components/ClientCombo.vue";
+import CompanyCombo from "@/components/CompanyCombo.vue";
 import AV from "leancloud-storage";
 export default {
   name: "EventsTable",
   components: {
     ThWithSort,
-    ClientCombo
+    ClientCombo,
+    CompanyCombo
   },
   props: {
     events: Array,
@@ -163,4 +179,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+span {
+  display: flex;
+}
+
+.icon {
+  margin-left: 10px;
+}
+</style>
