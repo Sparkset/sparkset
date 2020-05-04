@@ -4,7 +4,7 @@
 
 ## Current Abilities
 
-1. The user can create clients and the system will automatically add the predefined one-time events and recurring events for the client. The system will also suggest events that can be scheduled. User can also create custom events and set a recurrance if needed.
+1. The user can create clients and the system will automatically add the predefined one-time events and recurring events for the client. The system will also suggest events that can be scheduled. The user can also create custom events and set a recurrence if needed.
 2. The system will automatically create a company page when a new client with a new company is created. There can be multiple clients associated with the same company.
 3. The user can upload files that are associated with a client.
 4. The user can add notes with relative clients and tags associated with them. The user can filter notes by selecting a certain tag.
@@ -41,4 +41,4 @@ Note that this app doesn’t need LeanCloud’s command line interface to run lo
 
 ## Deploying the App
 
-The project is set up so that any commit made to this repository will automatically trigger the latest version on the `master` branch to be deployed to LeanEngine (so it’s safe to do experiments on other branches). See [LeanEngine Web Hosting documentation](https://docs.leancloud.app/leanengine_webhosting_guide-node.html#hash224173211) for how the mechanism is set up, as well as how you can manually deploy the app.
+The project is set up so that whenever a commit is made to the `master` branch, this commit will be deployed to LeanEngine automatically (so it’s safe to do experiments on other branches). See [LeanEngine Web Hosting documentation](https://docs.leancloud.app/leanengine_webhosting_guide-node.html#hash224173211) for how the mechanism is set up, as well as how you can manually deploy the app.
