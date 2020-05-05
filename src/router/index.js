@@ -3,9 +3,9 @@ import VueRouter from "vue-router";
 import AV from "leancloud-storage";
 Vue.use(VueRouter);
 async function isLoggedIn() {
-  try {
-    const user = AV.User.current();
-    if (user) {
+  const user = AV.User.current();
+  if (user) {
+    try {
       const result = await user.isAuthenticated();
       if (result) {
         await user.fetch();
@@ -13,11 +13,11 @@ async function isLoggedIn() {
         await AV.User.logOut();
       }
       return result;
+    } catch (error) {
+      alert(error);
     }
-    return false;
-  } catch (error) {
-    alert(error);
   }
+  return false;
 }
 const routes = [
   {
