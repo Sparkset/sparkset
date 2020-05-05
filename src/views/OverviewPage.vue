@@ -57,7 +57,9 @@
             </p>
             <p>
               Events Open:
-              <span class="item-text-danger"> {{ stats.eventsOpen }} </span>
+              <span class="item-text-danger">
+                {{ stats.eventsOpen }}
+              </span>
             </p>
           </div>
         </section>
@@ -148,7 +150,6 @@ export default {
     const vm = this;
     vm.fetchEvents();
     vm.fetchNotes();
-    vm.fetchStats();
   },
   methods: {
     fetchEvents() {
@@ -272,7 +273,6 @@ export default {
         .catch(error => {
           alert(error);
         });
-      vm.fetchStats();
     },
     dismiss(event) {
       const vm = this;
@@ -307,6 +307,12 @@ export default {
 .horizontal-item:last-of-type > .card {
   margin: 0 18px 0 0;
 }
+.item-text-success {
+  color: #36d5d8;
+}
+.item-text-danger {
+  color: #e52f2e;
+}
 @media (min-width: 544px) {
   .horizontal-items {
     left: -24px;
@@ -320,11 +326,5 @@ export default {
   .horizontal-item:last-of-type > .card {
     margin: 0 24px 0 0;
   }
-}
-.item-text-success {
-  color: #4bb543;
-}
-.item-text-danger {
-  color: #ff0000;
 }
 </style>
