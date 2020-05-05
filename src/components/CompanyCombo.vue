@@ -12,7 +12,7 @@
         <router-link :to="`/company/${company.id}`">
           {{ company.get("name") }}
         </router-link>
-        <br>
+        <br />
         <a
           class="social"
           v-if="company.get('linkedin')"
