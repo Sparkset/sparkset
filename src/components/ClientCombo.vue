@@ -12,6 +12,7 @@
         <router-link :to="`/client/${client.id}`">
           {{ client.get("fullName") }}
         </router-link>
+        <br>
         <a
           class="social"
           v-if="client.get('linkedin')"
