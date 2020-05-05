@@ -10,12 +10,23 @@
         >
           Name
         </ThWithSort>
+        <ThWithSort
+          by="nextEvent"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Next Company Wide Event
+        </ThWithSort>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="company in sortedCompanies" :key="company.id">
+      <tr v-for="company in sortedCompanies" :key="company.company.id">
         <td>
-          <CompanyCombo :company="company" />
+          <CompanyCombo :company="company.company" />
+        </td>
+        <td>
+          {{ company.nextEvent.get("name") }}
         </td>
       </tr>
     </tbody>
@@ -50,9 +61,19 @@ export default {
   computed: {
     sortedCompanies() {
       const vm = this;
-      return vm.companies.sort((a, b) =>
-        a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
-      );
+      if (vm.sortedBy === "nextEvent") {
+        return vm.companies.sort((a, b) =>
+          a.nextEvent.get("name") > b.nextEvent.get("name")
+            ? vm.sortOrder
+            : -vm.sortOrder
+        );
+      } else {
+        return vm.companies.sort((a, b) =>
+          a.company.get(vm.sortedBy) > b.company.get(vm.sortedBy)
+            ? vm.sortOrder
+            : -vm.sortOrder
+        );
+      }
     }
   }
 };

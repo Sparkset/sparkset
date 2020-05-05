@@ -31,16 +31,45 @@ export default {
   },
   created() {
     const vm = this;
-    const companyQuery = new AV.Query("Company");
-    companyQuery
-      .limit(1000)
-      .find()
-      .then(companies => {
-        vm.companies = companies;
-      })
-      .catch(error => {
-        alert(error);
-      });
+    vm.getCompanies();
+  },
+  methods: {
+    getCompanies() {
+      const vm = this;
+      const companyQuery = new AV.Query("Company");
+      companyQuery
+        .limit(1000)
+        .find()
+        .then(companies => {
+          Promise.all(
+            companies.map(async company => {
+              try {
+                const nextEvent =
+                  (await new AV.Query("Event")
+                    .equalTo("company", company)
+                    .equalTo("done", false)
+                    .ascending("time")
+                    .first()) || new AV.Object("Event").set("name", "");
+                return {
+                  company,
+                  nextEvent
+                };
+              } catch (error) {
+                alert(error);
+              }
+              return {
+                company,
+                nextEvent: new AV.Object("Event").set("name", "")
+              };
+            })
+          ).then(companies => {
+            vm.companies = companies;
+          });
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
   }
 };
 </script>
