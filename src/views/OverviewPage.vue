@@ -33,8 +33,13 @@
               <input type="time" v-model="event.pendingChanges.time" required />
             </div>
             <div class="field">
-              <button class="primary">
+              <button type="submit" class="primary">
                 Add
+              </button>
+            </div>
+            <div class="field">
+              <button type="button" @click="dismiss(event)">
+                Dismiss
               </button>
             </div>
           </form>
@@ -254,6 +259,16 @@ export default {
       );
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
+        .then(vm.fetchEvents)
+        .catch(error => {
+          alert(error);
+        });
+    },
+    dismiss(event) {
+      const vm = this;
+      event.lastEvent
+        .unset("recursIn")
+        .save()
         .then(vm.fetchEvents)
         .catch(error => {
           alert(error);

@@ -79,30 +79,8 @@ const routes = [
         component: () => import("../views/ClientsPage.vue")
       },
       {
-        path: "/companies",
-        component: () => import("../views/CompaniesPage.vue")
-      },
-      {
         path: "/clients/add",
         component: () => import("../views/ClientsAddPage.vue")
-      },
-      {
-        path: "/company/:id",
-        component: () => import("../views/CompanyPage.vue"),
-        children: [
-          {
-            path: "",
-            component: () => import("../components/CompanyProfile.vue")
-          },
-          {
-            path: "clients",
-            component: () => import("../components/CompanyClients.vue")
-          },
-          {
-            path: "events",
-            component: () => import("../components/CompanyEvents.vue")
-          }
-        ]
       },
       {
         path: "/client/:id",
@@ -119,6 +97,28 @@ const routes = [
           {
             path: "files",
             component: () => import("../components/ClientFiles.vue")
+          }
+        ]
+      },
+      {
+        path: "/companies",
+        component: () => import("../views/CompaniesPage.vue")
+      },
+      {
+        path: "/company/:id",
+        component: () => import("../views/CompanyPage.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("../components/CompanyProfile.vue")
+          },
+          {
+            path: "clients",
+            component: () => import("../components/CompanyClients.vue")
+          },
+          {
+            path: "events",
+            component: () => import("../components/CompanyEvents.vue")
           }
         ]
       },
