@@ -17,7 +17,9 @@ import {
   faPaperPlane,
   faPhoneAlt,
   faBuilding,
-  faArrowRight
+  faArrowRight,
+  faUser,
+  faStickyNote
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faLinkedin,
@@ -31,6 +33,8 @@ library.add(
   faLongArrowAltDown,
   faArrowDown,
   faSearch,
+  faUser,
+  faStickyNote,
   faPaperPlane,
   faPhoneAlt,
   faBuilding,
