@@ -43,6 +43,10 @@ export default {
           path: "/clients"
         },
         {
+          name: "Companies",
+          path: "/companies"
+        },
+        {
           name: "Notes",
           path: "/notes"
         }

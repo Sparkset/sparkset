@@ -24,7 +24,7 @@ import {
 import {
   faLinkedin,
   faFacebookSquare,
-  faInstagram
+  faInstagramSquare
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(
@@ -40,7 +40,7 @@ library.add(
   faBuilding,
   faLinkedin,
   faFacebookSquare,
-  faInstagram,
+  faInstagramSquare,
   faArrowRight
 );
 Vue.component("font-awesome-icon", FontAwesomeIcon);

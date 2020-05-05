@@ -187,7 +187,7 @@
               "
               target="_blank"
             >
-              <font-awesome-icon :icon="['fab', 'instagram']" />
+              <font-awesome-icon :icon="['fab', 'instagram-square']" />
             </a>
           </span>
           <input v-model="companyInstagram" type="text" :disabled="!editing" />
@@ -209,6 +209,12 @@
         <label>
           <span>Profile Picture</span>
           <input type="file" ref="picturesInput" />
+        </label>
+      </div>
+      <div v-if="editingCompanyPicture" class="field field--half">
+        <label>
+          <span>Company Profile Picture</span>
+          <input type="file" ref="companyPicturesInput" />
         </label>
       </div>
       <div v-if="editing" class="field">
@@ -252,7 +258,9 @@ export default {
       companyFacebook: "",
       companyInstagram: "",
       jobTitle: "",
-      jobDescription: ""
+      jobDescription: "",
+      editingCompanyPicture: false,
+      companyProfielPic: null
     };
   },
   methods: {
@@ -264,7 +272,13 @@ export default {
           .equalTo("name", vm.companyName)
           .first()
           .then(company => {
-            vm.company = company || new AV.Object("Company");
+            if (company) {
+              vm.company = company;
+              vm.editingCompanyPicture = false;
+            } else {
+              vm.company = new AV.Object("Company");
+              vm.editingCompanyPicture = true;
+            }
           })
           .catch(error => {
             alert(error);
@@ -281,11 +295,13 @@ export default {
           });
       } else {
         vm.company = new AV.Object("Company");
+        vm.editingCompanyPicture = false;
         vm.companyPrediction = new AV.Object("Company");
       }
     },
     completeCompanyWithPrediction() {
       const vm = this;
+      vm.editingCompanyPicture = false;
       vm.company = vm.companyPrediction;
       vm.companyName = vm.company.get("name");
       vm.completeCompany();
@@ -303,6 +319,14 @@ export default {
         .set("linkedin", vm.companyLinkedin)
         .set("facebook", vm.companyFacebook)
         .set("instagram", vm.companyInstagram);
+      if (
+        vm.editingCompanyPicture &&
+        vm.$refs.companyPicturesInput.files.length
+      ) {
+        const picture = vm.$refs.companyPicturesInput.files[0];
+        const file = new AV.File(picture.name, picture);
+        vm.company.set("picture", file);
+      }
       if (vm.isNew && vm.$refs.picturesInput.files.length) {
         const picture = vm.$refs.picturesInput.files[0];
         const file = new AV.File(picture.name, picture);

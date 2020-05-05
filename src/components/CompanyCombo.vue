@@ -13,11 +13,28 @@
           {{ company.get("name") }}
         </router-link>
         <a
+          class="social"
           v-if="company.get('linkedin')"
           :href="`https://www.linkedin.com/company/${company.get('linkedin')}`"
           target="_blank"
         >
           <font-awesome-icon :icon="['fab', 'linkedin']" />
+        </a>
+        <a
+          class="social"
+          v-if="company.get('facebook')"
+          :href="`https://www.facebook.com/${company.get('facebook')}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'facebook-square']" />
+        </a>
+        <a
+          class="social"
+          v-if="company.get('instagram')"
+          :href="`https://www.instagram.com/${company.get('instagram')}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'instagram-square']" />
         </a>
       </span>
     </span>
@@ -45,5 +62,8 @@ export default {
   width: 30pt;
   height: 30pt;
   object-fit: cover;
+}
+.social {
+  margin-right: 4px;
 }
 </style>

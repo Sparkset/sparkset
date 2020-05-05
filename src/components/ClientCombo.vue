@@ -13,6 +13,7 @@
           {{ client.get("fullName") }}
         </router-link>
         <a
+          class="social"
           v-if="client.get('linkedin')"
           :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
           target="_blank"
@@ -49,6 +50,9 @@ export default {
   width: 30pt;
   height: 30pt;
   object-fit: cover;
+}
+.social {
+  margin-right: 4px;
 }
 .nickname {
   font-size: 9pt;

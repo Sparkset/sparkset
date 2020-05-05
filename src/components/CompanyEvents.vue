@@ -6,7 +6,7 @@
       <EventsTable :events="clientEvents" :fetch-events="fetchClientEvents" />
     </div>
     <div class="field field--superwide">
-      <h2>Company Wide Events</h2>
+      <h2>Company-Wide Events</h2>
       <EventsTable :events="companyEvents" :fetch-events="fetchCompanyEvents" />
     </div>
     <div v-if="!creatingCustomEvent" class="field">
