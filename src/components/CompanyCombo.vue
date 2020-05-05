@@ -19,6 +19,20 @@
         >
           <font-awesome-icon :icon="['fab', 'linkedin']" />
         </a>
+        <a
+          v-if="company.get('facebook')"
+          :href="`https://www.facebook.com/${company.get('facebook')}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'facebook-square']" />
+        </a>
+         <a
+          v-if="company.get('instagram')"
+          :href="`https://www.instagram.com/${company.get('instagram')}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'instagram-square']" />
+        </a>
       </span>
     </span>
   </span>
@@ -29,7 +43,7 @@ import AV from "leancloud-storage";
 export default {
   name: "CompanyCombo",
   props: {
-    company: AV.Object
+    company: AV.Object,
   }
 };
 </script>
@@ -40,7 +54,6 @@ export default {
   align-items: center;
   margin-top: 7px;
   margin-left: 0px;
-  color: #36d5d8;
 }
 
 .combo > img {
@@ -51,6 +64,7 @@ export default {
   object-fit: cover;
 }
 
-.text {
+a {
+  margin-left: 2px;
 }
 </style>
