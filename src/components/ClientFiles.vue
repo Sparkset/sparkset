@@ -20,45 +20,30 @@
       <table>
         <thead>
           <tr>
-            <th class="sortable" @click="sortBy('name')">
+            <ThWithSort
+              by="name"
+              :sorted-by="sortedBy"
+              :sort-order="sortOrder"
+              :sort-by="sortBy"
+            >
               Name
-              <span v-if="sortedBy === 'name'">
-                <font-awesome-icon
-                  :icon="[
-                    'fas',
-                    sortOrder === 1
-                      ? 'long-arrow-alt-up'
-                      : 'long-arrow-alt-down'
-                  ]"
-                />
-              </span>
-            </th>
-            <th class="sortable" @click="sortBy('createdAt')">
+            </ThWithSort>
+            <ThWithSort
+              by="createdAt"
+              :sorted-by="sortedBy"
+              :sort-order="sortOrder"
+              :sort-by="sortBy"
+            >
               Uploaded at
-              <span v-if="sortedBy === 'createdAt'">
-                <font-awesome-icon
-                  :icon="[
-                    'fas',
-                    sortOrder === 1
-                      ? 'long-arrow-alt-up'
-                      : 'long-arrow-alt-down'
-                  ]"
-                />
-              </span>
-            </th>
-            <th class="sortable" @click="sortBy('size')">
+            </ThWithSort>
+            <ThWithSort
+              by="size"
+              :sorted-by="sortedBy"
+              :sort-order="sortOrder"
+              :sort-by="sortBy"
+            >
               Size
-              <span v-if="sortedBy === 'size'">
-                <font-awesome-icon
-                  :icon="[
-                    'fas',
-                    sortOrder === 1
-                      ? 'long-arrow-alt-up'
-                      : 'long-arrow-alt-down'
-                  ]"
-                />
-              </span>
-            </th>
+            </ThWithSort>
             <th>Delete</th>
           </tr>
         </thead>
@@ -98,9 +83,13 @@
 </template>
 
 <script>
+import ThWithSort from "@/components/ThWithSort.vue";
 import AV from "leancloud-storage";
 export default {
   name: "ClientFiles",
+  components: {
+    ThWithSort
+  },
   data() {
     return {
       query: "",

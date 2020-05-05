@@ -34,10 +34,9 @@
       <tr v-for="event in sortedEvents" :key="event.event.id">
         <td v-if="showClient">
           <CompanyCombo
-            v-if="event.companyWide"
+            v-if="event.event.get('company')"
             :company="event.event.get('company')"
           />
-
           <ClientCombo v-else :client="event.event.get('client')" />
         </td>
         <td>

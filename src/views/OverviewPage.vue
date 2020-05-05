@@ -111,7 +111,6 @@ export default {
           vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
-            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -147,7 +146,6 @@ export default {
                 .set("name", lastEvent.get("name"))
                 .set("client", lastEvent.get("client"))
                 .set("recursIn", lastEvent.get("recursIn")),
-              companyWide: lastEvent.get("company") ? true : false,
               pendingChanges: {
                 date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
