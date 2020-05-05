@@ -22,26 +22,32 @@ import AV from "leancloud-storage";
 export default {
   name: "CompaniesPage",
   components: {
-    CompaniesTable
+    CompaniesTable,
   },
   data() {
     return {
-      companies: []
+      companies: [],
     };
   },
   created() {
-    const vm = this;
-    const companyQuery = new AV.Query("Company");
-    companyQuery
-      .limit(1000)
-      .find()
-      .then(companies => {
-        vm.companies = companies;
-      })
-      .catch(error => {
-        alert(error);
-      });
-  }
+      const vm = this;
+      vm.getCompanies();
+  },
+  methods: {
+    getCompanies() {
+      const vm = this;
+      const companyQuery = new AV.Query("Company");
+      companyQuery
+        .limit(1000)
+        .find()
+        .then((companies) => {
+          vm.companies = companies;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+  },
 };
 </script>
 

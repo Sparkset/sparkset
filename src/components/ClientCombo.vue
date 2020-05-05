@@ -12,11 +12,7 @@
         <router-link :to="`/client/${client.id}`">
           {{ client.get("fullName") }}
         </router-link>
-<<<<<<< HEAD
-        <br>
-=======
         <br />
->>>>>>> 2166b4ac37975ce6bc2804da36fd7f6407902473
         <a
           class="social"
           v-if="client.get('linkedin')"
