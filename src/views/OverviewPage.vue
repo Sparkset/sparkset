@@ -44,18 +44,8 @@
         <section class="fields">
           <h1>Weekly Report</h1>
           <div class="field">
-            <p>
-              Events Completed:
-              <span v-if="eventsTrue">
-                {{ eventsTrue }}
-              </span>
-            </p>
-            <p>
-              Events Open:
-              <span v-if="eventsFalse">
-                {{ eventsFalse }}
-              </span>
-            </p>
+            <p>Events Completed: {{ stats.eventsCompleted }}</p>
+            <p>Events Open: {{ stats.eventsOpen }}</p>
           </div>
         </section>
       </div>
@@ -63,39 +53,18 @@
         <section class="fields">
           <h1>Data at a Glance</h1>
           <div class="field">
-            <p>
-              Clients:
-              <span v-if="clientsCount">
-                {{ clientsCount }}
-              </span>
-            </p>
-            <p>
-              Companies:
-              <span v-if="companiesCount">
-                {{ companiesCount }}
-              </span>
-            </p>
-            <p>
-              Events:
-              <span v-if="eventsCount">
-                {{ eventsCount }}
-              </span>
-            </p>
-            <p>
-              Notes:
-              <span v-if="notesCount">
-                {{ notesCount }}
-              </span>
-            </p>
-            <p>Preferences:</p>
+            <p>Clients: {{ stats.clients }}</p>
+            <p>Companies: {{ stats.companies }}</p>
+            <p>Events: {{ stats.events }}</p>
+            <p>Notes: {{ stats.notes }}</p>
           </div>
         </section>
       </div>
       <div class="card">
         <section class="fields">
           <h1>New Clients</h1>
-          <div class="field--">
-            <p v-for="client in recentClients" :key="client.id">
+          <div class="field">
+            <p v-for="client in stats.newClients" :key="client.id">
               {{ client.get("fullName") }}
             </p>
           </div>
@@ -151,58 +120,24 @@ export default {
       suggestedEvents: [],
       recentNotes: [],
       clients: [],
-      recentClients: [],
-      clientsCount: 0,
-      companiesCount: 0,
-      eventsCount: 0,
-      eventsFalse: 0,
-      eventsTrue: 0,
-      notesCount: 0
+      stats: {
+        eventsCompleted: 0,
+        eventsOpen: 0,
+        clients: 0,
+        companies: 0,
+        events: 0,
+        notes: 0,
+        newClients: []
+      }
     };
   },
   created() {
     const vm = this;
-    vm.fetchClients();
-    vm.fetchCompanies();
     vm.fetchEvents();
     vm.fetchNotes();
+    vm.fetchStats();
   },
   methods: {
-    fetchClients() {
-      const vm = this;
-      const clientsQuery = new AV.Query("Client");
-      const clientsCountQuery = new AV.Query("Client");
-      clientsQuery
-        .descending("createdAt")
-        .limit(3)
-        .find()
-        .then(clients => {
-          vm.recentClients = clients;
-        })
-        .catch(error => {
-          alert(error);
-        });
-      clientsCountQuery
-        .count()
-        .then(clients => {
-          vm.clientsCount = clients;
-        })
-        .catch(error => {
-          alert(error);
-        });
-    },
-    fetchCompanies() {
-      const vm = this;
-      const companiesQuery = new AV.Query("Company");
-      companiesQuery
-        .count()
-        .then(companies => {
-          vm.companiesCount = companies;
-        })
-        .catch(error => {
-          alert(error);
-        });
-    },
     fetchEvents() {
       const vm = this;
       const upcomingEventQuery = new AV.Query("Event");
@@ -216,7 +151,6 @@ export default {
           vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
-            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -252,7 +186,6 @@ export default {
                 .set("name", lastEvent.get("name"))
                 .set("client", lastEvent.get("client"))
                 .set("recursIn", lastEvent.get("recursIn")),
-              companyWide: lastEvent.get("company") ? true : false,
               pendingChanges: {
                 date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
@@ -263,35 +196,6 @@ export default {
               lastEvent
             };
           });
-        })
-        .catch(error => {
-          alert(error);
-        });
-      const eventsQuery = new AV.Query("Event");
-      eventsQuery
-        .count()
-        .then(events => {
-          vm.eventsCount = events;
-        })
-        .catch(error => {
-          alert(error);
-        });
-      const falseEventsQuery = new AV.Query("Event");
-      falseEventsQuery
-        .equalTo("done", false)
-        .count()
-        .then(events => {
-          vm.eventsFalse = events;
-        })
-        .catch(error => {
-          alert(error);
-        });
-      const trueEventsQuery = new AV.Query("Event");
-      trueEventsQuery
-        .equalTo("done", true)
-        .count()
-        .then(events => {
-          vm.eventsTrue = events;
         })
         .catch(error => {
           alert(error);
@@ -313,15 +217,27 @@ export default {
         .catch(error => {
           alert(error);
         });
-      const notesCountQuery = new AV.Query("Note");
-      notesCountQuery
-        .count()
-        .then(notes => {
-          vm.notesCount = notes;
-        })
-        .catch(error => {
-          alert(error);
-        });
+    },
+    async fetchStats() {
+      const vm = this;
+      try {
+        vm.stats.eventsCompleted = await new AV.Query("Event")
+          .equalTo("done", true)
+          .count();
+        vm.stats.eventsOpen = await new AV.Query("Event")
+          .equalTo("done", false)
+          .count();
+        vm.stats.clients = await new AV.Query("Client").count();
+        vm.stats.companies = await new AV.Query("Company").count();
+        vm.stats.events = await new AV.Query("Event").count();
+        vm.stats.notes = await new AV.Query("Note").count();
+        vm.stats.newClients = await new AV.Query("Client")
+          .descending("createdAt")
+          .limit(3)
+          .find();
+      } catch (error) {
+        alert(error);
+      }
     },
     add(event) {
       const vm = this;
