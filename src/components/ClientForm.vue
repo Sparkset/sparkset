@@ -211,6 +211,12 @@
           <input type="file" ref="picturesInput" />
         </label>
       </div>
+      <div v-if="editingCompanyPicture" class="field field--half">
+        <label>
+          <span>Company Profile Picture</span>
+          <input type="file" ref="companyPicturesInput" />
+        </label>
+      </div>
       <div v-if="editing" class="field">
         <button type="submit" class="primary">Save</button>
       </div>
@@ -252,19 +258,29 @@ export default {
       companyFacebook: "",
       companyInstagram: "",
       jobTitle: "",
-      jobDescription: ""
+      jobDescription: "",
+      editingCompanyPicture: false,
+      companyProfielPic: null
     };
   },
   methods: {
     findCompany() {
       const vm = this;
+      if (vm.companyName == "") {
+        vm.editingCompanyPicture = false;
+      }
       if (vm.companyName) {
         const companyQuery = new AV.Query("Company");
         companyQuery
           .equalTo("name", vm.companyName)
           .first()
           .then(company => {
-            vm.company = company || new AV.Object("Company");
+            if (company) {
+              vm.company = company || new AV.Object("Company");
+              vm.editingCompanyPicture = false;
+            } else {
+              vm.editingCompanyPicture = true;
+            }
           })
           .catch(error => {
             alert(error);
@@ -286,6 +302,7 @@ export default {
     },
     completeCompanyWithPrediction() {
       const vm = this;
+      vm.editingCompanyPicture = false;
       vm.company = vm.companyPrediction;
       vm.companyName = vm.company.get("name");
       vm.completeCompany();
@@ -307,6 +324,14 @@ export default {
         const picture = vm.$refs.picturesInput.files[0];
         const file = new AV.File(picture.name, picture);
         vm.client.set("picture", file);
+        if (
+          vm.editingCompanyPicture &&
+          vm.$refs.companyPicturesInput.files.length
+        ) {
+          const picture = vm.$refs.companyPicturesInput.files[0];
+          const file = new AV.File(picture.name, picture);
+          vm.client.set("company").set("picture", file);
+        }
       }
       vm.client
         .set("fullName", vm.fullName)

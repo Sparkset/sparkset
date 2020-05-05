@@ -1,5 +1,12 @@
 <template>
   <span class="combo">
+    <img
+      :src="
+        company.get('picture')
+          ? company.get('picture').url()
+          : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+      "
+    />
     <span>
       <span>
         <router-link :to="`/company/${company.id}`" class="text">
@@ -51,9 +58,18 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 7px;
-  margin-left: 5px;
+  margin-left: 0px;
   color: #36d5d8;
 }
+
+.combo > img {
+  margin: 0 1rem 0 0;
+  border-radius: 50%;
+  width: 30pt;
+  height: 30pt;
+  object-fit: cover;
+}
+
 .text {
 }
 </style>
