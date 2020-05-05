@@ -60,7 +60,7 @@
               <input type="time" v-model="event.pendingChanges.time" required />
             </div>
             <div class="field">
-              <button class="primary">
+              <button type="submit" class="primary">
                 Save
               </button>
             </div>
@@ -78,6 +78,9 @@
           </a>
         </td>
         <td>
+          <button v-if="!event.event.id" @click="dismiss(event)">
+            Dismiss
+          </button>
           <button
             v-if="!event.editing"
             :class="[event.event.get('done') ? '' : 'primary']"
@@ -155,6 +158,16 @@ export default {
       const vm = this;
       event.event
         .set("done", !event.event.get("done"))
+        .save()
+        .then(vm.fetchEvents)
+        .catch(error => {
+          alert(error);
+        });
+    },
+    dismiss(event) {
+      const vm = this;
+      event.lastEvent
+        .unset("recursIn")
         .save()
         .then(vm.fetchEvents)
         .catch(error => {

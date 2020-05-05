@@ -33,8 +33,13 @@
               <input type="time" v-model="event.pendingChanges.time" required />
             </div>
             <div class="field">
-              <button class="primary">
+              <button type="submit" class="primary">
                 Add
+              </button>
+            </div>
+            <div class="field">
+              <button type="button" @click="dismiss(event)">
+                Dismiss
               </button>
             </div>
           </form>
@@ -268,6 +273,16 @@ export default {
           alert(error);
         });
       vm.fetchStats();
+    },
+    dismiss(event) {
+      const vm = this;
+      event.lastEvent
+        .unset("recursIn")
+        .save()
+        .then(vm.fetchEvents)
+        .catch(error => {
+          alert(error);
+        });
     }
   }
 };

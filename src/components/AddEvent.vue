@@ -53,12 +53,12 @@
       </label>
     </div>
     <div class="field">
-      <button class="primary">
+      <button type="submit" class="primary">
         Save
       </button>
     </div>
     <div class="field">
-      <button @click="cancel">Cancel</button>
+      <button type="button" @click="cancel">Cancel</button>
     </div>
   </form>
 </template>

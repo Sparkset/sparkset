@@ -62,7 +62,7 @@
               :href="`https://www.instagram.com/${company.get('instagram')}`"
               target="_blank"
             >
-              <font-awesome-icon :icon="['fab', 'instagram']" />
+              <font-awesome-icon :icon="['fab', 'instagram-square']" />
             </a>
           </span>
           <input

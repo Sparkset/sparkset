@@ -40,6 +40,15 @@
               {{ result.get("company").get("name") }}
             </span>
           </span>
+          <span v-if="result.className === 'Event'">
+            <span class="result__left">
+              <font-awesome-icon :icon="['fas', 'calendar-day']" />
+              {{ result.get("name") }}
+            </span>
+            <span class="result__right">
+              {{ result.get("client").get("fullName") }}
+            </span>
+          </span>
           <span v-if="result.className === 'Note'">
             <span class="result__left">
               <font-awesome-icon :icon="['fas', 'sticky-note']" />
@@ -64,7 +73,7 @@ export default {
     };
   },
   methods: {
-    getResults() {
+    async getResults() {
       const vm = this;
       const keywords = vm.query
         .replace(/[^a-zA-Z0-9]/g, " ")
@@ -79,7 +88,7 @@ export default {
           "cellPhone",
           "workPhone"
         ];
-        const clientQuery = AV.Query.and(
+        const clients = await AV.Query.and(
           ...keywords.map(keyword =>
             AV.Query.or(
               ...clientFields.map(field =>
@@ -96,9 +105,20 @@ export default {
           )
         )
           .include("company")
-          .limit(3);
+          .descending("updatedAt")
+          .limit(3)
+          .find();
+        const events = await AV.Query.and(
+          ...keywords.map(keyword =>
+            new AV.Query("Event").matches("name", new RegExp(keyword, "i"))
+          )
+        )
+          .include("client")
+          .descending("updatedAt")
+          .limit(3)
+          .find();
         const noteFields = ["title", "content"];
-        const noteQuery = AV.Query.and(
+        const notes = await AV.Query.and(
           ...keywords.map(keyword =>
             AV.Query.or(
               ...noteFields.map(field =>
@@ -108,18 +128,11 @@ export default {
           )
         )
           .include("owner")
-          .limit(2);
-        clientQuery
-          .find()
-          .then(clients => {
-            noteQuery.find().then(notes => {
-              vm.results = [...clients, ...notes];
-              vm.selectedResult = 0;
-            });
-          })
-          .catch(error => {
-            alert(error);
-          });
+          .descending("updatedAt")
+          .limit(3)
+          .find();
+        vm.results = [...clients, ...events, ...notes];
+        vm.selectedResult = 0;
       } else {
         vm.results = [];
       }
@@ -130,6 +143,11 @@ export default {
       const className = vm.results[vm.selectedResult].className;
       if (className === "Client") {
         vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
+      }
+      if (className === "Event") {
+        vm.$router.push(
+          `/client/${vm.results[vm.selectedResult].get("client").id}/events`
+        );
       }
       if (className === "Note") {
         vm.$router.push(`/notes#${vm.results[vm.selectedResult].id}`);
