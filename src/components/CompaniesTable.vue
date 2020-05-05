@@ -26,7 +26,7 @@
 import ThWithSort from "@/components/ThWithSort.vue";
 import CompanyCombo from "@/components/CompanyCombo.vue";
 export default {
-  name: "ComapniesTable",
+  name: "CompaniesTable",
   components: {
     ThWithSort,
     CompanyCombo
