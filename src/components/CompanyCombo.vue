@@ -14,7 +14,7 @@
         </router-link>
         <a
           v-if="company.get('linkedin')"
-          :href="`https://www.linkedin.com/in/${company.get('linkedin')}`"
+          :href="`https://www.linkedin.com/company/${company.get('linkedin')}`"
           target="_blank"
         >
           <font-awesome-icon :icon="['fab', 'linkedin']" />
