@@ -296,7 +296,7 @@ export default {
   width: calc(100% + 36px);
   margin-top: 0.3em;
   padding: 0 18px;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .horizontal-item > .card {
   margin: 0 12px 0 0;

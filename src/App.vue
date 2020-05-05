@@ -144,7 +144,7 @@ section:last-of-type {
   width: 100%;
 }
 .field--superwide {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .field--with--dropdown {
   position: relative;
@@ -311,7 +311,7 @@ td > button.danger:hover {
   width: 100%;
   padding: 0 0 88px 0;
   background-color: #f3f3f3;
-  overflow-y: scroll;
+  overflow-y: auto;
   z-index: 2;
   transition: left 0.2s ease;
 }
