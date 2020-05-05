@@ -40,6 +40,67 @@
           </form>
         </section>
       </div>
+      <div class="card">
+        <section class="fields">
+          <h1>Weekly Report</h1>
+          <div class="field">
+            <p>
+              Events Completed:
+              <span v-if="eventsTrue">
+                {{ eventsTrue }}
+              </span>
+            </p>
+            <p>
+              Events Open:
+              <span v-if="eventsFalse">
+                {{ eventsFalse }}
+              </span>
+            </p>
+          </div>
+        </section>
+      </div>
+      <div class="card">
+        <section class="fields">
+          <h1>Data at a Glance</h1>
+          <div class="field">
+            <p>
+              Clients:
+              <span v-if="clientsCount">
+                {{ clientsCount }}
+              </span>
+            </p>
+            <p>
+              Companies:
+              <span v-if="companiesCount">
+                {{ companiesCount }}
+              </span>
+            </p>
+            <p>
+              Events:
+              <span v-if="eventsCount">
+                {{ eventsCount }}
+              </span>
+            </p>
+            <p>
+              Notes:
+              <span v-if="notesCount">
+                {{ notesCount }}
+              </span>
+            </p>
+            <p>Preferences:</p>
+          </div>
+        </section>
+      </div>
+      <div class="card">
+        <section class="fields">
+          <h1>New Clients</h1>
+          <div class="field--">
+            <p v-for="client in recentClients" :key="client.id">
+              {{ client.get("fullName") }}
+            </p>
+          </div>
+        </section>
+      </div>
     </div>
     <div class="column column--left">
       <div class="card">
@@ -89,15 +150,59 @@ export default {
       upcomingEvents: [],
       suggestedEvents: [],
       recentNotes: [],
-      clients: []
+      clients: [],
+      recentClients: [],
+      clientsCount: 0,
+      companiesCount: 0,
+      eventsCount: 0,
+      eventsFalse: 0,
+      eventsTrue: 0,
+      notesCount: 0
     };
   },
   created() {
     const vm = this;
+    vm.fetchClients();
+    vm.fetchCompanies();
     vm.fetchEvents();
     vm.fetchNotes();
   },
   methods: {
+    fetchClients() {
+      const vm = this;
+      const clientsQuery = new AV.Query("Client");
+      const clientsCountQuery = new AV.Query("Client");
+      clientsQuery
+        .descending("createdAt")
+        .limit(3)
+        .find()
+        .then(clients => {
+          vm.recentClients = clients;
+        })
+        .catch(error => {
+          alert(error);
+        });
+      clientsCountQuery
+        .count()
+        .then(clients => {
+          vm.clientsCount = clients;
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
+    fetchCompanies() {
+      const vm = this;
+      const companiesQuery = new AV.Query("Company");
+      companiesQuery
+        .count()
+        .then(companies => {
+          vm.companiesCount = companies;
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
     fetchEvents() {
       const vm = this;
       const upcomingEventQuery = new AV.Query("Event");
@@ -111,6 +216,7 @@ export default {
           vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
+            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -146,6 +252,7 @@ export default {
                 .set("name", lastEvent.get("name"))
                 .set("client", lastEvent.get("client"))
                 .set("recursIn", lastEvent.get("recursIn")),
+              companyWide: lastEvent.get("company") ? true : false,
               pendingChanges: {
                 date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
@@ -156,6 +263,35 @@ export default {
               lastEvent
             };
           });
+        })
+        .catch(error => {
+          alert(error);
+        });
+      const eventsQuery = new AV.Query("Event");
+      eventsQuery
+        .count()
+        .then(events => {
+          vm.eventsCount = events;
+        })
+        .catch(error => {
+          alert(error);
+        });
+      const falseEventsQuery = new AV.Query("Event");
+      falseEventsQuery
+        .equalTo("done", false)
+        .count()
+        .then(events => {
+          vm.eventsFalse = events;
+        })
+        .catch(error => {
+          alert(error);
+        });
+      const trueEventsQuery = new AV.Query("Event");
+      trueEventsQuery
+        .equalTo("done", true)
+        .count()
+        .then(events => {
+          vm.eventsTrue = events;
         })
         .catch(error => {
           alert(error);
@@ -173,6 +309,15 @@ export default {
         .find()
         .then(notes => {
           vm.recentNotes = notes;
+        })
+        .catch(error => {
+          alert(error);
+        });
+      const notesCountQuery = new AV.Query("Note");
+      notesCountQuery
+        .count()
+        .then(notes => {
+          vm.notesCount = notes;
         })
         .catch(error => {
           alert(error);
