@@ -8,7 +8,7 @@
             {{ companies.length === 1 ? "Company" : "Companies" }}
           </h1>
           <div class="field field--superwide">
-            <CompaniesTable :companies="companies" noBlue/>
+            <CompaniesTable :companies="companies" />
           </div>
         </section>
       </div>
@@ -22,11 +22,11 @@ import AV from "leancloud-storage";
 export default {
   name: "CompaniesPage",
   components: {
-    CompaniesTable,
+    CompaniesTable
   },
   data() {
     return {
-      companies: [],
+      companies: []
     };
   },
   created() {
@@ -35,13 +35,13 @@ export default {
     companyQuery
       .limit(1000)
       .find()
-      .then((companies) => {
+      .then(companies => {
         vm.companies = companies;
       })
-      .catch((error) => {
+      .catch(error => {
         alert(error);
       });
-  },
+  }
 };
 </script>
 

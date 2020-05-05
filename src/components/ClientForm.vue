@@ -187,7 +187,7 @@
               "
               target="_blank"
             >
-              <font-awesome-icon :icon="['fab', 'instagram']" />
+              <font-awesome-icon :icon="['fab', 'instagram-square']" />
             </a>
           </span>
           <input v-model="companyInstagram" type="text" :disabled="!editing" />
@@ -266,9 +266,6 @@ export default {
   methods: {
     findCompany() {
       const vm = this;
-      if (vm.companyName == "") {
-        vm.editingCompanyPicture = false;
-      }
       if (vm.companyName) {
         const companyQuery = new AV.Query("Company");
         companyQuery
@@ -276,9 +273,10 @@ export default {
           .first()
           .then(company => {
             if (company) {
-              vm.company = company || new AV.Object("Company");
+              vm.company = company;
               vm.editingCompanyPicture = false;
             } else {
+              vm.company = new AV.Object("Company");
               vm.editingCompanyPicture = true;
             }
           })
@@ -297,6 +295,7 @@ export default {
           });
       } else {
         vm.company = new AV.Object("Company");
+        vm.editingCompanyPicture = false;
         vm.companyPrediction = new AV.Object("Company");
       }
     },
@@ -320,18 +319,18 @@ export default {
         .set("linkedin", vm.companyLinkedin)
         .set("facebook", vm.companyFacebook)
         .set("instagram", vm.companyInstagram);
+      if (
+        vm.editingCompanyPicture &&
+        vm.$refs.companyPicturesInput.files.length
+      ) {
+        const picture = vm.$refs.companyPicturesInput.files[0];
+        const file = new AV.File(picture.name, picture);
+        vm.company.set("picture", file);
+      }
       if (vm.isNew && vm.$refs.picturesInput.files.length) {
         const picture = vm.$refs.picturesInput.files[0];
         const file = new AV.File(picture.name, picture);
         vm.client.set("picture", file);
-        if (
-          vm.editingCompanyPicture &&
-          vm.$refs.companyPicturesInput.files.length
-        ) {
-          const picture = vm.$refs.companyPicturesInput.files[0];
-          const file = new AV.File(picture.name, picture);
-          vm.client.set("company").set("picture", file);
-        }
       }
       vm.client
         .set("fullName", vm.fullName)

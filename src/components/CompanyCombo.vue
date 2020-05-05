@@ -13,6 +13,7 @@
           {{ company.get("name") }}
         </router-link>
         <a
+          class="social"
           v-if="company.get('linkedin')"
           :href="`https://www.linkedin.com/company/${company.get('linkedin')}`"
           target="_blank"
@@ -20,13 +21,15 @@
           <font-awesome-icon :icon="['fab', 'linkedin']" />
         </a>
         <a
+          class="social"
           v-if="company.get('facebook')"
           :href="`https://www.facebook.com/${company.get('facebook')}`"
           target="_blank"
         >
           <font-awesome-icon :icon="['fab', 'facebook-square']" />
         </a>
-         <a
+        <a
+          class="social"
           v-if="company.get('instagram')"
           :href="`https://www.instagram.com/${company.get('instagram')}`"
           target="_blank"
@@ -43,7 +46,7 @@ import AV from "leancloud-storage";
 export default {
   name: "CompanyCombo",
   props: {
-    company: AV.Object,
+    company: AV.Object
   }
 };
 </script>
@@ -52,10 +55,7 @@ export default {
 .combo {
   display: flex;
   align-items: center;
-  margin-top: 7px;
-  margin-left: 0px;
 }
-
 .combo > img {
   margin: 0 1rem 0 0;
   border-radius: 50%;
@@ -63,8 +63,7 @@ export default {
   height: 30pt;
   object-fit: cover;
 }
-
-a {
-  margin-left: 2px;
+.social {
+  margin-right: 4px;
 }
 </style>

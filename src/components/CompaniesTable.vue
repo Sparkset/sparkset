@@ -29,15 +29,15 @@ export default {
   name: "ComapniesTable",
   components: {
     ThWithSort,
-    CompanyCombo,
+    CompanyCombo
   },
   props: {
-    companies: Array,
+    companies: Array
   },
   data() {
     return {
       sortedBy: "name",
-      sortOrder: 1,
+      sortOrder: 1
     };
   },
   methods: {
@@ -45,22 +45,16 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
-    },
+    }
   },
   computed: {
     sortedCompanies() {
       const vm = this;
-      if (vm.sortedBy === "name") {
-        return vm.companies.sort((a, b) =>
-          a.get("name") > b.get("name") ? vm.sortOrder : -vm.sortOrder
-        );
-      } else {
-        return vm.companies.sort((a, b) =>
-          a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
-        );
-      }
-    },
-  },
+      return vm.companies.sort((a, b) =>
+        a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
+      );
+    }
+  }
 };
 </script>
 
