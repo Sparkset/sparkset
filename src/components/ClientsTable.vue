@@ -52,7 +52,7 @@
         </td>
         <td v-if="showCompany">
           <router-link :to="`/company/${client.get('company').id}`">
-            {{ client.get("company").get("name") }}
+            <CompanyCombo :company="client.get('company')"></CompanyCombo>
           </router-link>
         </td>
         <td>{{ client.get("jobTitle") }}</td>
@@ -74,20 +74,22 @@
 <script>
 import ThWithSort from "@/components/ThWithSort.vue";
 import ClientCombo from "@/components/ClientCombo.vue";
+import CompanyCombo from "@/components/CompanyCombo.vue";
 export default {
   name: "ClientsTable",
   components: {
     ThWithSort,
-    ClientCombo
+    ClientCombo,
+    CompanyCombo,
   },
   props: {
     clients: Array,
-    showCompany: Boolean
+    showCompany: Boolean,
   },
   data() {
     return {
       sortedBy: "fullName",
-      sortOrder: 1
+      sortOrder: 1,
     };
   },
   methods: {
@@ -95,7 +97,7 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
-    }
+    },
   },
   computed: {
     sortedClients() {
@@ -111,8 +113,8 @@ export default {
           a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
         );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

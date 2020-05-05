@@ -9,20 +9,21 @@
     />
     <span>
       <span>
-        <router-link :to="`/client/${client.id}`">
-          {{ client.get("fullName") }}
-        </router-link>
-        <br />
-        <a
-          class="social"
-          v-if="client.get('linkedin')"
-          :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
-          target="_blank"
-        >
-          <font-awesome-icon :icon="['fab', 'linkedin']" />
-        </a>
+        <div>
+          <router-link :to="`/client/${client.id}`">
+            {{ client.get("fullName") }}
+          </router-link>
+        </div>
+        <div v-if="client.get('linkedin')">
+          <a
+            class="social"
+            :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
+            target="_blank"
+          >
+            <font-awesome-icon :icon="['fab', 'linkedin']" />
+          </a>
+        </div>
       </span>
-      <br />
       <span class="nickname">
         {{ client.get("nickname") }}
       </span>
@@ -35,8 +36,8 @@ import AV from "leancloud-storage";
 export default {
   name: "ClientCombo",
   props: {
-    client: AV.Object
-  }
+    client: AV.Object,
+  },
 };
 </script>
 
