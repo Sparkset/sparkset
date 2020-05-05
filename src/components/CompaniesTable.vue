@@ -10,12 +10,23 @@
         >
           Name
         </ThWithSort>
+        <ThWithSort
+          by="upcomingEvent"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Upcoming Company Wide Event
+        </ThWithSort>
       </tr>
     </thead>
     <tbody>
       <tr v-for="company in sortedCompanies" :key="company.id">
         <td>
           <CompanyCombo :company="company" />
+        </td>
+        <td>
+          {{nextEvents[company.id]}}
         </td>
       </tr>
     </tbody>
@@ -29,15 +40,16 @@ export default {
   name: "ComapniesTable",
   components: {
     ThWithSort,
-    CompanyCombo
+    CompanyCombo,
   },
   props: {
-    companies: Array
+    companies: Array,
+    nextEvents: Object,
   },
   data() {
     return {
       sortedBy: "name",
-      sortOrder: 1
+      sortOrder: 1,
     };
   },
   methods: {
@@ -45,7 +57,7 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
-    }
+    },
   },
   computed: {
     sortedCompanies() {
@@ -53,8 +65,8 @@ export default {
       return vm.companies.sort((a, b) =>
         a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
       );
-    }
-  }
+    },
+  },
 };
 </script>
 
