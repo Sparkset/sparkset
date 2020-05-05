@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="self">
     <h2>{{ note.get("title") }}</h2>
     <p class="time">
       {{
@@ -40,6 +40,12 @@ export default {
   name: "NoteCard",
   props: {
     note: AV.Object
+  },
+  mounted() {
+    const vm = this;
+    if (vm.$route.hash === `#${vm.note.id}`) {
+      vm.$refs.self.scrollIntoView({ behavior: "smooth" });
+    }
   }
 };
 </script>

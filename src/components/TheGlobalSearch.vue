@@ -21,7 +21,7 @@
         v-model="query"
         v-focus
         @input="getResults"
-        @keydown.enter="goToSelectedClient"
+        @keydown.enter="goToSelectedItem"
       />
       <div v-if="results.length" id="results">
         <button
@@ -29,13 +29,22 @@
           :key="result.id"
           :class="['result', index === selectedResult ? 'selected' : null]"
           @mousemove="selectedResult = index"
-          @click="goToSelectedClient"
+          @click="goToSelectedItem"
         >
-          <span class="result__name">
-            {{ result.get("fullName") }}
+          <span v-if="result.className === 'Client'">
+            <span class="result__left">
+              <font-awesome-icon :icon="['fas', 'user']" />
+              {{ result.get("fullName") }}
+            </span>
+            <span class="result__right">
+              {{ result.get("company").get("name") }}
+            </span>
           </span>
-          <span class="result__company">
-            {{ result.get("company").get("name") }}
+          <span v-if="result.className === 'Note'">
+            <span class="result__left">
+              <font-awesome-icon :icon="['fas', 'sticky-note']" />
+              {{ result.get("title") }}
+            </span>
           </span>
         </button>
       </div>
@@ -62,7 +71,7 @@ export default {
         .split(" ")
         .filter(keyword => keyword);
       if (keywords.length) {
-        const fields = [
+        const clientFields = [
           "fullName",
           "nickname",
           "jobTitle",
@@ -70,10 +79,10 @@ export default {
           "cellPhone",
           "workPhone"
         ];
-        AV.Query.and(
+        const clientQuery = AV.Query.and(
           ...keywords.map(keyword =>
             AV.Query.or(
-              ...fields.map(field =>
+              ...clientFields.map(field =>
                 new AV.Query("Client").matches(field, new RegExp(keyword, "i"))
               ),
               new AV.Query("Client").matchesQuery(
@@ -87,11 +96,26 @@ export default {
           )
         )
           .include("company")
-          .limit(5)
+          .limit(3);
+        const noteFields = ["title", "content"];
+        const noteQuery = AV.Query.and(
+          ...keywords.map(keyword =>
+            AV.Query.or(
+              ...noteFields.map(field =>
+                new AV.Query("Note").matches(field, new RegExp(keyword, "i"))
+              )
+            )
+          )
+        )
+          .include("owner")
+          .limit(2);
+        clientQuery
           .find()
           .then(clients => {
-            vm.results = clients;
-            vm.selectedResult = 0;
+            noteQuery.find().then(notes => {
+              vm.results = [...clients, ...notes];
+              vm.selectedResult = 0;
+            });
           })
           .catch(error => {
             alert(error);
@@ -100,10 +124,16 @@ export default {
         vm.results = [];
       }
     },
-    goToSelectedClient() {
+    goToSelectedItem() {
       const vm = this;
       vm.$store.commit("closeGlobalSearch");
-      vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
+      const className = vm.results[vm.selectedResult].className;
+      if (className === "Client") {
+        vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
+      }
+      if (className === "Note") {
+        vm.$router.push(`/notes#${vm.results[vm.selectedResult].id}`);
+      }
     }
   },
   directives: {
@@ -162,11 +192,11 @@ export default {
   background-color: #36d5d8;
   color: #fff;
 }
-.result__name {
+.result__left {
   float: left;
   font-weight: 500;
 }
-.result__company {
+.result__right {
   float: right;
 }
 @media (min-width: 544px) {

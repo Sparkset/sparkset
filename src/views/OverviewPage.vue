@@ -40,6 +40,36 @@
           </form>
         </section>
       </div>
+      <div class="card">
+        <section class="fields">
+          <h1>Weekly Report</h1>
+          <div class="field">
+            <p>Events Completed: {{ stats.eventsCompleted }}</p>
+            <p>Events Open: {{ stats.eventsOpen }}</p>
+          </div>
+        </section>
+      </div>
+      <div class="card">
+        <section class="fields">
+          <h1>Data at a Glance</h1>
+          <div class="field">
+            <p>Clients: {{ stats.clients }}</p>
+            <p>Companies: {{ stats.companies }}</p>
+            <p>Events: {{ stats.events }}</p>
+            <p>Notes: {{ stats.notes }}</p>
+          </div>
+        </section>
+      </div>
+      <div class="card">
+        <section class="fields">
+          <h1>New Clients</h1>
+          <div class="field">
+            <p v-for="client in stats.newClients" :key="client.id">
+              {{ client.get("fullName") }}
+            </p>
+          </div>
+        </section>
+      </div>
     </div>
     <div class="column column--left">
       <div class="card">
@@ -89,12 +119,23 @@ export default {
       upcomingEvents: [],
       suggestedEvents: [],
       recentNotes: [],
-      clients: []
+      clients: [],
+      stats: {
+        eventsCompleted: 0,
+        eventsOpen: 0,
+        clients: 0,
+        companies: 0,
+        events: 0,
+        notes: 0,
+        newClients: []
+      }
     };
   },
   created() {
     const vm = this;
     vm.fetchEvents();
+    vm.fetchNotes();
+    vm.fetchStats();
   },
   methods: {
     fetchEvents() {
@@ -103,13 +144,13 @@ export default {
       upcomingEventQuery
         .equalTo("done", false)
         .include("client")
+        .include("company")
         .limit(1000)
         .find()
         .then(upcomingEvents => {
           vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
-            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -145,7 +186,6 @@ export default {
                 .set("name", lastEvent.get("name"))
                 .set("client", lastEvent.get("client"))
                 .set("recursIn", lastEvent.get("recursIn")),
-              companyWide: lastEvent.get("companyWide"),
               pendingChanges: {
                 date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
@@ -156,7 +196,6 @@ export default {
               lastEvent
             };
           });
-          vm.fetchNotes();
         })
         .catch(error => {
           alert(error);
@@ -178,6 +217,27 @@ export default {
         .catch(error => {
           alert(error);
         });
+    },
+    async fetchStats() {
+      const vm = this;
+      try {
+        vm.stats.eventsCompleted = await new AV.Query("Event")
+          .equalTo("done", true)
+          .count();
+        vm.stats.eventsOpen = await new AV.Query("Event")
+          .equalTo("done", false)
+          .count();
+        vm.stats.clients = await new AV.Query("Client").count();
+        vm.stats.companies = await new AV.Query("Company").count();
+        vm.stats.events = await new AV.Query("Event").count();
+        vm.stats.notes = await new AV.Query("Note").count();
+        vm.stats.newClients = await new AV.Query("Client")
+          .descending("createdAt")
+          .limit(3)
+          .find();
+      } catch (error) {
+        alert(error);
+      }
     },
     add(event) {
       const vm = this;

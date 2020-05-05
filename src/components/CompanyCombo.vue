@@ -9,12 +9,12 @@
     />
     <span>
       <span>
-        <router-link :to="`/company/${company.id}`" class="text">
-          {{ companyName }}
+        <router-link :to="`/company/${company.id}`">
+          {{ company.get("name") }}
         </router-link>
         <a
-          v-if="companyLinkedin != ''"
-          :href="`https://www.linkedin.com/in/${companyLinkedin}`"
+          v-if="company.get('linkedin')"
+          :href="`https://www.linkedin.com/company/${company.get('linkedin')}`"
           target="_blank"
         >
           <font-awesome-icon :icon="['fab', 'linkedin']" />
@@ -30,25 +30,6 @@ export default {
   name: "CompanyCombo",
   props: {
     company: AV.Object
-  },
-  data() {
-    return {
-      companyName: "",
-      companyLinkedin: ""
-    };
-  },
-  created() {
-    const vm = this;
-    const companyQuery = new AV.Query("Company");
-    companyQuery
-      .get(vm.company.id)
-      .then(c => {
-        vm.companyName = c.get("name");
-        vm.companyLinkedin = c.get("linkedin");
-      })
-      .catch(error => {
-        alert(error);
-      });
   }
 };
 </script>
