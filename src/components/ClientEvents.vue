@@ -12,15 +12,12 @@
     <div class="field field--superwide">
       <EventsTable :events="pastEvents" :fetch-events="fetchEvents" />
     </div>
-    <h1>Company Wide Events</h1>
     <div v-if="!creatingCustomEvent" class="field">
       <button class="primary" @click="creatingCustomEvent = true">
         Create Custom Event
       </button>
     </div>
-    <div v-else>
-      <AddEvent @cancel-event="cancel" @create-event="createEvent"></AddEvent>
-    </div>
+    <AddEvent v-else @cancel-event="cancel" @create-event="createEvent" />
   </section>
 </template>
 
@@ -41,14 +38,7 @@ export default {
       pastEvents: [],
       companyEvents: [],
       creatingCustomEvent: false,
-      company: null,
-      newEvent: {
-        name: "",
-        date: "",
-        time: "",
-        recurringEvent: false,
-        daysBetween: 1
-      }
+      company: new AV.Object("Company")
     };
   },
   created() {
@@ -56,22 +46,31 @@ export default {
     vm.fetchCompany();
   },
   methods: {
+    fetchCompany() {
+      const vm = this;
+      const clientyQuery = new AV.Query("Client");
+      clientyQuery
+        .get(vm.$route.params.id)
+        .then(client => {
+          vm.company = client.get("company");
+          vm.fetchEvents();
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
     fetchEvents() {
       const vm = this;
       const innerClientQuery = new AV.Query("Event");
-      innerClientQuery
-        .equalTo(
-          "client",
-          AV.Object.createWithoutData("Client", vm.$route.params.id)
-        )
-        .include("client")
-        .equalTo("done", false);
+      innerClientQuery.equalTo(
+        "client",
+        AV.Object.createWithoutData("Client", vm.$route.params.id)
+      );
       const innerCompanyQuery = new AV.Query("Event");
-      innerCompanyQuery
-        .equalTo("company", vm.company)
-        .equalTo("done", false)
-        .include("client");
+      innerCompanyQuery.equalTo("company", vm.company);
       AV.Query.or(innerClientQuery, innerCompanyQuery)
+        .equalTo("done", false)
+        .include("client")
         .limit(1000)
         .find()
         .then(upcomingEvents => {
@@ -154,19 +153,6 @@ export default {
           alert(error);
         });
     },
-    fetchCompany() {
-      const vm = this;
-      const companyQuery = new AV.Query("Client");
-      companyQuery
-        .get(vm.$route.params.id)
-        .then(client => {
-          vm.company = client.get("company");
-          vm.fetchEvents();
-        })
-        .catch(error => {
-          alert(error);
-        });
-    },
     add(event) {
       const vm = this;
       event.event.set(
@@ -194,7 +180,6 @@ export default {
       event
         .set("client", client)
         .set("name", newEvent.name)
-        .set("companyWide", false)
         .set(
           "time",
           new Date(
@@ -212,7 +197,7 @@ export default {
       event
         .save()
         .then(() => {
-          alert("New Event has been saved.");
+          alert("Event created.");
           vm.fetchEvents();
           vm.creatingCustomEvent = false;
         })

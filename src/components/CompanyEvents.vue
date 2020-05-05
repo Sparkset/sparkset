@@ -14,9 +14,7 @@
         Create Custom Event
       </button>
     </div>
-    <div v-else>
-      <AddEvent @cancel-event="cancel" @create-event="createEvent"></AddEvent>
-    </div>
+    <AddEvent v-else @cancel-event="cancel" @create-event="createEvent" />
   </section>
 </template>
 
@@ -48,6 +46,7 @@ export default {
     fetchEvents() {
       const vm = this;
       vm.fetchClientEvents();
+      vm.fetchCompanyEvents();
     },
     fetchClientEvents() {
       const vm = this;
@@ -60,9 +59,8 @@ export default {
       eventsQuery
         .matchesQuery("client", clientsQuery)
         .equalTo("done", false)
-        .equalTo("companyWide", false)
+        .exists("client")
         .include("client")
-        .descending("createdAt")
         .limit(1000)
         .find()
         .then(events => {
@@ -80,7 +78,6 @@ export default {
               )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
             }
           }));
-          vm.fetchCompanyEvents();
         })
         .catch(error => {
           alert(error);
@@ -137,8 +134,6 @@ export default {
           AV.Object.createWithoutData("Company", vm.$route.params.id)
         )
         .set("name", newEvent.name)
-        .set("companyWide", true)
-        .set("done", false)
         .set(
           "time",
           new Date(
@@ -156,7 +151,7 @@ export default {
       event
         .save()
         .then(() => {
-          alert("Event has been created");
+          alert("Event created.");
           vm.fetchEvents();
           vm.creatingCustomEvent = false;
         })

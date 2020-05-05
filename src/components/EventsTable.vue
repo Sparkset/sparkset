@@ -32,23 +32,20 @@
     </thead>
     <tbody>
       <tr v-for="event in sortedEvents" :key="event.event.id">
-        <div v-if="showClient">
-          <td v-if="!event.companyWide">
-            <ClientCombo :client="event.event.get('client')" />
-          </td>
-          <td v-if="event.event.get('company')">
-            <CompanyCombo :company="event.event.get('company')" />
-          </td>
-        </div>
+        <td v-if="showClient">
+          <CompanyCombo
+            v-if="event.companyWide"
+            :company="event.event.get('company')"
+          />
+
+          <ClientCombo v-else :client="event.event.get('client')" />
+        </td>
         <td>
-          <label>
-            <span>
-              {{ event.event.get("name") }}
-              <div v-if="event.event.get('company')" class="icon">
-                <font-awesome-icon :icon="['fas', 'building']" />
-              </div>
-            </span>
-          </label>
+          {{ event.event.get("name") }}
+          <font-awesome-icon
+            v-if="event.event.get('company')"
+            :icon="['fas', 'building']"
+          />
         </td>
         <td>
           <form v-if="event.editing" @submit.prevent="update(event)">
@@ -179,12 +176,4 @@ export default {
 };
 </script>
 
-<style scoped>
-span {
-  display: flex;
-}
-
-.icon {
-  margin-left: 10px;
-}
-</style>
+<style scoped></style>
