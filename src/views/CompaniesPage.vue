@@ -8,7 +8,7 @@
             {{ companies.length === 1 ? "Company" : "Companies" }}
           </h1>
           <div class="field field--superwide">
-            <CompaniesTable :companies="companies" />
+            <CompaniesTable :companies="companies" :nextEvents="nextEvents" />
           </div>
         </section>
       </div>
@@ -26,21 +26,28 @@ export default {
   },
   data() {
     return {
-      companies: []
+      companies: [],
+      nextEvents: {}
     };
   },
   created() {
     const vm = this;
-    const companyQuery = new AV.Query("Company");
-    companyQuery
-      .limit(1000)
-      .find()
-      .then(companies => {
-        vm.companies = companies;
-      })
-      .catch(error => {
-        alert(error);
-      });
+    vm.getCompanies();
+  },
+  methods: {
+    getCompanies() {
+      const vm = this;
+      const companyQuery = new AV.Query("Company");
+      companyQuery
+        .limit(1000)
+        .find()
+        .then(companies => {
+          vm.companies = companies;
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
   }
 };
 </script>

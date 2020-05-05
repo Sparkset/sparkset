@@ -10,6 +10,14 @@
         >
           Name
         </ThWithSort>
+        <ThWithSort
+          by="nextCompanyWideEvent"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Next Company Wide Event
+        </ThWithSort>
       </tr>
     </thead>
     <tbody>
@@ -32,7 +40,8 @@ export default {
     CompanyCombo
   },
   props: {
-    companies: Array
+    companies: Array,
+    nextEvents: Object
   },
   data() {
     return {
