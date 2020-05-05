@@ -22,17 +22,18 @@ import AV from "leancloud-storage";
 export default {
   name: "CompaniesPage",
   components: {
-    CompaniesTable
+    CompaniesTable,
   },
   data() {
     return {
       companies: [],
-      nextEvents: {}
+      nextEvents: {},
     };
   },
   created() {
     const vm = this;
     vm.getCompanies();
+    vm.getNextEvents();
   },
   methods: {
     getCompanies() {
@@ -41,14 +42,34 @@ export default {
       companyQuery
         .limit(1000)
         .find()
-        .then(companies => {
+        .then((companies) => {
           vm.companies = companies;
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
-    }
-  }
+    },
+    async getNextEvents() {
+      const vm = this;
+      for (const company of vm.companies) {
+        console.log(company.get("name"));
+        try {
+          const event = await new AV.Query("Event")
+            .equalTo("company", company)
+            .equalTo("done", false)
+            .first();
+          if (event) {
+            vm.nextEvents[company.id] = event.get("name");
+          } else {
+            vm.nextEvents[company.id] = "default";
+          }
+        }
+        catch(error){
+          alert(error);
+        }
+      }
+    },
+  },
 };
 </script>
 

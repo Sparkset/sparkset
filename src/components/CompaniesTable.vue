@@ -25,6 +25,9 @@
         <td>
           <CompanyCombo :company="company" />
         </td>
+        <td>
+          {{nextEvents[company.id]}}
+        </td>
       </tr>
     </tbody>
   </table>
