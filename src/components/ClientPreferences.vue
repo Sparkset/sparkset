@@ -5,98 +5,204 @@
     <table>
       <tr>
         <td style="text-align:center">
-          <button v-popover:foodNDrinks style="width: 250px; height: 250px;">
+          <button @click="show('fNd')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'hamburger']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Food & Drinks Preferences</p>
           </button>
-          <popover name="foodNDrinks" >Allergies: Peanuts</popover>
+          <div class="field">
+            <modal aria-expanded="true" name='fNd'>
+              <div id="needb" class="field">
+                <h1>
+                  Food & Drinks Preferences
+                </h1>
+                <textarea rows="10"></textarea>
+              </div>
+            </modal>
+          </div>
         </td>
         <td style="text-align:center">
-          <button v-popover:busiGNI style="width: 250px; height: 250px;">
+          <button @click="show('busiGNI')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'city']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Business Goals & Interests</p>
           </button>
-          <popover name="busiGNI" triggers="hover" placement="bottom">some kind of data</popover>
+          <div class="field">
+            <modal name='busiGNI'>
+              <div id="needb" class="field">
+                <h1>
+                  Business Goals & Interests
+                </h1>
+                <textarea rows="10"></textarea>
+              </div>
+            </modal>
+          </div>
         </td>
         <td style="text-align:center">
-          <button v-popover:family style="width: 250px; height: 250px;">
+          <button @click="show('family')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'home']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Family</p>
           </button>
-          <popover name="family" triggers="hover" placement="bottom">some kind of data</popover>
+          <div class="field">
+            <modal name='family'>
+              <div id="needb" class="field">
+                <h1>
+                  Family
+                </h1>
+                <textarea rows="10"></textarea>
+              </div>
+            </modal>
+          </div>
         </td>
       </tr>
       <tr>
         <td style="text-align:center">
-          <button v-popover:hobbies style="width: 250px; height: 250px;">
+          <button @click="show('hobbies')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'football-ball']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Hobbies</p>
           </button>
-          <popover name="hobbies" triggers="hover" placement="bottom">some kind of data</popover>  
+          <div class="field">
+            <modal name='hobbies'>
+              <div id="needb" class="field">
+                <h1>
+                  Hobbies
+                </h1>
+                <textarea rows="10"></textarea>
+              </div>
+            </modal>
+          </div>
         </td>
         <td style="text-align:center">
-          <button v-popover:learningPref style="width: 250px; height: 250px;">
+          <button @click="show('learningPref')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'book']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Learning Preferences</p>
           </button>
-          <popover name="learningPref" triggers="hover" placement="bottom">some kind of data</popover>  
+          <div class="field">
+            <modal name='learningPref'>
+              <div id="needb" class="field">
+                <h1>
+                  Learning Preferences
+                </h1>
+                <textarea rows="10"></textarea>
+              </div>
+            </modal>
+          </div>  
         </td>
         <td style="text-align:center">
-          <button v-popover:achievements style="width: 250px; height: 250px;">
+          <button @click="show('achieve')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'trophy']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Achievements</p>
           </button>
-          <popover name="achievements" triggers="hover" placement="bottom">some kind of data</popover>
+          <div class="field">
+            <modal name='achieve'>
+              <div id="needb" class="field">
+                <h1>
+                  Achievements
+                </h1>
+                <textarea rows="10"></textarea>
+              </div>
+            </modal>
+          </div>  
         </td>
       </tr>
       <tr>
         <td style="text-align:center">
-          <button v-popover:petPeeves style="width: 250px; height: 250px;">
+          <button @click="show('petPeeves')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'exclamation-triangle']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Pet Peeves</p>
           </button>
-          <popover name="petPeeves" triggers="hover" placement="bottom">some kind of data</popover>
+          <modal name='petPeeves'>
+            <div id="needb" class="field">
+              <h1>
+                Pet Peeves
+              </h1>
+              <textarea rows="10"></textarea>
+            </div>
+          </modal>
         </td>
         <td style="text-align:center">
-          <button v-popover:lifestylePref style="width: 250px; height: 250px;">
+          <button @click="show('lifestyle')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'umbrella-beach']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Lifestyle Preferences</p>
           </button>
-          <popover name="lifestylePref" triggers="hover" placement="bottom">some kind of data</popover>
+          <modal name='lifestyle'>
+            <div id="needb" class="field">
+              <h1>
+                Lifestyle Preferences
+              </h1>
+              <textarea rows="10"></textarea>
+            </div>
+          </modal>
         </td>
         <td style="text-align:center">
-          <button v-popover:heroes style="width: 250px; height: 250px;">
+          <button @click="show('heroes')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'crown']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Heroes: Personal & Business</p>
           </button>
-          <popover name="heroes" triggers="hover" placement="bottom">some kind of data</popover>
+          <modal name='heroes'>
+            <div id="needb" class="field">
+              <h1>
+                Heroes: Personal & Business
+              </h1>
+              <textarea rows="10"></textarea>
+            </div>
+          </modal>
         </td>
       </tr>
       <tr>
         <td style="text-align:center">
-          <button v-popover:personalHis style="width: 250px; height: 250px;">
+          <button @click="show('personalHis')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'history']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Personal History</p>
           </button>
-          <popover name="personalHis" triggers="hover" placement="bottom">some kind of data</popover>
+          <modal name='personalHis'>
+            <div id="needb" class="field">
+              <h1>
+                Personal History
+              </h1>
+              <textarea rows="10"></textarea>
+            </div>
+          </modal>
         </td>
         <td style="text-align:center">
-          <button v-popover:education style="width: 250px; height: 250px;">
+          <button @click="show('education')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'graduation-cap']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Education</p>
           </button>
-          <popover name="education" triggers="hover" placement="bottom">some kind of data</popover>
+          <modal name='education'>
+            <div id="needb" class="field">
+              <h1>
+                Education
+              </h1>
+              <textarea rows="10"></textarea>
+            </div>
+          </modal>
         </td>
         <td style="text-align:center">
-          <button v-popover:others style="width: 250px; height: 250px;">
+          <button @click="show('others')" style="width: 250px; height: 250px;">
             <font-awesome-icon :icon="['fas', 'clipboard']" size="10x" color="skyblue" opacity="0.7"/>
             <p>Other Notes</p>
           </button>
-          <popover name="others" triggers="hover" placement="bottom">some kind of data</popover>
+          <modal name='others'>
+            <div id="needb" class="field">
+              <h1>
+                Other Notes
+              </h1>
+              <textarea rows="10"></textarea>
+            </div>
+          </modal>
         </td>
       </tr>
     </table>
     </p>
+    <div class="field">
+      <button @click="show">
+        Add Categories
+      </button>
+    </div>
+    <div class="field">
+      <modal name="addCategory">
+        tba
+      </modal>
+    </div>
   </section>
 </template>
 
@@ -105,7 +211,9 @@
 import AV from "leancloud-storage";
 import Vue      from 'vue'
 import Popover  from 'vue-js-popover'
- 
+import VModal from 'vue-js-modal'
+
+Vue.use(VModal)
 Vue.use(Popover)
 
 export default {
@@ -118,7 +226,7 @@ export default {
   data() {
     return {
       editing: false,
-      fullName: "",
+      allergies: "",
       foodNDrinks: "",
       busiGNI: "",
       family: "",
@@ -136,8 +244,8 @@ export default {
 
   created() {
     const vm = this;
-    vm.fetchPref();
-    ///vm.foodNDrinks = vm.pref.get("foodNDrinks");
+    vm.allergies = vm.pref.get("allergies");
+    vm.favSnack = vm.pref.get("favouriteSnacks")
     ///vm.busiGNI = vm.pref.get("busiGNI");
     ///vm.family = vm.pref.get("family");
     ///vm.hobbies = vm.pref.get("hobbies");
@@ -152,22 +260,28 @@ export default {
   },
 
   methods: {
-    fetchPref() {
-      const vm = this;
-      const prefQuery = new AV.Query("Preferences");
-      prefQuery
-        .equalTo(
-          "client",
-          AV.Object.createWithoutData("Client", vm.$route.params.id)
-        )
-        .equalTo("foodNDrinks",vm.foodNDrinks)
-        .include("client")
-        .limit(1000)
-        .find()
-        .then(vm.pref.get("foodNDrinks"))
-        }
+    show (id) {
+      this.$modal.show(id);
+    },
+    
+    hide (id) {
+      this.$modal.hide(id);
+    },
 
-      }
+    go() {
+      const vm = this;
+      vm.pref
+        .set("allergies",vm.allergies)
+        .save()
+        .then(() => {
+          vm.callback();
+          vm.editing = false;
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
+  }
     }
 
 </script>
@@ -179,7 +293,12 @@ export default {
 
 
 <style>
-  
+
+#needb {
+  width: 94%;
+  margin-left: 20px;
+  padding: 0;
+}
   
  
 </style>
