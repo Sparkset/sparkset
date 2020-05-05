@@ -19,6 +19,7 @@ import {
   faBuilding,
   faArrowRight,
   faUser,
+  faCalendarDay,
   faStickyNote
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -34,6 +35,7 @@ library.add(
   faArrowDown,
   faSearch,
   faUser,
+  faCalendarDay,
   faStickyNote,
   faPaperPlane,
   faPhoneAlt,
