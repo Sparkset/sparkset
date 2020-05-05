@@ -17,112 +17,58 @@
         Create Custom Event
       </button>
     </div>
-    <form v-else @submit.prevent="createEvent">
-      <h1>Create Custom Event</h1>
-      <div class="field field--half">
-        <label>
-          <span>Name</span>
-          <input type="text" v-model="newEvent.name" required />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Date</span>
-          <input
-            type="date"
-            max="2099-12-31"
-            v-model="newEvent.date"
-            required
-          />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Time</span>
-          <input type="time" v-model="newEvent.time" required />
-        </label>
-      </div>
-      <div class="field field--half">
-        <label>
-          <span>Recur</span>
-          <toggle-button
-            :value="newEvent.recurringEvent"
-            :color="{
-              checked: '#36d5d8',
-              unchecked: '#e52f2e'
-            }"
-            :labels="{
-              checked: 'Yes',
-              unchecked: 'No'
-            }"
-            :width="72"
-            :height="42"
-            :font-size="12"
-            @change="changeRecurringEvent"
-            sync
-          />
-        </label>
-      </div>
-      <div v-if="newEvent.recurringEvent" class="field field--half">
-        <label>
-          <span>Days Between Events</span>
-          <input
-            type="number"
-            min="1"
-            step="1"
-            v-model.number="newEvent.daysBetween"
-            required
-          />
-        </label>
-      </div>
-      <div class="field">
-        <button class="primary">
-          Save
-        </button>
-      </div>
-      <div class="field">
-        <button @click="cancel">Cancel</button>
-      </div>
-    </form>
+    <AddEvent v-else @cancel-event="cancel" @create-event="createEvent" />
   </section>
 </template>
 
 <script>
 import EventsTable from "@/components/EventsTable.vue";
 import AV from "leancloud-storage";
+import AddEvent from "@/components/AddEvent.vue";
 export default {
   name: "ClientEvents",
   components: {
-    EventsTable
+    EventsTable,
+    AddEvent
   },
   data() {
     return {
       upcomingEvents: [],
       suggestedEvents: [],
       pastEvents: [],
+      companyEvents: [],
       creatingCustomEvent: false,
-      newEvent: {
-        name: "",
-        date: "",
-        time: "",
-        recurringEvent: false,
-        daysBetween: 1
-      }
+      company: new AV.Object("Company")
     };
   },
   created() {
     const vm = this;
-    vm.fetchEvents();
+    vm.fetchCompany();
   },
   methods: {
+    fetchCompany() {
+      const vm = this;
+      const clientyQuery = new AV.Query("Client");
+      clientyQuery
+        .get(vm.$route.params.id)
+        .then(client => {
+          vm.company = client.get("company");
+          vm.fetchEvents();
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
     fetchEvents() {
       const vm = this;
-      const upcomingEventQuery = new AV.Query("Event");
-      upcomingEventQuery
-        .equalTo(
-          "client",
-          AV.Object.createWithoutData("Client", vm.$route.params.id)
-        )
+      const innerClientQuery = new AV.Query("Event");
+      innerClientQuery.equalTo(
+        "client",
+        AV.Object.createWithoutData("Client", vm.$route.params.id)
+      );
+      const innerCompanyQuery = new AV.Query("Event");
+      innerCompanyQuery.equalTo("company", vm.company);
+      AV.Query.or(innerClientQuery, innerCompanyQuery)
         .equalTo("done", false)
         .include("client")
         .limit(1000)
@@ -131,6 +77,7 @@ export default {
           vm.upcomingEvents = upcomingEvents.map(event => ({
             event,
             editing: false,
+            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -146,12 +93,7 @@ export default {
         .catch(error => {
           alert(error);
         });
-      const lastEventQuery = new AV.Query("Event");
-      lastEventQuery
-        .equalTo(
-          "client",
-          AV.Object.createWithoutData("Client", vm.$route.params.id)
-        )
+      AV.Query.or(innerClientQuery, innerCompanyQuery)
         .equalTo("done", true)
         .exists("recursIn")
         .include("client")
@@ -170,6 +112,7 @@ export default {
                 .set("client", lastEvent.get("client"))
                 .set("recursIn", lastEvent.get("recursIn")),
               editing: true,
+              companyWide: lastEvent.get("company") ? true : false,
               pendingChanges: {
                 date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
@@ -184,12 +127,7 @@ export default {
         .catch(error => {
           alert(error);
         });
-      const pastEventQuery = new AV.Query("Event");
-      pastEventQuery
-        .equalTo(
-          "client",
-          AV.Object.createWithoutData("Client", vm.$route.params.id)
-        )
+      AV.Query.or(innerClientQuery, innerCompanyQuery)
         .equalTo("done", true)
         .include("client")
         .limit(1000)
@@ -198,6 +136,7 @@ export default {
           vm.pastEvents = pastEvents.map(event => ({
             event,
             editing: false,
+            companyWide: event.get("company") ? true : false,
             pendingChanges: {
               date: `${event.get("time").getFullYear()}-${`0${event
                 .get("time")
@@ -234,57 +173,41 @@ export default {
           alert(error);
         });
     },
-    createEvent() {
+    createEvent(newEvent) {
       const vm = this;
       const client = AV.Object.createWithoutData("Client", vm.$route.params.id);
       const event = new AV.Object("Event");
       event
         .set("client", client)
-        .set("name", vm.newEvent.name)
+        .set("name", newEvent.name)
         .set(
           "time",
           new Date(
-            vm.newEvent.date.slice(0, 4),
-            vm.newEvent.date.slice(5, 7) - 1,
-            vm.newEvent.date.slice(8, 10),
-            vm.newEvent.time.slice(0, 2),
-            vm.newEvent.time.slice(3, 5),
+            newEvent.date.slice(0, 4),
+            newEvent.date.slice(5, 7) - 1,
+            newEvent.date.slice(8, 10),
+            newEvent.time.slice(0, 2),
+            newEvent.time.slice(3, 5),
             0
           )
         );
-      if (vm.newEvent.recurringEvent) {
-        event.set("recursIn", vm.newEvent.daysBetween);
+      if (newEvent.recurringEvent) {
+        event.set("recursIn", newEvent.daysBetween);
       }
       event
         .save()
         .then(() => {
-          alert("New Event has been saved.");
+          alert("Event created.");
           vm.fetchEvents();
-          vm.resetNewEventValues();
           vm.creatingCustomEvent = false;
         })
         .catch(error => {
           alert(error);
         });
     },
-    changeRecurringEvent(e) {
-      const vm = this;
-      vm.newEvent.recurringEvent = e.value;
-    },
     cancel() {
       const vm = this;
-      vm.resetNewEventValues();
       vm.creatingCustomEvent = false;
-    },
-    resetNewEventValues() {
-      const vm = this;
-      vm.newEvent = {
-        name: "",
-        date: "",
-        time: "",
-        recurringEvent: false,
-        daysBetween: 1
-      };
     }
   }
 };

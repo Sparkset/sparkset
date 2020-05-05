@@ -33,9 +33,20 @@
     <tbody>
       <tr v-for="event in sortedEvents" :key="event.event.id">
         <td v-if="showClient">
-          <ClientCombo :client="event.event.get('client')" />
+          <CompanyCombo
+            v-if="event.companyWide"
+            :company="event.event.get('company')"
+          />
+
+          <ClientCombo v-else :client="event.event.get('client')" />
         </td>
-        <td>{{ event.event.get("name") }}</td>
+        <td>
+          {{ event.event.get("name") }}
+          <font-awesome-icon
+            v-if="event.event.get('company')"
+            :icon="['fas', 'building']"
+          />
+        </td>
         <td>
           <form v-if="event.editing" @submit.prevent="update(event)">
             <div class="field">
@@ -84,12 +95,14 @@
 <script>
 import ThWithSort from "@/components/ThWithSort.vue";
 import ClientCombo from "@/components/ClientCombo.vue";
+import CompanyCombo from "@/components/CompanyCombo.vue";
 import AV from "leancloud-storage";
 export default {
   name: "EventsTable",
   components: {
     ThWithSort,
-    ClientCombo
+    ClientCombo,
+    CompanyCombo
   },
   props: {
     events: Array,
