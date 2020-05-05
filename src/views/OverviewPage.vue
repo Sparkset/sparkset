@@ -47,10 +47,20 @@
       </div>
       <div class="card">
         <section class="fields">
-          <h1>Weekly Report</h1>
+          <h1>Events Reported</h1>
           <div class="field">
-            <p>Events Completed: {{ stats.eventsCompleted }}</p>
-            <p>Events Open: {{ stats.eventsOpen }}</p>
+            <p>
+              Events Completed:
+              <span class="item-text-success">
+                {{ stats.eventsCompleted }}
+              </span>
+            </p>
+            <p>
+              Events Open:
+              <span class="item-text-danger">
+                {{ stats.eventsOpen }}
+              </span>
+            </p>
           </div>
         </section>
       </div>
@@ -140,7 +150,6 @@ export default {
     const vm = this;
     vm.fetchEvents();
     vm.fetchNotes();
-    vm.fetchStats();
   },
   methods: {
     fetchEvents() {
@@ -205,6 +214,7 @@ export default {
         .catch(error => {
           alert(error);
         });
+      vm.fetchStats();
     },
     fetchNotes() {
       const vm = this;
@@ -296,6 +306,12 @@ export default {
 }
 .horizontal-item:last-of-type > .card {
   margin: 0 18px 0 0;
+}
+.item-text-success {
+  color: #36d5d8;
+}
+.item-text-danger {
+  color: #e52f2e;
 }
 @media (min-width: 544px) {
   .horizontal-items {
