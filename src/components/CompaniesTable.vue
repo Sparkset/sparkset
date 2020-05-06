@@ -26,7 +26,21 @@
           <CompanyCombo :company="company.company" />
         </td>
         <td>
-          {{ company.nextEvent.get("name") }}
+          <div v-if="company.nextEvent.get('time')">
+            <router-link :to="`/company/${company.company.id}/events`">
+              {{
+                company.nextEvent.get("name") +
+                  " on " +
+                  company.nextEvent.get("time").toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  })
+              }}
+            </router-link>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -40,15 +54,15 @@ export default {
   name: "CompaniesTable",
   components: {
     ThWithSort,
-    CompanyCombo
+    CompanyCombo,
   },
   props: {
-    companies: Array
+    companies: Array,
   },
   data() {
     return {
       sortedBy: "name",
-      sortOrder: 1
+      sortOrder: 1,
     };
   },
   methods: {
@@ -56,7 +70,7 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
-    }
+    },
   },
   computed: {
     sortedCompanies() {
@@ -74,8 +88,8 @@ export default {
             : -vm.sortOrder
         );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
