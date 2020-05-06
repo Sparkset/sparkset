@@ -35,8 +35,8 @@ import AV from "leancloud-storage";
 export default {
   name: "ClientCombo",
   props: {
-    client: AV.Object,
-  },
+    client: AV.Object
+  }
 };
 </script>
 

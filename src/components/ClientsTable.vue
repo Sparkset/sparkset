@@ -80,7 +80,7 @@ export default {
   components: {
     ThWithSort,
     ClientCombo,
-    CompanyCombo,
+    CompanyCombo
   },
   props: {
     clients: Array,
