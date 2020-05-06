@@ -8,11 +8,12 @@
       "
     />
     <span>
-      <span>
+      <div>
         <router-link :to="`/company/${company.id}`">
           {{ company.get("name") }}
         </router-link>
-        <br />
+      </div>
+      <div>
         <a
           class="social"
           v-if="company.get('linkedin')"
@@ -37,7 +38,7 @@
         >
           <font-awesome-icon :icon="['fab', 'instagram-square']" />
         </a>
-      </span>
+      </div>
     </span>
   </span>
 </template>
@@ -66,5 +67,9 @@ export default {
 }
 .social {
   margin-right: 4px;
+  opacity: 0.6;
+}
+.social:hover {
+  opacity: 1;
 }
 </style>

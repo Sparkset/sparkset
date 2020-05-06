@@ -52,7 +52,7 @@
         </td>
         <td v-if="showCompany">
           <router-link :to="`/company/${client.get('company').id}`">
-            <CompanyCombo :company="client.get('company')"></CompanyCombo>
+            <CompanyCombo :company="client.get('company')" />
           </router-link>
         </td>
         <td>{{ client.get("jobTitle") }}</td>

@@ -8,24 +8,24 @@
       "
     />
     <span>
-      <span>
+      <div>
         <router-link :to="`/client/${client.id}`">
           {{ client.get("fullName") }}
         </router-link>
-        <div v-if="client.get('linkedin')">
-          <a
-            class="social"
-            v-if="client.get('linkedin')"
-            :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
-            target="_blank"
-          >
-            <font-awesome-icon :icon="['fab', 'linkedin']" />
-          </a>
-        </div>
-      </span>
-      <span class="nickname">
+      </div>
+      <div>
+        <a
+          class="social"
+          v-if="client.get('linkedin')"
+          :href="`https://www.linkedin.com/in/${client.get('linkedin')}`"
+          target="_blank"
+        >
+          <font-awesome-icon :icon="['fab', 'linkedin']" />
+        </a>
+      </div>
+      <div class="nickname">
         {{ client.get("nickname") }}
-      </span>
+      </div>
     </span>
   </span>
 </template>
@@ -54,6 +54,10 @@ export default {
 }
 .social {
   margin-right: 4px;
+  opacity: 0.6;
+}
+.social:hover {
+  opacity: 1;
 }
 .nickname {
   font-size: 9pt;
