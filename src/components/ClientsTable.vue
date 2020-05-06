@@ -52,7 +52,7 @@
         </td>
         <td v-if="showCompany">
           <router-link :to="`/company/${client.get('company').id}`">
-            {{ client.get("company").get("name") }}
+            <CompanyCombo :company="client.get('company')" />
           </router-link>
         </td>
         <td>{{ client.get("jobTitle") }}</td>
@@ -74,11 +74,13 @@
 <script>
 import ThWithSort from "@/components/ThWithSort.vue";
 import ClientCombo from "@/components/ClientCombo.vue";
+import CompanyCombo from "@/components/CompanyCombo.vue";
 export default {
   name: "ClientsTable",
   components: {
     ThWithSort,
-    ClientCombo
+    ClientCombo,
+    CompanyCombo
   },
   props: {
     clients: Array,

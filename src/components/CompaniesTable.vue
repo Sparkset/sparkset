@@ -26,7 +26,21 @@
           <CompanyCombo :company="company.company" />
         </td>
         <td>
-          {{ company.nextEvent.get("name") }}
+          <div v-if="company.nextEvent.get('time')">
+            <router-link :to="`/company/${company.company.id}/events`">
+              {{
+                `${company.nextEvent.get("name")} on ${company.nextEvent
+                  .get("time")
+                  .toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric"
+                  })}`
+              }}
+            </router-link>
+          </div>
         </td>
       </tr>
     </tbody>
