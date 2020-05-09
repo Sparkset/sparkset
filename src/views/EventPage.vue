@@ -15,7 +15,7 @@
         <section class="field fields">
           <h2>Details</h2>
           <ul>
-            <li v-if="!editingTime">
+            <li v-if="!editingTime && event.get('time')">
               Time:
               {{
                 event.get("time").toLocaleString("en-US", {
@@ -78,12 +78,9 @@
             <div v-if="editingNotes">
               <md-field>
                 <label>{{ event.get("notes") }}</label>
-                <md-textarea
-                  v-model="pendingChanges.notes"
-                  md-autogrow
-                  v-on:keyup.enter="saveNote(event)"
-                  >{{ event.get("notes") }}</md-textarea
-                >
+                <md-textarea v-model="pendingChanges.notes" md-autogrow>{{
+                  event.get("notes")
+                }}</md-textarea>
               </md-field>
               <button class="primary" @click="saveNote(event)">
                 Save Note
@@ -102,7 +99,7 @@ export default {
   name: "EventPage",
   data() {
     return {
-      event: null,
+      event: new AV.Object("Event"),
       clientName: "",
       companyName: "",
       editingTime: false,
@@ -202,6 +199,16 @@ export default {
       .get(eventId)
       .then(event => {
         vm.event = event;
+        vm.pendingChanges.date = `${event
+          .get("time")
+          .getFullYear()}-${`0${event.get("time").getMonth() + 1}`.slice(
+          -2
+        )}-${`0${event.get("time").getDate()}`.slice(-2)}`;
+        vm.pendingChanges.time = `${`0${event.get("time").getHours()}`.slice(
+          -2
+        )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`;
+        vm.pendingChanges.notes = event.get("notes");
+        console.log(vm.pendingChanges.time);
         if (event.get("client")) {
           vm.getClientName(vm.event.get("client").get("objectId"));
         } else if (event.get("company")) {
