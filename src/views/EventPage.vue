@@ -59,6 +59,38 @@
             <li>Client Company: {{ companyName }}</li>
           </ul>
         </section>
+        <section class="fields">
+          <div class="notesTitle">
+            <h2>Notes</h2>
+            <button
+              class="primary"
+              v-if="!editingNotes"
+              @click="editingNotes = true"
+              style="margin-left: 10px; margin-bottom: 10px;"
+            >
+              Edit Notes
+            </button>
+          </div>
+          <div style="margin-top: 5px;">
+            <div v-if="!editingNotes" style="display: flex;">
+              <p v-if="!editingNotes">{{ event.get("notes") }}</p>
+            </div>
+            <div v-if="editingNotes">
+              <md-field>
+                <label>{{ event.get("notes") }}</label>
+                <md-textarea
+                  v-model="pendingChanges.notes"
+                  md-autogrow
+                  v-on:keyup.enter="saveNote(event)"
+                  >{{ event.get("notes") }}</md-textarea
+                >
+              </md-field>
+              <button class="primary" @click="saveNote(event)">
+                Save Note
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   </div>
@@ -74,9 +106,11 @@ export default {
       clientName: "",
       companyName: "",
       editingTime: false,
+      editingNotes: false,
       pendingChanges: {
         date: "",
-        time: ""
+        time: "",
+        notes: ""
       }
     };
   },
@@ -138,28 +172,31 @@ export default {
         .catch(error => {
           alert(error);
         });
-      // if (event.lastEvent) {
-      //   event.lastEvent.unset("recursIn");
-      //   AV.Object.saveAll([event.event, event.lastEvent])
-      //     .then(vm.fetchEvents)
-      //     .catch((error) => {
-      //       alert(error);
-      //     });
-      // } else {
-      //   event.event
-      //     .save()
-      //     .then(() => {
-      //       event.editing = false;
-      //     })
-      //     .catch((error) => {
-      //       alert(error);
-      //     });
-      // }
+    },
+    resetPendingChanges() {
+      const vm = this;
+      vm.pendingChanges.date = "";
+      vm.pendingChanges.time = "";
+      vm.pendingChanges.notes = "";
+    },
+    saveNote(event) {
+      const vm = this;
+      event
+        .set("notes", vm.pendingChanges.notes)
+        .save()
+        .then(() => {
+          vm.editingNotes = false;
+          vm.created;
+        })
+        .catch(error => {
+          alert(error);
+        });
     }
   },
   created() {
     const vm = this;
     const eventQuery = new AV.Query("Event");
+    vm.resetPendingChanges();
     const eventId = vm.$route.params.id;
     eventQuery
       .get(eventId)
@@ -184,10 +221,13 @@ export default {
 }
 
 .primary {
-  margin-left: 925px;
   background-color: #36d5d8;
   color: #fff;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.notesTitle {
+  display: flex;
 }
 </style>

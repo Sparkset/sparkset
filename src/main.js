@@ -3,6 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import AV from "leancloud-storage";
+import VueMaterial from "vue-material";
+// import 'vue-material/dist/vue-material.min.css'
 AV.init({
   appId: "nLNpC0EXtPodRpoeEmjDFnHC-MdYXbMMI",
   appKey: "n9YcJdJ1dFxtpqOBOLUdbaA1"
@@ -48,6 +50,7 @@ library.add(
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import ToggleButton from "vue-js-toggle-button";
 Vue.use(ToggleButton);
+Vue.use(VueMaterial);
 Vue.config.productionTip = false;
 new Vue({
   router,
