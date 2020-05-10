@@ -4,10 +4,16 @@
       <div class="card ">
         <section class="field fields title">
           <h1>{{ event.get("name") }}</h1>
+          <font-awesome-icon
+            v-if="event.get('company')"
+            :icon="['fas', 'building']"
+            size="lg"
+            style="margin-top: 13px; margin-left: 10px;"
+          />
           <button
             class="primary"
             @click="toggle(event)"
-            style="margin-left: 10px;"
+            style="margin-left: 30px;"
           >
             {{ event.get("done") == true ? "Undone" : "Done" }}
           </button>
@@ -16,24 +22,18 @@
           <h2>Details</h2>
           <ul>
             <li v-if="!editingTime && event.get('time')">
-              Time:
-              {{
-                event.get("time").toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric"
-                })
-              }}
-              <button
-                class="primary"
-                v-if="!editingTime"
-                @click="editingTime = true"
-                style="margin-left: 10px;"
-              >
-                Edit Time
-              </button>
+              <a @click="editingTime = true">
+                Time:
+                {{
+                  event.get("time").toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric"
+                  })
+                }}
+              </a>
             </li>
 
             <form v-if="editingTime" @submit.prevent="update(event)">
@@ -55,8 +55,18 @@
                 </button>
               </div>
             </form>
-            <li v-if="event.get('client')">Client: {{ clientName }}</li>
-            <li>Client Company: {{ companyName }}</li>
+            <router-link
+              v-if="event.get('client')"
+              :to="`/client/${event.get('client').id}`"
+            >
+              <li v-if="event.get('client')">Client: {{ clientName }}</li>
+            </router-link>
+            <router-link
+              v-if="event.get('company')"
+              :to="`/company/${event.get('company').id}`"
+            >
+              <li>Client Company: {{ companyName }}</li>
+            </router-link>
           </ul>
         </section>
         <section class="fields">
