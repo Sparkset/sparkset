@@ -87,8 +87,7 @@
             </div>
             <div v-if="editingNotes">
               <md-field>
-                <label>{{ event.get("notes") }}</label>
-                <md-textarea v-model="pendingChanges.notes" md-autogrow>{{
+                <md-textarea v-model="pendingChanges.notes">{{
                   event.get("notes")
                 }}</md-textarea>
               </md-field>
