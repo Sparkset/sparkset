@@ -30,7 +30,7 @@
                     month: "numeric",
                     day: "numeric",
                     hour: "numeric",
-                    minute: "numeric"
+                    minute: "numeric",
                   })
                 }}
               </a>
@@ -86,11 +86,7 @@
               <p v-if="!editingNotes">{{ event.get("notes") }}</p>
             </div>
             <div v-if="editingNotes">
-              <md-field>
-                <md-textarea v-model="pendingChanges.notes">{{
-                  event.get("notes")
-                }}</md-textarea>
-              </md-field>
+              <textarea v-model="pendingChanges.notes"> </textarea>
               <button class="primary" @click="saveNote(event)">
                 Save Note
               </button>
@@ -116,8 +112,8 @@ export default {
       pendingChanges: {
         date: "",
         time: "",
-        notes: ""
-      }
+        notes: "",
+      },
     };
   },
   methods: {
@@ -126,11 +122,11 @@ export default {
       const clientQuery = new AV.Query("Client");
       clientQuery
         .get(id)
-        .then(client => {
+        .then((client) => {
           vm.clientName = client.get("fullName");
           vm.getCompanyName(client.get("company").get("objectId"));
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -139,10 +135,10 @@ export default {
       const companyQuery = new AV.Query("Company");
       companyQuery
         .get(id)
-        .then(company => {
+        .then((company) => {
           vm.companyName = company.get("name");
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -152,7 +148,7 @@ export default {
         .set("done", !event.get("done"))
         .save()
         .then(vm.created)
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -175,7 +171,7 @@ export default {
           vm.editingTime = false;
           vm.created;
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
     },
@@ -194,10 +190,10 @@ export default {
           vm.editingNotes = false;
           vm.created;
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error);
         });
-    }
+    },
   },
   created() {
     const vm = this;
@@ -206,7 +202,7 @@ export default {
     const eventId = vm.$route.params.id;
     eventQuery
       .get(eventId)
-      .then(event => {
+      .then((event) => {
         vm.event = event;
         vm.pendingChanges.date = `${event
           .get("time")
@@ -224,10 +220,10 @@ export default {
           vm.getCompanyName(vm.event.get("company").get("objectId"));
         }
       })
-      .catch(error => {
+      .catch((error) => {
         alert(error);
       });
-  }
+  },
 };
 </script>
 
