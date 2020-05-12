@@ -48,7 +48,6 @@ library.add(
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import ToggleButton from "vue-js-toggle-button";
 Vue.use(ToggleButton);
-Vue.use(VueMaterial);
 Vue.config.productionTip = false;
 new Vue({
   router,
