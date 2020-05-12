@@ -83,7 +83,9 @@
           </div>
           <div style="margin-top: 5px;">
             <div v-if="!editingNotes" style="display: flex;">
-              <p v-if="!editingNotes">{{ event.get("notes") }}</p>
+              <vue-markdown v-if="!editingNotes">{{
+                event.get("notes")
+              }}</vue-markdown>
             </div>
             <div v-if="editingNotes">
               <textarea v-model="pendingChanges.notes"> </textarea>
@@ -100,8 +102,12 @@
 
 <script>
 import AV from "leancloud-storage";
+import VueMarkdown from "vue-markdown";
 export default {
   name: "EventPage",
+  components: {
+    VueMarkdown
+  },
   data() {
     return {
       event: new AV.Object("Event"),
