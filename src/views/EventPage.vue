@@ -30,7 +30,7 @@
                     month: "numeric",
                     day: "numeric",
                     hour: "numeric",
-                    minute: "numeric",
+                    minute: "numeric"
                   })
                 }}
               </a>
@@ -112,8 +112,8 @@ export default {
       pendingChanges: {
         date: "",
         time: "",
-        notes: "",
-      },
+        notes: ""
+      }
     };
   },
   methods: {
@@ -122,11 +122,11 @@ export default {
       const clientQuery = new AV.Query("Client");
       clientQuery
         .get(id)
-        .then((client) => {
+        .then(client => {
           vm.clientName = client.get("fullName");
           vm.getCompanyName(client.get("company").get("objectId"));
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -135,10 +135,10 @@ export default {
       const companyQuery = new AV.Query("Company");
       companyQuery
         .get(id)
-        .then((company) => {
+        .then(company => {
           vm.companyName = company.get("name");
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -148,7 +148,7 @@ export default {
         .set("done", !event.get("done"))
         .save()
         .then(vm.created)
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -171,7 +171,7 @@ export default {
           vm.editingTime = false;
           vm.created;
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
     },
@@ -190,10 +190,10 @@ export default {
           vm.editingNotes = false;
           vm.created;
         })
-        .catch((error) => {
+        .catch(error => {
           alert(error);
         });
-    },
+    }
   },
   created() {
     const vm = this;
@@ -202,7 +202,7 @@ export default {
     const eventId = vm.$route.params.id;
     eventQuery
       .get(eventId)
-      .then((event) => {
+      .then(event => {
         vm.event = event;
         vm.pendingChanges.date = `${event
           .get("time")
@@ -213,17 +213,16 @@ export default {
           -2
         )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`;
         vm.pendingChanges.notes = event.get("notes");
-        console.log(vm.pendingChanges.time);
         if (event.get("client")) {
           vm.getClientName(vm.event.get("client").get("objectId"));
         } else if (event.get("company")) {
           vm.getCompanyName(vm.event.get("company").get("objectId"));
         }
       })
-      .catch((error) => {
+      .catch(error => {
         alert(error);
       });
-  },
+  }
 };
 </script>
 

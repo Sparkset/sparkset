@@ -145,9 +145,7 @@ export default {
         vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
       }
       if (className === "Event") {
-        vm.$router.push(
-          `/client/${vm.results[vm.selectedResult].get("client").id}/events`
-        );
+        vm.$router.push(`/event/${vm.results[vm.selectedResult].id}`);
       }
       if (className === "Note") {
         vm.$router.push(`/notes#${vm.results[vm.selectedResult].id}`);
