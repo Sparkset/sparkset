@@ -15,7 +15,7 @@
             @click="toggle(event)"
             style="margin-left: 30px;"
           >
-            {{ event.get("done") == true ? "Undone" : "Done" }}
+            {{ event.get("done") ? "Undone" : "Done" }}
           </button>
         </section>
         <section class="field fields">
@@ -175,7 +175,6 @@ export default {
         .save()
         .then(() => {
           vm.editingTime = false;
-          vm.created;
         })
         .catch(error => {
           alert(error);
