@@ -193,7 +193,6 @@ export default {
         .save()
         .then(() => {
           vm.editingNotes = false;
-          vm.created;
         })
         .catch(error => {
           alert(error);
