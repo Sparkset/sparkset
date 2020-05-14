@@ -46,7 +46,11 @@
               {{ result.get("name") }}
             </span>
             <span class="result__right">
-              {{ result.get("client").get("fullName") }}
+              {{
+                result.get("client")
+                  ? result.get("client").get("fullName")
+                  : result.get("company").get("name")
+              }}
             </span>
           </span>
           <span v-if="result.className === 'Note'">
@@ -145,9 +149,7 @@ export default {
         vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
       }
       if (className === "Event") {
-        vm.$router.push(
-          `/client/${vm.results[vm.selectedResult].get("client").id}/events`
-        );
+        vm.$router.push(`/event/${vm.results[vm.selectedResult].id}`);
       }
       if (className === "Note") {
         vm.$router.push(`/notes#${vm.results[vm.selectedResult].id}`);
