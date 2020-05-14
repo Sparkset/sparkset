@@ -190,7 +190,7 @@ export default {
 </script>
 
 <style scoped>
-.title > svg {
+h1 > svg {
   color: #605e5e;
 }
 </style>
