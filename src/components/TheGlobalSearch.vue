@@ -46,7 +46,11 @@
               {{ result.get("name") }}
             </span>
             <span class="result__right">
-              {{ result.get("client").get("fullName") }}
+              {{
+                result.get("client")
+                  ? result.get("client").get("fullName")
+                  : result.get("company").get("name")
+              }}
             </span>
           </span>
           <span v-if="result.className === 'Note'">

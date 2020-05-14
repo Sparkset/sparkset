@@ -1,99 +1,97 @@
 <template>
   <div>
     <div class="column">
-      <div class="card ">
-        <section class="field fields title">
-          <h1>{{ event.get("name") }}</h1>
-          <font-awesome-icon
-            v-if="event.get('company')"
-            :icon="['fas', 'building']"
-            size="lg"
-            style="margin-top: 13px; margin-left: 10px;"
-          />
-          <button
-            class="primary"
-            @click="toggle(event)"
-            style="margin-left: 30px;"
-          >
-            {{ event.get("done") ? "Undone" : "Done" }}
-          </button>
-        </section>
-        <section class="field fields">
-          <h2>Details</h2>
-          <ul>
-            <li v-if="!editingTime && event.get('time')">
-              <a @click="editingTime = true">
-                Time:
-                {{
-                  event.get("time").toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric"
-                  })
-                }}
-              </a>
-            </li>
-
-            <form v-if="editingTime" @submit.prevent="update(event)">
-              <h3>New Time</h3>
-              <div class="field">
-                <input
-                  type="date"
-                  max="2099-12-31"
-                  v-model="pendingChanges.date"
-                  required
-                />
-              </div>
-              <div class="field">
-                <input type="time" v-model="pendingChanges.time" required />
-              </div>
-              <div class="field">
-                <button type="submit" class="primary">
-                  Save
-                </button>
-              </div>
-            </form>
-            <router-link
-              v-if="event.get('client')"
-              :to="`/client/${event.get('client').id}`"
-            >
-              <li v-if="event.get('client')">Client: {{ clientName }}</li>
-            </router-link>
-            <router-link
+      <div class="card">
+        <section class="fields">
+          <h1>
+            {{ event.get("name") }}
+            <font-awesome-icon
               v-if="event.get('company')"
-              :to="`/company/${event.get('company').id}`"
-            >
-              <li>Client Company: {{ companyName }}</li>
-            </router-link>
-          </ul>
+              :icon="['fas', 'building']"
+            />{{ " " }}
+            <button class="primary" @click="toggle">
+              {{ event.get("done") ? "Undone" : "Done" }}
+            </button>
+          </h1>
         </section>
         <section class="fields">
-          <div class="notesTitle">
-            <h2>Notes</h2>
+          <h2>Details</h2>
+          <div class="field">
+            <ul>
+              <li>
+                <a v-if="!editingTime" @click="editingTime = true">
+                  Time:
+                  {{
+                    event.get("time")
+                      ? event.get("time").toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric"
+                        })
+                      : undefined
+                  }}
+                </a>
+                <form v-else @submit.prevent="updateTime">
+                  <p>New Time</p>
+                  <div class="field">
+                    <input
+                      type="date"
+                      max="2099-12-31"
+                      v-model="pendingChanges.date"
+                      required
+                    />
+                  </div>
+                  <div class="field">
+                    <input type="time" v-model="pendingChanges.time" required />
+                  </div>
+                  <div class="field">
+                    <button type="submit" class="primary">
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </li>
+              <li v-if="event.get('client')">
+                <router-link :to="`/client/${event.get('client').id}`">
+                  Client: {{ event.get("client").get("fullName") }}
+                </router-link>
+              </li>
+              <li v-if="event.get('company')">
+                <router-link :to="`/company/${event.get('company').id}`">
+                  Company: {{ event.get("company").get("name") }}
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section class="fields">
+          <h2>
+            Notes
             <button
               class="primary"
               v-if="!editingNotes"
               @click="editingNotes = true"
-              style="margin-left: 10px; margin-bottom: 10px;"
             >
-              Edit Notes
+              Edit
             </button>
+          </h2>
+          <div v-if="event.get('notes') && !editingNotes" class="field">
+            <vue-markdown>
+              {{ event.get("notes") }}
+            </vue-markdown>
           </div>
-          <div style="margin-top: 5px;">
-            <div v-if="!editingNotes" style="display: flex;">
-              <vue-markdown v-if="!editingNotes">{{
-                event.get("notes")
-              }}</vue-markdown>
+          <form v-else @submit.prevent="saveNotes">
+            <div class="field">
+              <textarea v-model="pendingChanges.notes" />
             </div>
-            <div v-if="editingNotes">
-              <textarea v-model="pendingChanges.notes"> </textarea>
-              <button class="primary" @click="saveNote(event)">
-                Save Note
+            <div class="field">
+              <button class="primary">
+                Save
               </button>
             </div>
-          </div>
+          </form>
         </section>
       </div>
     </div>
@@ -111,8 +109,6 @@ export default {
   data() {
     return {
       event: new AV.Object("Event"),
-      clientName: "",
-      companyName: "",
       editingTime: false,
       editingNotes: false,
       pendingChanges: {
@@ -123,55 +119,29 @@ export default {
     };
   },
   methods: {
-    getClientName(id) {
+    toggle() {
       const vm = this;
-      const clientQuery = new AV.Query("Client");
-      clientQuery
-        .get(id)
-        .then(client => {
-          vm.clientName = client.get("fullName");
-          vm.getCompanyName(client.get("company").get("objectId"));
-        })
-        .catch(error => {
-          alert(error);
-        });
-    },
-    getCompanyName(id) {
-      const vm = this;
-      const companyQuery = new AV.Query("Company");
-      companyQuery
-        .get(id)
-        .then(company => {
-          vm.companyName = company.get("name");
-        })
-        .catch(error => {
-          alert(error);
-        });
-    },
-    toggle(event) {
-      const vm = this;
-      event
-        .set("done", !event.get("done"))
+      vm.event
+        .set("done", !vm.event.get("done"))
         .save()
-        .then(vm.created)
         .catch(error => {
           alert(error);
         });
     },
-    update(event) {
+    updateTime() {
       const vm = this;
-      event.set(
-        "time",
-        new Date(
-          vm.pendingChanges.date.slice(0, 4),
-          vm.pendingChanges.date.slice(5, 7) - 1,
-          vm.pendingChanges.date.slice(8, 10),
-          vm.pendingChanges.time.slice(0, 2),
-          vm.pendingChanges.time.slice(3, 5),
-          0
+      vm.event
+        .set(
+          "time",
+          new Date(
+            vm.pendingChanges.date.slice(0, 4),
+            vm.pendingChanges.date.slice(5, 7) - 1,
+            vm.pendingChanges.date.slice(8, 10),
+            vm.pendingChanges.time.slice(0, 2),
+            vm.pendingChanges.time.slice(3, 5),
+            0
+          )
         )
-      );
-      event
         .save()
         .then(() => {
           vm.editingTime = false;
@@ -180,15 +150,9 @@ export default {
           alert(error);
         });
     },
-    resetPendingChanges() {
+    saveNotes() {
       const vm = this;
-      vm.pendingChanges.date = "";
-      vm.pendingChanges.time = "";
-      vm.pendingChanges.notes = "";
-    },
-    saveNote(event) {
-      const vm = this;
-      event
+      vm.event
         .set("notes", vm.pendingChanges.notes)
         .save()
         .then(() => {
@@ -202,10 +166,10 @@ export default {
   created() {
     const vm = this;
     const eventQuery = new AV.Query("Event");
-    vm.resetPendingChanges();
-    const eventId = vm.$route.params.id;
     eventQuery
-      .get(eventId)
+      .include("client")
+      .include("company")
+      .get(vm.$route.params.id)
       .then(event => {
         vm.event = event;
         vm.pendingChanges.date = `${event
@@ -217,11 +181,6 @@ export default {
           -2
         )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`;
         vm.pendingChanges.notes = event.get("notes");
-        if (event.get("client")) {
-          vm.getClientName(vm.event.get("client").get("objectId"));
-        } else if (event.get("company")) {
-          vm.getCompanyName(vm.event.get("company").get("objectId"));
-        }
       })
       .catch(error => {
         alert(error);
@@ -231,18 +190,7 @@ export default {
 </script>
 
 <style scoped>
-.title {
-  display: flex;
-}
-
-.primary {
-  background-color: #36d5d8;
-  color: #fff;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.notesTitle {
-  display: flex;
+.title > svg {
+  color: #605e5e;
 }
 </style>
