@@ -19,7 +19,7 @@
             Showing {{ filteredNotes.length }}
             {{ filteredNotes.length === 1 ? "Note" : "Notes" }}
           </h1>
-          <p>
+          <p v-if="tagOptions.length">
             Filter by:
             <router-link
               v-for="tag in tagOptions"
