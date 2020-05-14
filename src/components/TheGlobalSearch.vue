@@ -32,32 +32,48 @@
           @click="goToSelectedItem"
         >
           <span v-if="result.className === 'Client'">
-            <span class="result__left">
+            <div class="primary">
               <font-awesome-icon :icon="['fas', 'user']" />
               {{ result.get("fullName") }}
-            </span>
-            <span class="result__right">
+            </div>
+            <div class="secondary">
+              <span class="type">Client</span>
               {{ result.get("company").get("name") }}
-            </span>
+            </div>
           </span>
           <span v-if="result.className === 'Event'">
-            <span class="result__left">
+            <div class="primary">
               <font-awesome-icon :icon="['fas', 'calendar-day']" />
               {{ result.get("name") }}
-            </span>
-            <span class="result__right">
+            </div>
+            <div class="secondary">
+              <span class="type">Event</span>
+              {{
+                result.get("time").toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric"
+                })
+              }}
+              with
               {{
                 result.get("client")
                   ? result.get("client").get("fullName")
                   : result.get("company").get("name")
               }}
-            </span>
+            </div>
           </span>
           <span v-if="result.className === 'Note'">
-            <span class="result__left">
+            <div class="primary">
               <font-awesome-icon :icon="['fas', 'sticky-note']" />
               {{ result.get("title") }}
-            </span>
+            </div>
+            <div class="secondary">
+              <span class="type">Note</span>
+              {{ result.get("content") }}
+            </div>
           </span>
         </button>
       </div>
@@ -118,6 +134,7 @@ export default {
           )
         )
           .include("client")
+          .include("company")
           .descending("updatedAt")
           .limit(3)
           .find();
@@ -205,19 +222,32 @@ export default {
 .result {
   display: block;
   width: 100%;
-  height: 46px;
-  padding: 0 12px;
+  padding: 8px 12px;
 }
 .result.selected {
   background-color: #36d5d8;
   color: #fff;
 }
-.result__left {
-  float: left;
+.result > span > .primary,
+.result > span > .secondary {
+  text-align: left;
+}
+.result > span > .primary {
   font-weight: 500;
 }
-.result__right {
-  float: right;
+.result > span > .secondary {
+  padding-left: 14pt;
+  font-size: 9pt;
+  opacity: 0.6;
+}
+.result > span > .secondary > .type {
+  background-color: #605e5e22;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.result.selected > span > .secondary > .type {
+  background-color: #fff;
+  color: #36d5d8;
 }
 @media (min-width: 544px) {
   #main {
