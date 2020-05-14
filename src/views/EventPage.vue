@@ -82,7 +82,7 @@
               {{ event.get("notes") }}
             </vue-markdown>
           </div>
-          <form v-else @submit.prevent="saveNotes">
+          <form v-if="editingNotes" @submit.prevent="saveNotes">
             <div class="field">
               <textarea v-model="pendingChanges.notes" />
             </div>
