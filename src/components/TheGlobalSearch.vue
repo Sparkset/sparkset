@@ -31,50 +31,62 @@
           @mousemove="selectedResult = index"
           @click="goToSelectedItem"
         >
-          <span v-if="result.className === 'Client'">
-            <div class="primary">
+          <div v-if="result.className === 'Client'">
+            <div class="icon">
               <font-awesome-icon :icon="['fas', 'user']" />
-              {{ result.get("fullName") }}
             </div>
-            <div class="secondary">
-              <span class="type">Client</span>
-              {{ result.get("company").get("name") }}
+            <div class="content">
+              <div class="primary">
+                {{ result.get("fullName") }}
+              </div>
+              <div class="secondary">
+                <span class="type">Client</span>
+                {{ result.get("company").get("name") }}
+              </div>
             </div>
-          </span>
-          <span v-if="result.className === 'Event'">
-            <div class="primary">
+          </div>
+          <div v-if="result.className === 'Event'">
+            <div class="icon">
               <font-awesome-icon :icon="['fas', 'calendar-day']" />
-              {{ result.get("name") }}
             </div>
-            <div class="secondary">
-              <span class="type">Event</span>
-              {{
-                result.get("time").toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric"
-                })
-              }}
-              with
-              {{
-                result.get("client")
-                  ? result.get("client").get("fullName")
-                  : result.get("company").get("name")
-              }}
+            <div class="content">
+              <div class="primary">
+                {{ result.get("name") }}
+              </div>
+              <div class="secondary">
+                <span class="type">Event</span>
+                {{
+                  result.get("time").toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric"
+                  })
+                }}
+                with
+                {{
+                  result.get("client")
+                    ? result.get("client").get("fullName")
+                    : result.get("company").get("name")
+                }}
+              </div>
             </div>
-          </span>
-          <span v-if="result.className === 'Note'">
-            <div class="primary">
+          </div>
+          <div v-if="result.className === 'Note'">
+            <div class="icon">
               <font-awesome-icon :icon="['fas', 'sticky-note']" />
-              {{ result.get("title") }}
             </div>
-            <div class="secondary">
-              <span class="type">Note</span>
-              {{ result.get("content") }}
+            <div class="content">
+              <div class="primary">
+                {{ result.get("title") }}
+              </div>
+              <div class="secondary">
+                <span class="type">Note</span>
+                {{ result.get("content") }}
+              </div>
             </div>
-          </span>
+          </div>
         </button>
       </div>
     </div>
@@ -229,24 +241,30 @@ export default {
   background-color: #36d5d8;
   color: #fff;
 }
-.result > span > .primary,
-.result > span > .secondary {
+.result > div {
+  display: flex;
+}
+.result > div > .content {
+  padding-left: 8px;
+}
+.result > div > .content > .primary,
+.result > div > .content > .secondary {
   text-align: left;
 }
-.result > span > .primary {
+.result > div > .content > .primary {
   font-weight: 500;
 }
-.result > span > .secondary {
-  padding-left: 14pt;
+.result > div > .content > .secondary {
   font-size: 9pt;
   opacity: 0.6;
 }
-.result > span > .secondary > .type {
+.result > div > .content > .secondary > .type {
   background-color: #605e5e22;
-  padding: 0 2px;
+  padding: 0 4px;
   border-radius: 2px;
+  text-transform: uppercase;
 }
-.result.selected > span > .secondary > .type {
+.result.selected > div > .content > .secondary > .type {
   background-color: #fff;
   color: #36d5d8;
 }
