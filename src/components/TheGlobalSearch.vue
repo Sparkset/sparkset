@@ -161,6 +161,7 @@ export default {
     goToSelectedItem() {
       const vm = this;
       vm.$store.commit("closeGlobalSearch");
+      vm.$store.commit("closeSideNav");
       const className = vm.results[vm.selectedResult].className;
       if (className === "Client") {
         vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
