@@ -249,7 +249,9 @@ button {
   cursor: pointer;
 }
 .field > button,
-td > button {
+td > button,
+h1 > button,
+h2 > button {
   border: 1px solid #f7f5f5;
   padding: 8px 12px;
   background-color: #f7f5f5;
@@ -259,38 +261,58 @@ td > button {
 .field > button:focus,
 .field > button:hover,
 td > button:focus,
-td > button:hover {
+td > button:hover,
+h1 > button:focus,
+h1 > button:hover,
+h2 > button:focus,
+h2 > button:hover {
   border-color: #e5e3e3;
   background-color: #e5e3e3;
 }
 .field > button.primary,
 td > button.primary,
+h1 > button.primary,
+h2 > button.primary,
 .field > button.danger,
-td > button.danger {
+td > button.danger,
+h1 > button.danger,
+h2 > button.danger {
   font-weight: 500;
   color: #fff;
 }
 .field > button.primary,
-td > button.primary {
+td > button.primary,
+h1 > button.primary,
+h2 > button.primary {
   border-color: #36d5d8;
   background-color: #36d5d8;
 }
 .field > button.primary:focus,
 .field > button.primary:hover,
 td > button.primary:focus,
-td > button.primary:hover {
+td > button.primary:hover,
+h1 > button.primary:focus,
+h1 > button.primary:hover,
+h2 > button.primary:focus,
+h2 > button.primary:hover {
   border-color: #29a0a2;
   background-color: #29a0a2;
 }
 .field > button.danger,
-td > button.danger {
+td > button.danger,
+h1 > button.danger,
+h2 > button.danger {
   border-color: #e52f2e;
   background-color: #e52f2e;
 }
 .field > button.danger:focus,
 .field > button.danger:hover,
 td > button.danger:focus,
-td > button.danger:hover {
+td > button.danger:hover,
+h1 > button.danger:focus,
+h1 > button.danger:hover,
+h2 > button.danger:focus,
+h2 > button.danger:hover {
   border-color: #ac2323;
   background-color: #ac2323;
 }

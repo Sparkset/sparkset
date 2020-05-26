@@ -12,7 +12,7 @@
         })
       }}
     </p>
-    <p>{{ note.get("content") }}</p>
+    <vue-markdown>{{ note.get("content") }}</vue-markdown>
     <ul class="fa-ul">
       <li v-for="client in note.get('clients')" :key="client.id">
         <router-link :to="`/client/${client.id}`" class="client">
@@ -36,10 +36,14 @@
 
 <script>
 import AV from "leancloud-storage";
+import VueMarkdown from "vue-markdown";
 export default {
   name: "NoteCard",
   props: {
     note: AV.Object
+  },
+  components: {
+    VueMarkdown
   },
   mounted() {
     const vm = this;

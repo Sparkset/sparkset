@@ -19,7 +19,8 @@
 4. [Vuex](https://vuex.vuejs.org/) for managing global states.
 5. [vue-js-toggle-button](http://vue-js-toggle-button.yev.io/) for switch button.
 6. [vue-multiselect](https://vue-multiselect.js.org/) for picking clients and tags for notes.
-7. [Font Awesome](https://fontawesome.com/) for icons.
+7. [vue-markdown](https://github.com/miaolz123/vue-markdown) for parsing notes written in Markdown.
+8. [Font Awesome](https://fontawesome.com/) for icons.
 
 ## Setting up Development Environment
 

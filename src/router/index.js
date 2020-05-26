@@ -123,6 +123,10 @@ const routes = [
         ]
       },
       {
+        path: "/event/:id",
+        component: () => import("../views/EventPage.vue")
+      },
+      {
         path: "/notes",
         component: () => import("../views/NotesPage.vue")
       }
