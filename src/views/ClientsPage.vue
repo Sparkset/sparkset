@@ -37,6 +37,11 @@
           </div>
         </section>
       </div>
+      <div class="field">
+        <button @click="exportPDF()">
+          Export as PDF
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -44,6 +49,8 @@
 <script>
 import ClientsTable from "@/components/ClientsTable.vue";
 import AV from "leancloud-storage";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 export default {
   name: "ClientsPage",
   components: {
@@ -219,6 +226,29 @@ export default {
     vm.search();
   },
   methods: {
+    exportPDF() {
+      const vm = this;
+      const rows = vm.clients.map(row => ({
+        fullName: row.get("fullName"),
+        company: row.get("company").get("name"),
+        jobTitle: row.get("jobTitle"),
+        email: row.get("email"),
+        cellPhone: row.get("cellPhone")
+      }));
+      const columns = [
+        { title: "Name", key: "fullName" },
+        { title: "Company", key: "company" },
+        { title: "Job Title", key: "jobTitle" },
+        { title: "Email", key: "email" },
+        { title: "Cell Phone", key: "cellPhone" }
+      ];
+      var doc = new jsPDF("p", "pt");
+      doc.text("Client Information", 40, 40);
+      doc.autoTable(columns, rows, {
+        margin: { top: 60 }
+      });
+      doc.save("clients.pdf");
+    },
     search() {
       const vm = this;
       if (vm.fields[vm.selectedField].class === "Client") {
