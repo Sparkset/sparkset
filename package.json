@@ -16,6 +16,8 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "core-js": "^3.6.4",
     "express": "^4.17.1",
+    "jspdf": "^1.5.3",
+    "jspdf-autotable": "^3.5.3",
     "leancloud-storage": "^4.5.3",
     "leanengine": "^3.6.0",
     "vue": "^2.6.11",
