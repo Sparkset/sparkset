@@ -13,14 +13,15 @@
 
 ## Dependencies
 
-1. [LeanCloud](https://leancloud.app/) for [object storage](https://docs.leancloud.app/leanstorage_guide-js.html), [web hosting](https://docs.leancloud.app/leanengine_webhosting_guide-node.html), and [cloud functions](https://docs.leancloud.app/leanengine_cloudfunction_guide-node.html). Note that while we’re using the [Developer Plan](https://leancloud.app/pricing/) of LeanCloud (which is free), the cloud can only handle 30,000 requests per day. However, this is totally sufficient for the purpose of this app.
-2. [Vue.js](https://vuejs.org/) as the front-end framework.
-3. [Vue Router](https://router.vuejs.org/) for crunching multiple views into a single-page app.
-4. [Vuex](https://vuex.vuejs.org/) for managing global states.
+1. [Font Awesome](https://fontawesome.com/) for icons.
+2. [jspdf](https://parall.ax/products/jspdf) for exporting client tables as PDF.
+3. [LeanCloud](https://leancloud.app/) for [object storage](https://docs.leancloud.app/leanstorage_guide-js.html), [web hosting](https://docs.leancloud.app/leanengine_webhosting_guide-node.html), and [cloud functions](https://docs.leancloud.app/leanengine_cloudfunction_guide-node.html). Note that while we’re using the [Developer Plan](https://leancloud.app/pricing/) of LeanCloud (which is free), the cloud can only handle 30,000 requests per day. However, this is totally sufficient for the purpose of this app.
+4. [Vue.js](https://vuejs.org/) as the front-end framework.
 5. [vue-js-toggle-button](http://vue-js-toggle-button.yev.io/) for switch button.
-6. [vue-multiselect](https://vue-multiselect.js.org/) for picking clients and tags for notes.
-7. [vue-markdown](https://github.com/miaolz123/vue-markdown) for parsing notes written in Markdown.
-8. [Font Awesome](https://fontawesome.com/) for icons.
+6. [vue-markdown](https://github.com/miaolz123/vue-markdown) for parsing notes written in Markdown.
+7. [vue-multiselect](https://vue-multiselect.js.org/) for picking clients and tags for notes.
+8. [Vue Router](https://router.vuejs.org/) for crunching multiple views into a single-page app.
+9. [Vuex](https://vuex.vuejs.org/) for managing global states.
 
 ## Setting up Development Environment
 
