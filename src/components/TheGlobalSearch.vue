@@ -17,77 +17,85 @@
     >
       <input
         type="text"
-        :class="[results.length ? 'has-results' : null]"
+        placeholder="Search clients, events, notes…"
+        :class="[query ? 'has-query' : null]"
         v-model="query"
         v-focus
         @input="getResults"
         @keydown.enter="goToSelectedItem"
       />
-      <div v-if="results.length" id="results">
-        <button
-          v-for="(result, index) in results"
-          :key="result.id"
-          :class="['result', index === selectedResult ? 'selected' : null]"
-          @mousemove="selectedResult = index"
-          @click="goToSelectedItem"
-        >
-          <div v-if="result.className === 'Client'">
-            <div class="icon">
-              <font-awesome-icon :icon="['fas', 'user']" />
-            </div>
-            <div class="content">
-              <div class="primary">
-                {{ result.get("fullName") }}
+      <div v-if="query" id="results">
+        <div v-if="results.length">
+          <button
+            v-for="(result, index) in results"
+            :key="result.id"
+            :class="['result', index === selectedResult ? 'selected' : null]"
+            @mousemove="selectedResult = index"
+            @click="goToSelectedItem"
+          >
+            <div v-if="result.className === 'Client'">
+              <div class="icon">
+                <font-awesome-icon :icon="['fas', 'user']" />
               </div>
-              <div class="secondary">
-                <span class="type">Client</span>
-                {{ result.get("company").get("name") }}
+              <div class="content">
+                <div class="primary">
+                  {{ result.get("fullName") }}
+                </div>
+                <div class="secondary">
+                  <span class="type">Client</span>
+                  {{ result.get("company").get("name") }}
+                </div>
               </div>
             </div>
+            <div v-if="result.className === 'Event'">
+              <div class="icon">
+                <font-awesome-icon :icon="['fas', 'calendar-day']" />
+              </div>
+              <div class="content">
+                <div class="primary">
+                  {{ result.get("name") }}
+                </div>
+                <div class="secondary">
+                  <span class="type">Event</span>
+                  {{
+                    result.get("time").toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "numeric"
+                    })
+                  }}
+                  with
+                  {{
+                    result.get("client")
+                      ? result.get("client").get("fullName")
+                      : result.get("company").get("name")
+                  }}
+                </div>
+              </div>
+            </div>
+            <div v-if="result.className === 'Note'">
+              <div class="icon">
+                <font-awesome-icon :icon="['fas', 'sticky-note']" />
+              </div>
+              <div class="content">
+                <div class="primary">
+                  {{ result.get("title") }}
+                </div>
+                <div class="secondary">
+                  <span class="type">Note</span>
+                  {{ result.get("content") }}
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div v-else>
+          <div class="result">
+            <span>Nothing found</span>
           </div>
-          <div v-if="result.className === 'Event'">
-            <div class="icon">
-              <font-awesome-icon :icon="['fas', 'calendar-day']" />
-            </div>
-            <div class="content">
-              <div class="primary">
-                {{ result.get("name") }}
-              </div>
-              <div class="secondary">
-                <span class="type">Event</span>
-                {{
-                  result.get("time").toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "numeric"
-                  })
-                }}
-                with
-                {{
-                  result.get("client")
-                    ? result.get("client").get("fullName")
-                    : result.get("company").get("name")
-                }}
-              </div>
-            </div>
-          </div>
-          <div v-if="result.className === 'Note'">
-            <div class="icon">
-              <font-awesome-icon :icon="['fas', 'sticky-note']" />
-            </div>
-            <div class="content">
-              <div class="primary">
-                {{ result.get("title") }}
-              </div>
-              <div class="secondary">
-                <span class="type">Note</span>
-                {{ result.get("content") }}
-              </div>
-            </div>
-          </div>
-        </button>
+        </div>
       </div>
     </div>
   </div>
@@ -213,13 +221,16 @@ export default {
   width: calc(100% - 48px);
   max-width: 720px;
 }
+#main * {
+  transition: unset;
+}
 #main > input {
   border: none;
   margin: 0;
   padding: 12px;
   border-radius: 4px;
 }
-#main > input.has-results {
+#main > input.has-query {
   border-bottom: 1px solid #e5e5e5;
   border-radius: 4px 4px 0 0;
 }
@@ -228,9 +239,6 @@ export default {
   background-color: #fff;
   border-radius: 0 0 4px 4px;
   overflow: hidden;
-}
-#results * {
-  transition: unset;
 }
 .result {
   display: block;
