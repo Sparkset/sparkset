@@ -1,10 +1,14 @@
 <template>
   <nav>
-    <ul id="left"></ul>
+    <ul id="left">
+      <li>
+        <span>Welcome {{ fullName }}</span>
+      </li>
+    </ul>
     <ul id="right">
       <li :class="[$store.state.openedTopNavItem === 'user' ? 'open' : '']">
         <button @click.stop="$store.commit('updateOpenedTopNavItem', 'user')">
-          <span id="right__name">{{ fullName }}</span>
+          <span id="right__name">{{ userEmail }}</span>
         </button>
         <ul class="dialogue">
           <li>
@@ -35,6 +39,7 @@ export default {
   data() {
     return {
       fullName: AV.User.current().get("fullName"),
+      userEmail: AV.User.current().get("email"),
       allowAddingNewUsers: AV.User.current().get("allowAddingNewUsers")
     };
   },
@@ -89,8 +94,10 @@ export default {
 #right > li {
   margin: 8px 0 8px 8px;
 }
+#left > li > span,
 #left > li > a > span,
 #left > li > button > span,
+#right > li > span,
 #right > li > a > span,
 #right > li > button > span {
   display: inline-block;

@@ -3,9 +3,9 @@ import VueRouter from "vue-router";
 import AV from "leancloud-storage";
 Vue.use(VueRouter);
 async function isLoggedIn() {
-  try {
-    const user = AV.User.current();
-    if (user) {
+  const user = AV.User.current();
+  if (user) {
+    try {
       const result = await user.isAuthenticated();
       if (result) {
         await user.fetch();
@@ -13,11 +13,11 @@ async function isLoggedIn() {
         await AV.User.logOut();
       }
       return result;
+    } catch (error) {
+      alert(error);
     }
-    return false;
-  } catch (error) {
-    alert(error);
   }
+  return false;
 }
 const routes = [
   {
@@ -83,20 +83,6 @@ const routes = [
         component: () => import("../views/ClientsAddPage.vue")
       },
       {
-        path: "/company/:id",
-        component: () => import("../views/CompanyPage.vue"),
-        children: [
-          {
-            path: "",
-            component: () => import("../components/CompanyProfile.vue")
-          },
-          {
-            path: "clients",
-            component: () => import("../components/CompanyClients.vue")
-          }
-        ]
-      },
-      {
         path: "/client/:id",
         component: () => import("../views/ClientPage.vue"),
         children: [
@@ -117,6 +103,32 @@ const routes = [
             component: () => import("../components/ClientFiles.vue")
           }
         ]
+      },
+      {
+        path: "/companies",
+        component: () => import("../views/CompaniesPage.vue")
+      },
+      {
+        path: "/company/:id",
+        component: () => import("../views/CompanyPage.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("../components/CompanyProfile.vue")
+          },
+          {
+            path: "clients",
+            component: () => import("../components/CompanyClients.vue")
+          },
+          {
+            path: "events",
+            component: () => import("../components/CompanyEvents.vue")
+          }
+        ]
+      },
+      {
+        path: "/event/:id",
+        component: () => import("../views/EventPage.vue")
       },
       {
         path: "/notes",

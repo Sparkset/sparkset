@@ -35,6 +35,7 @@ export default {
         const clientQuery = new AV.Query("Client");
         clientQuery
           .equalTo("company", vm.company)
+          .limit(1000)
           .find()
           .then(clients => {
             vm.clients = clients;

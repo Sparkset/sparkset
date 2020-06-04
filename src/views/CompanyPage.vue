@@ -14,6 +14,11 @@
                 <span>Clients</span>
               </router-link>
             </li>
+            <li>
+              <router-link :to="`/company/${$route.params.id}/events`">
+                <span>Events</span>
+              </router-link>
+            </li>
           </ul>
         </section>
         <router-view :key="$route.path"></router-view>

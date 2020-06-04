@@ -49,10 +49,17 @@ a {
   color: currentColor;
   cursor: pointer;
 }
-h1 {
+h1,
+h2 {
   font-weight: 600;
-  font-size: 18pt;
   color: #36d5d8;
+}
+h1 {
+  font-size: 18pt;
+}
+h2 {
+  font-size: 16pt;
+  margin-block-start: 0.3em;
 }
 table {
   width: 100%;
@@ -61,21 +68,15 @@ table {
   table-layout: fixed;
 }
 thead {
-  background-color: #00000009;
+  background-color: #00000008;
 }
 tbody {
-  background-color: #00000006;
+  background-color: #00000004;
 }
 th,
 td {
   padding: 8px;
   width: 192px;
-}
-th.sortable {
-  cursor: pointer;
-}
-th.sortable > span > svg {
-  opacity: 0.4;
 }
 .card {
   position: relative;
@@ -143,12 +144,27 @@ section:last-of-type {
   width: 100%;
 }
 .field--superwide {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .field--with--dropdown {
   position: relative;
 }
+.tag {
+  display: inline-block;
+  margin: 4px 4px 0 0;
+  padding: 4px 8px;
+  background-color: #36d5d822;
+  color: #36d5d8;
+  font-size: 9pt;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+.tag.active {
+  background-color: #36d5d8;
+  color: #fff;
+}
 label > span {
+  display: block;
   color: #605e5e;
 }
 label > span > a > svg > path {
@@ -179,7 +195,8 @@ select:focus {
 label > input,
 label > textarea,
 label > select,
-label > div {
+label > div,
+label > .vue-js-switch {
   margin: 6px 0 0 0;
 }
 label > input:disabled,
@@ -232,7 +249,9 @@ button {
   cursor: pointer;
 }
 .field > button,
-td > button {
+td > button,
+h1 > button,
+h2 > button {
   border: 1px solid #f7f5f5;
   padding: 8px 12px;
   background-color: #f7f5f5;
@@ -242,38 +261,58 @@ td > button {
 .field > button:focus,
 .field > button:hover,
 td > button:focus,
-td > button:hover {
+td > button:hover,
+h1 > button:focus,
+h1 > button:hover,
+h2 > button:focus,
+h2 > button:hover {
   border-color: #e5e3e3;
   background-color: #e5e3e3;
 }
 .field > button.primary,
 td > button.primary,
+h1 > button.primary,
+h2 > button.primary,
 .field > button.danger,
-td > button.danger {
+td > button.danger,
+h1 > button.danger,
+h2 > button.danger {
   font-weight: 500;
   color: #fff;
 }
 .field > button.primary,
-td > button.primary {
+td > button.primary,
+h1 > button.primary,
+h2 > button.primary {
   border-color: #36d5d8;
   background-color: #36d5d8;
 }
 .field > button.primary:focus,
 .field > button.primary:hover,
 td > button.primary:focus,
-td > button.primary:hover {
+td > button.primary:hover,
+h1 > button.primary:focus,
+h1 > button.primary:hover,
+h2 > button.primary:focus,
+h2 > button.primary:hover {
   border-color: #29a0a2;
   background-color: #29a0a2;
 }
 .field > button.danger,
-td > button.danger {
+td > button.danger,
+h1 > button.danger,
+h2 > button.danger {
   border-color: #e52f2e;
   background-color: #e52f2e;
 }
 .field > button.danger:focus,
 .field > button.danger:hover,
 td > button.danger:focus,
-td > button.danger:hover {
+td > button.danger:hover,
+h1 > button.danger:focus,
+h1 > button.danger:hover,
+h2 > button.danger:focus,
+h2 > button.danger:hover {
   border-color: #ac2323;
   background-color: #ac2323;
 }
@@ -294,7 +333,7 @@ td > button.danger:hover {
   width: 100%;
   padding: 0 0 88px 0;
   background-color: #f3f3f3;
-  overflow-y: scroll;
+  overflow-y: auto;
   z-index: 2;
   transition: left 0.2s ease;
 }
@@ -403,7 +442,8 @@ td > button.danger:hover {
   label > input,
   label > textarea,
   label > select,
-  label > div {
+  label > div,
+  label > .vue-js-switch {
     margin: 8px 0 0 0;
   }
   .column {

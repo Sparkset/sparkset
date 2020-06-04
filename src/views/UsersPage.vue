@@ -34,22 +34,25 @@
               </label>
             </div>
             <div class="field field--half">
-              <toggle-button
-                :value="newUser.allowAddingNewUsers"
-                :color="{
-                  checked: '#36d5d8',
-                  unchecked: '#e52f2e'
-                }"
-                :labels="{
-                  checked: 'Allow adding users',
-                  unchecked: 'Disallow adding users'
-                }"
-                :width="175"
-                :height="35"
-                :font-size="12"
-                @change="changeUserCreationPermission"
-                sync
-              />
+              <label>
+                <span>Allow Adding Users</span>
+                <toggle-button
+                  :value="newUser.allowAddingNewUsers"
+                  :color="{
+                    checked: '#36d5d8',
+                    unchecked: '#e52f2e'
+                  }"
+                  :labels="{
+                    checked: 'Yes',
+                    unchecked: 'No'
+                  }"
+                  :width="72"
+                  :height="42"
+                  :font-size="12"
+                  @change="changeUserCreationPermission"
+                  sync
+                />
+              </label>
             </div>
             <div class="field">
               <button type="submit" class="primary">Add New User</button>
