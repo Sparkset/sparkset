@@ -246,7 +246,7 @@ export default {
       doc.text("Client Information", 40, 40);
       doc.autoTable(columns, rows, {
         margin: { top: 60 },
-        headerStyles: { fillColor: [54, 213, 216] },
+        headerStyles: { fillColor: [54, 213, 216] }
       });
       doc.save("clients.pdf");
     },
