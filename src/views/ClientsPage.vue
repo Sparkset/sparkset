@@ -245,7 +245,8 @@ export default {
       var doc = new jsPDF("p", "pt");
       doc.text("Client Information", 40, 40);
       doc.autoTable(columns, rows, {
-        margin: { top: 60 }
+        margin: { top: 60 },
+        headerStyles: { fillColor: [54, 213, 216] },
       });
       doc.save("clients.pdf");
     },
