@@ -17,6 +17,18 @@ import {
   faPaperPlane,
   faPhoneAlt,
   faBuilding,
+  faHamburger,
+  faCity,
+  faHome,
+  faFootballBall,
+  faBook,
+  faTrophy,
+  faExclamationTriangle,
+  faUmbrellaBeach,
+  faGraduationCap,
+  faHistory,
+  faClipboard,
+  faCrown,
   faArrowRight,
   faUser,
   faCalendarDay,
@@ -25,6 +37,7 @@ import {
 import {
   faLinkedin,
   faFacebookSquare,
+  faInstagram,
   faInstagramSquare
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -40,8 +53,21 @@ library.add(
   faPaperPlane,
   faPhoneAlt,
   faBuilding,
+  faHamburger,
   faLinkedin,
   faFacebookSquare,
+  faInstagram,
+  faCity,
+  faHome,
+  faFootballBall,
+  faBook,
+  faTrophy,
+  faExclamationTriangle,
+  faUmbrellaBeach,
+  faGraduationCap,
+  faHistory,
+  faClipboard,
+  faCrown,
   faInstagramSquare,
   faArrowRight
 );
