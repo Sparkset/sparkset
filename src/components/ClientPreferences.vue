@@ -7,12 +7,7 @@
         <td style="text-align:center">
           <form @submit.prevent="go">
             <button @click="show('fNd')" style="width: 250px; height: 250px;">
-              <font-awesome-icon
-                :icon="['fas', 'hamburger']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_food.png" alt="Food and Drink" />
               <p>Food & Drinks Preferences</p>
             </button>
             <div class="field">
@@ -33,11 +28,7 @@
                   <textarea rows="3" v-model="fOthers"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('fNd')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('fNd')">
                     Save
                   </button>
                   <button type="button" class="close" @click="hide('fNd')">
@@ -54,12 +45,7 @@
               @click="show('busiGNI')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'city']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_goals.png" alt="Business Goals and Interests" />
               <p>Business Goals & Interests</p>
             </button>
             <div class="field">
@@ -74,11 +60,7 @@
                   <textarea rows="10" v-model="busiI"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('busiGNI')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('busiGNI')">
                     Save
                   </button>
                   <button type="button" class="close" @click="hide('busiGNI')">
@@ -92,12 +74,7 @@
         <td style="text-align:center">
           <form @submit.prevent="go">
             <button @click="show('f&f')" style="width: 250px; height: 250px;">
-              <font-awesome-icon
-                :icon="['fas', 'home']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_home.png" alt="Family and Friends" />
               <p>Family & Friends</p>
             </button>
             <div class="field">
@@ -112,11 +89,7 @@
                   <textarea rows="10" v-model="friends"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('f&f')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('f&f')">
                     Save
                   </button>
                   <button type="button" class="close" @click="hide('f&f')">
@@ -135,12 +108,7 @@
               @click="show('hobbies')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'football-ball']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_hobby.png" alt="Hobbies" />
               <p>Hobbies</p>
             </button>
             <div class="field">
@@ -157,11 +125,7 @@
                   <textarea rows="10" v-model="hOthers"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('hobbies')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('hobbies')">
                     Save
                   </button>
                   <button type="button" class="close" @click="hide('hobbies')">
@@ -178,12 +142,7 @@
               @click="show('learningPref')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'book']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_learn.png" alt="Learning Preferences" />
               <p>Learning Preferences</p>
             </button>
             <div class="field">
@@ -195,18 +154,10 @@
                   <textarea rows="10" v-model="learningPref"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('learningPref')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('learningPref')">
                     Save
                   </button>
-                  <button
-                    type="button"
-                    class="close"
-                    @click="hide('learningPref')"
-                  >
+                  <button type="button" class="close" @click="hide('learningPref')">
                     Cancel
                   </button>
                 </div>
@@ -220,12 +171,7 @@
               @click="show('achieve')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'trophy']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_achieve.png" alt="Achievements" />
               <p>Achievements</p>
             </button>
             <div class="field">
@@ -237,11 +183,7 @@
                   <textarea rows="10" v-model="achievements"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('achieve')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('achieve')">
                     Save
                   </button>
                   <button type="button" class="close" @click="hide('achieve')">
@@ -260,12 +202,7 @@
               @click="show('petPeeves')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'exclamation-triangle']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_peeve.png" alt="Pet Peeves" />
               <p>Pet Peeves</p>
             </button>
             <div class="field">
@@ -277,18 +214,10 @@
                   <textarea rows="10" v-model="petPeeves"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('petPeeves')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('petPeeves')">
                     Save
                   </button>
-                  <button
-                    type="button"
-                    class="close"
-                    @click="hide('petPeeves')"
-                  >
+                  <button type="button" class="close" @click="hide('petPeeves')">
                     Cancel
                   </button>
                 </div>
@@ -302,12 +231,7 @@
               @click="show('lifestyle')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'umbrella-beach']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_life.png" alt="Lifestyle" />
               <p>Lifestyle Preferences</p>
             </button>
             <div class="field">
@@ -319,18 +243,10 @@
                   <textarea rows="10" v-model="lifestylePref"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('lifestyle')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('lifestyle')">
                     Save
                   </button>
-                  <button
-                    type="button"
-                    class="close"
-                    @click="hide('lifestyle')"
-                  >
+                  <button type="button" class="close" @click="hide('lifestyle')">
                     Cancel
                   </button>
                 </div>
@@ -344,12 +260,7 @@
               @click="show('heroes')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'crown']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_hero.png" alt="Heroes" />
               <p>Heroes: Personal & Business</p>
             </button>
             <div class="field">
@@ -361,11 +272,7 @@
                   <textarea rows="10" v-model="heroes"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('heroes')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('heroes')">
                     Save
                   </button>
                   <button type="button" class="close" @click="hide('heroes')">
@@ -384,12 +291,7 @@
               @click="show('personalHis')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'history']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_history.png" alt="Personal History" />
               <p>Personal History</p>
             </button>
             <div class="field">
@@ -401,18 +303,10 @@
                   <textarea rows="10" v-model="personalHis"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('personalHis')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('personalHis')">
                     Save
                   </button>
-                  <button
-                    type="button"
-                    class="close"
-                    @click="hide('personalHis')"
-                  >
+                  <button type="button" class="close" @click="hide('personalHis')">
                     Cancel
                   </button>
                 </div>
@@ -426,12 +320,7 @@
               @click="show('education')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'graduation-cap']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_educ.png" alt="Education" />
               <p>Education</p>
             </button>
             <div class="field">
@@ -443,18 +332,10 @@
                   <textarea rows="10" v-model="education"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('education')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('education')">
                     Save
                   </button>
-                  <button
-                    type="button"
-                    class="close"
-                    @click="hide('education')"
-                  >
+                  <button type="button" class="close" @click="hide('education')">
                     Cancel
                   </button>
                 </div>
@@ -468,12 +349,7 @@
               @click="show('others')"
               style="width: 250px; height: 250px;"
             >
-              <font-awesome-icon
-                :icon="['fas', 'clipboard']"
-                size="10x"
-                color="skyblue"
-                opacity="0.7"
-              />
+              <img src="@/assets/pref_other.png" alt="Other Notes" />
               <p>Other Preferences</p>
             </button>
             <div class="field">
@@ -485,11 +361,7 @@
                   <textarea rows="10" v-model="others"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button
-                    type="submit"
-                    class="primary"
-                    @click="(editing = true), hide2('others')"
-                  >
+                  <button type="submit" class="primary" @click="editing = true, hide2('others')">
                     Save
                   </button>
                   <button type="button" class="close" @click="hide('others')">
@@ -598,7 +470,8 @@ export default {
     hide(id) {
       this.$modal.hide(id);
     },
-    hide2(id) {
+
+    hide2(id){
       alert("Preferences updated");
       this.$modal.hide(id);
     },
@@ -629,7 +502,7 @@ export default {
         .save()
         .then(() => {
           if (vm.editing == true) {
-            // alert("Preferences updated");
+          /** alert("Preferences updated"); **/
           }
           vm.editing = false;
         })
