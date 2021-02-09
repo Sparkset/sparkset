@@ -21,7 +21,13 @@
     </div>
     <div class="field field--half">
       <label>
-        <span>Recur</span>
+        <span>Notes</span>
+        <input type="text" v-model="newEvent.notes" />
+      </label>
+    </div>
+    <div class="field field--half">
+      <label>
+        <span>Recurring</span>
         <toggle-button
           :value="newEvent.recurringEvent"
           :color="{
@@ -72,6 +78,7 @@ export default {
         name: "",
         date: "",
         time: "",
+        notes: "",
         recurringEvent: false,
         daysBetween: 1
       }

@@ -252,8 +252,12 @@ export default {
     },
     search() {
       const vm = this;
+      // console.log(vm.fields[vm.selectedField]);
+      // console.log("key: ",vm.fields[vm.selectedField].key);
+      // console.log(vm.query);
       if (vm.fields[vm.selectedField].class === "Client") {
         const clientQuery = new AV.Query("Client");
+        // console.log(clientQuery);
         clientQuery
           .contains(vm.fields[vm.selectedField].key, vm.query)
           .include("company")

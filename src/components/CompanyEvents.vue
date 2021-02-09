@@ -57,6 +57,7 @@ export default {
       );
       const eventsQuery = new AV.Query("Event");
       eventsQuery
+        .notEqualTo("time", null)
         .matchesQuery("client", clientsQuery)
         .equalTo("done", false)
         .exists("client")
@@ -87,6 +88,7 @@ export default {
       const vm = this;
       const eventsQuery = new AV.Query("Event");
       eventsQuery
+        .notEqualTo("time", null)
         .equalTo("done", false)
         .equalTo(
           "company",

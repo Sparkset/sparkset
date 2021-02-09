@@ -101,6 +101,10 @@ const routes = [
           {
             path: "files",
             component: () => import("../components/ClientFiles.vue")
+          },
+          {
+            path: "clientNotes",
+            component: () => import("../components/ClientNotes.vue")
           }
         ]
       },
@@ -133,6 +137,10 @@ const routes = [
       {
         path: "/notes",
         component: () => import("../views/NotesPage.vue")
+      },
+      {
+        path:"/clientNote/:id",
+        component: () => import("../views/ClientNotePage.vue")
       }
     ],
     beforeEnter: (to, from, next) => {

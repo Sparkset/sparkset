@@ -4,7 +4,12 @@
     <form @submit.prevent="go">
       <div class="field field--half">
         <label>
-          <span>Full Name</span>
+          <a v-if="editing">
+            <span class="required-field">Full Name </span>
+          </a>
+          <a v-else>
+            <span>Full Name</span>
+          </a>
           <input v-model="fullName" type="text" required :disabled="!editing" />
         </label>
       </div>
@@ -17,12 +22,15 @@
       <div class="field field--half">
         <label>
           <span>
-            Email
+            Email 
             <a
               v-if="!editing && client.get('email')"
               :href="`mailto:${client.get('email')}`"
             >
               <font-awesome-icon :icon="['fas', 'paper-plane']" />
+            </a>
+            <a v-else>
+              <span class="required-field"></span>
             </a>
           </span>
           <input v-model="email" type="email" required :disabled="!editing" />
@@ -46,13 +54,16 @@
       <div class="field field--half">
         <label>
           <span>
-            Cell Phone
-            <a
-              v-if="!editing && client.get('cellPhone')"
-              :href="`tel:${client.get('cellPhone')}`"
-            >
-              <font-awesome-icon :icon="['fas', 'phone-alt']" />
-            </a>
+          Cell Phone
+          <a
+            v-if="!editing && client.get('cellPhone')"
+            :href="`tel:${client.get('cellPhone')}`"
+          >
+            <font-awesome-icon :icon="['fas', 'phone-alt']" />
+          </a>
+          <a v-else>
+            <span class="required-field"></span>
+          </a>
           </span>
           <input v-model="cellPhone" type="tel" required :disabled="!editing" />
         </label>
@@ -66,6 +77,9 @@
               :href="`tel:${client.get('workPhone')}`"
             >
               <font-awesome-icon :icon="['fas', 'phone-alt']" />
+            </a>
+            <a v-else>
+              <span class="required-field"></span>
             </a>
           </span>
           <input v-model="workPhone" type="tel" required :disabled="!editing" />
@@ -105,6 +119,9 @@
             >
               <font-awesome-icon :icon="['fas', 'building']" />
             </router-link>
+            <a v-if="editing">
+              <span class="required-field"></span>
+            </a>
           </span>
           <input
             type="text"
@@ -195,7 +212,11 @@
       </div>
       <div class="field field--half">
         <label>
-          <span>Job Title</span>
+          <span>Job Title 
+            <a v-if="editing">
+              <span class="required-field"></span>
+            </a>  
+          </span>
           <input v-model="jobTitle" type="text" required :disabled="!editing" />
         </label>
       </div>
@@ -219,6 +240,9 @@
       </div>
       <div v-if="editing" class="field">
         <button type="submit" class="primary">Save</button>
+        <button type="button" @click="(editing = false)">
+          Cancel
+        </button>
       </div>
     </form>
     <div v-if="!editing" class="field">
@@ -379,4 +403,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.required-field::after{
+  content:"*";
+  color:red;
+}
+</style>

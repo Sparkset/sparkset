@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import AV from "leancloud-storage";
 export default {
   name: "TheSideNav",
   data() {
@@ -47,7 +48,7 @@ export default {
           path: "/companies"
         },
         {
-          name: "Notes",
+          name: AV.User.current().get("fullName")+"'s Memos",
           path: "/notes"
         }
       ]

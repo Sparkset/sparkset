@@ -63,6 +63,11 @@
                 <span>Files</span>
               </router-link>
             </li>
+            <li>
+              <router-link :to="`/client/${$route.params.id}/clientNotes`">
+                <span>Client Notes</span>
+              </router-link>
+            </li>
           </ul>
         </section>
         <router-view :key="$route.path"></router-view>

@@ -2,7 +2,7 @@
   <section class="fields">
     <h1>
       Showing {{ client.get("files").length }}
-      {{ client.get("files").length === 1 ? "File" : "Files" }}
+      {{ client.get("files").length === 1 || client.get("files").length === 0? "File" : "Files" }}
     </h1>
     <div class="field field--half">
       <label>
@@ -50,14 +50,10 @@
         <tbody>
           <tr v-for="file in sortedFiles" :key="file.id">
             <td>
-              <span>
-                <a :href="file.url()">
-                  {{ file.get("name") }}
-                </a>
-              </span>
-              <br />
               <span class="description">
-                {{ file.metaData("description") }}
+                <a :href="file.url()">
+                  {{ file.metaData("description")}}
+                </a>
               </span>
             </td>
             <td>
@@ -121,9 +117,10 @@ export default {
       const files = vm.$refs.filesInput.files;
       files.forEach(file => {
         const fileInFiles = new AV.File(file.name, file);
+        fileInFiles.metaData("description","New File");
         fileInFiles.metaData(
           "description",
-          prompt(`Enter a description for ${file.name}:`)
+          prompt(`Enter a description(new name) for ${file.name}:`)
         );
         vm.client.add("files", fileInFiles);
       });
@@ -143,6 +140,10 @@ export default {
       vm.sortedBy = field;
     },
     addUnitToSize(size) {
+      if(size == undefined)
+      {
+        return 0 + " KB";
+      }
       const units = ["KB", "MB", "GB", "TB"];
       for (let i = units.length; i > 0; i--) {
         if (size >= Math.pow(1024, i)) {
@@ -154,6 +155,7 @@ export default {
     deleteFile(file) {
       const vm = this;
       if (confirm(`Are you sure to delete ${file.get("name")}?`)) {
+        console.log(file);
         vm.client
           .remove("files", file)
           .save()
@@ -170,7 +172,7 @@ export default {
       return vm.client
         .get("files")
         .filter(file =>
-          vm.query ? file.get("name").includes(vm.query) : true
+          vm.query ? file.get("description").toLowerCase().includes(vm.query.toLowerCase()) : true
         );
     },
     sortedFiles() {
@@ -183,9 +185,9 @@ export default {
         return vm.filteredFiles.sort((a, b) =>
           a.size() > b.size() ? vm.sortOrder : -vm.sortOrder
         );
-      } else {
+      } else { //sort by name
         return vm.filteredFiles.sort((a, b) =>
-          a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
+          a.get("description").toLowerCase() > b.get("description").toLowerCase() ? vm.sortOrder : -vm.sortOrder
         );
       }
     }
@@ -198,7 +200,6 @@ export default {
   display: none;
 }
 .description {
-  font-size: 9pt;
-  opacity: 0.6;
+  font-size: 12pt;
 }
 </style>

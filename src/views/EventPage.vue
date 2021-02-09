@@ -8,11 +8,32 @@
             <font-awesome-icon
               v-if="event.get('company')"
               :icon="['fas', 'building']"
-            />{{ " " }}
+            />{{" "}}
             <button class="primary" @click="toggle">
               {{ event.get("done") ? "Undone" : "Done" }}
             </button>
+            {{" "}}
+            <button
+              class="primary"
+              v-if="!editingName"
+              @click="editingName = true"
+            >
+              Edit
+            </button>
           </h1>
+            <form v-if="editingName" @submit.prevent="saveName">
+              <div class="field">
+                <textarea v-model="pendingChanges.name" />
+              </div>
+              <div class="field">
+                <button class="primary">
+                  Save
+                </button>
+                <button type="button" @click="(editingName = false)">
+                  Cancel
+                </button>
+              </div>
+            </form>
         </section>
         <section class="fields">
           <h2>Details</h2>
@@ -49,6 +70,9 @@
                   <div class="field">
                     <button type="submit" class="primary">
                       Save
+                    </button>
+                    <button type="button" @click="(editingTime = false)">
+                     Cancel
                     </button>
                   </div>
                 </form>
@@ -90,6 +114,9 @@
               <button class="primary">
                 Save
               </button>
+              <button type="button" @click="(editingNotes = false)">
+                Cancel
+              </button>
             </div>
           </form>
         </section>
@@ -111,10 +138,12 @@ export default {
       event: new AV.Object("Event"),
       editingTime: false,
       editingNotes: false,
+      editingName: false,
       pendingChanges: {
         date: "",
         time: "",
-        notes: ""
+        notes: "",
+        name: "",
       }
     };
   },
@@ -152,6 +181,7 @@ export default {
     },
     saveNotes() {
       const vm = this;
+      console.log(vm.event);
       vm.event
         .set("notes", vm.pendingChanges.notes)
         .save()
@@ -161,12 +191,32 @@ export default {
         .catch(error => {
           alert(error);
         });
+    },
+    saveName()
+    {
+      const vm = this;
+      if(vm.pendingChanges.name.length === 0)
+      {
+        alert("Event Name Cannot Be Empty!");
+      }
+      else{
+        vm.event
+          .set("name", vm.pendingChanges.name)
+          .save()
+          .then(() => {
+            vm.editingName = false;
+          })
+          .catch(error => {
+            alert(error);
+          })
+      }
     }
   },
   created() {
     const vm = this;
     const eventQuery = new AV.Query("Event");
     eventQuery
+      .notEqualTo("time", null)
       .include("client")
       .include("company")
       .get(vm.$route.params.id)
@@ -194,3 +244,4 @@ h1 > svg {
   color: #605e5e;
 }
 </style>
+

@@ -157,9 +157,11 @@ export default {
       const upcomingEventQuery = new AV.Query("Event");
       upcomingEventQuery
         .equalTo("done", false)
+        .notEqualTo("time", null)
         .include("client")
         .include("company")
-        .limit(1000)
+        .ascending("time")
+        .limit(10)
         .find()
         .then(upcomingEvents => {
           vm.upcomingEvents = upcomingEvents.map(event => ({
@@ -180,11 +182,13 @@ export default {
         .catch(error => {
           alert(error);
         });
-      const lastEventQuery = new AV.Query("Event");
+      const lastEventQuery = new AV.Query("Event"); //suggestions section
       lastEventQuery
         .equalTo("done", true)
         .exists("recursIn")
         .include("client")
+        .notEqualTo("time", null)
+        .notEqualTo("date", null)
         .ascending("time")
         .limit(1000)
         .find()

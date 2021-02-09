@@ -17,7 +17,7 @@
     >
       <input
         type="text"
-        placeholder="Search clients, events, notes…"
+        placeholder="Search clients, events, notes, companies, preferences, client notes…"
         :class="[query ? 'has-query' : null]"
         v-model="query"
         v-focus
@@ -68,9 +68,9 @@
                   }}
                   with
                   {{
-                    result.get("client")
+                    result.get("client") != null
                       ? result.get("client").get("fullName")
-                      : result.get("company").get("name")
+                      :result.get("company").get("name")
                   }}
                 </div>
               </div>
@@ -86,6 +86,37 @@
                 <div class="secondary">
                   <span class="type">Note</span>
                   {{ result.get("content") }}
+                </div>
+              </div>
+            </div>
+            <div v-if="result.className === 'Company'">
+              <div class="icon">
+                <font-awesome-icon :icon="['fas', 'building']" />
+              </div>
+              <div class="content">
+                <div class="primary">
+                  {{ result.get("name") }}
+                </div>
+                <div class="secondary">
+                  <span class="type">Company</span>
+                </div>
+              </div>
+            </div>
+            <div v-if="result.className === 'ClientNote'">
+              <div class="icon">
+                <font-awesome-icon :icon="['fas', 'sticky-note']" />
+              </div>
+              <div class="content">
+                <div class="primary">
+                  {{ result.get("title") }}
+                </div>
+                <div class="secondary">
+                  <span class="type">Client Note</span>
+                  {{
+                    result.get("client") != null
+                      ? result.get("client").get("fullName")
+                      :result.get("company").get("name")
+                  }}
                 </div>
               </div>
             </div>
@@ -128,6 +159,27 @@ export default {
           "cellPhone",
           "workPhone"
         ];
+        const preferenceFields = [
+          "P_achievements",
+          "P_allergies",
+          "P_busiG",
+          "P_busiI",
+          "P_drinks",
+          "P_education",
+          "P_restaurants",
+          "P_fOthers",
+          "P_family",
+          "P_friends",
+          "P_sports",
+          "P_skills",
+          "P_hOthers",
+          "P_learningPref",
+          "P_petPeeves",
+          "P_lifestylePref",
+          "P_heroes",
+          "P_personalHis",
+          "P_others"
+        ];
         const clients = await AV.Query.and(
           ...keywords.map(keyword =>
             AV.Query.or(
@@ -140,23 +192,30 @@ export default {
                   "name",
                   new RegExp(keyword, "i")
                 )
+              ),
+              ...preferenceFields.map(
+                field =>
+                  new AV.Query("Client").matches(
+                    field,
+                    new RegExp(keyword, "i")
+                  )
               )
             )
           )
         )
           .include("company")
-          .descending("updatedAt")
-          .limit(3)
+          .ascending("name")
           .find();
         const events = await AV.Query.and(
           ...keywords.map(keyword =>
             new AV.Query("Event").matches("name", new RegExp(keyword, "i"))
           )
         )
+          .notEqualTo("time",null)
+          .notEqualTo("done",true)
           .include("client")
           .include("company")
-          .descending("updatedAt")
-          .limit(3)
+          .ascending("time")
           .find();
         const noteFields = ["title", "content"];
         const notes = await AV.Query.and(
@@ -170,9 +229,27 @@ export default {
         )
           .include("owner")
           .descending("updatedAt")
-          .limit(3)
           .find();
-        vm.results = [...clients, ...events, ...notes];
+        const companies = await AV.Query.and(
+          ...keywords.map(keyword =>
+            new AV.Query("Company").matches("name", new RegExp(keyword, "i"))
+          )
+        ).find();
+
+        const clientNotes = await AV.Query.and(
+             ...keywords.map(keyword =>
+            AV.Query.or(
+              ...noteFields.map(field =>
+                new AV.Query("ClientNote").matches(field, new RegExp(keyword, "i"))
+              )
+            )
+          )
+        )
+        .descending("createdAt")
+        .find();
+
+        vm.results = [...clients, ...events, ...notes,...companies,...clientNotes];
+        console.log(vm.results);
         vm.selectedResult = 0;
       } else {
         vm.results = [];
@@ -184,13 +261,25 @@ export default {
       vm.$store.commit("closeSideNav");
       const className = vm.results[vm.selectedResult].className;
       if (className === "Client") {
-        vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
+          vm.$router.push(`/client/${vm.results[vm.selectedResult].id}`);
       }
       if (className === "Event") {
-        vm.$router.push(`/event/${vm.results[vm.selectedResult].id}`);
+        // vm.$router.push(`/ev0ent/${vm.results[vm.selectedResult].id}`);
+        if(vm.results[this.selectedResult].get("client") != null)
+        {
+          vm.$router.push(`/client/${vm.results[vm.selectedResult].get("client").id}/events/`);
+        }
+        vm.$router.push(`/company/${vm.results[vm.selectedResult].get("company").id}/events/`);
       }
       if (className === "Note") {
         vm.$router.push(`/notes#${vm.results[vm.selectedResult].id}`);
+      }
+      if (className === "Company") {
+        vm.$router.push(`/company/${vm.results[vm.selectedResult].id}`);
+      }
+      if (className === "ClientNote")
+      {
+        vm.$router.push(`/clientNote/${vm.results[vm.selectedResult].id}`);
       }
     }
   },

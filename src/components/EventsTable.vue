@@ -175,11 +175,78 @@ export default {
         .catch(error => {
           alert(error);
         });
+    },
+    compareOwner(a, b) {
+      return (
+        (a.event.get("client") != null
+          ? a.event
+              .get("client")
+              .get("fullName")
+              .toLowerCase()
+          : a.event
+              .get("company")
+              .get("name")
+              .toLowerCase()) >
+        (b.event.get("client") != null
+          ? b.event
+              .get("client")
+              .get("fullName")
+              .toLowerCase()
+          : b.event
+              .get("company")
+              .get("name")
+              .toLowerCase())
+      );
+    },
+    compareEventName(a, b) {
+      return (
+        a.event.get("name").toLowerCase() > b.event.get("name").toLowerCase()
+      );
     }
   },
   computed: {
     sortedEvents() {
       const vm = this;
+      // console.log(vm.events);
+      if (vm.sortedBy === "name") {
+        return vm.events.sort((a, b) =>
+          vm.compareEventName(a, b) ||
+          (a.event.get("name").toLowerCase() ==
+            b.event.get("name").toLowerCase() &&
+            a.event.get("time") > b.event.get("time")) ||
+          (a.event.get("name").toLowerCase() ==
+            b.event.get("name").toLowerCase() &&
+            a.event.get("time") == b.event.get("time") &&
+            vm.compareOwner(a,b))
+            ? vm.sortOrder
+            : -vm.sortOrder
+        );
+      } else if (vm.sortedBy === "client") {
+        return vm.events.sort((a, b) =>
+          vm.compareOwner(a, b) ||
+          ((a.event.get("client") != null
+            ? a.event
+                .get("client")
+                .get("fullName")
+                .toLowerCase()
+            : a.event
+                .get("company")
+                .get("name")
+                .toLowerCase()) ==
+            (b.event.get("client") != null
+              ? b.event
+                  .get("client")
+                  .get("fullName")
+                  .toLowerCase()
+              : b.event
+                  .get("company")
+                  .get("name")
+                  .toLowerCase()) &&
+            a.event.get("time") > b.event.get("time"))
+            ? vm.sortOrder
+            : -vm.sortOrder
+        );
+      }
       return vm.events.sort((a, b) =>
         a.event.get(vm.sortedBy) > b.event.get(vm.sortedBy)
           ? vm.sortOrder

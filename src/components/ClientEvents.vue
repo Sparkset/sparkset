@@ -69,6 +69,7 @@ export default {
       const innerCompanyQuery = new AV.Query("Event");
       innerCompanyQuery.equalTo("company", vm.company);
       AV.Query.or(innerClientQuery, innerCompanyQuery)
+        .notEqualTo("time", null)
         .equalTo("done", false)
         .include("client")
         .limit(1000)
@@ -93,6 +94,7 @@ export default {
           alert(error);
         });
       AV.Query.or(innerClientQuery, innerCompanyQuery)
+        .notEqualTo("time", null)
         .equalTo("done", true)
         .exists("recursIn")
         .include("client")
@@ -126,6 +128,7 @@ export default {
           alert(error);
         });
       AV.Query.or(innerClientQuery, innerCompanyQuery)
+        .notEqualTo("time", null)
         .equalTo("done", true)
         .include("client")
         .limit(1000)
@@ -187,7 +190,8 @@ export default {
             newEvent.time.slice(3, 5),
             0
           )
-        );
+        )
+        .set("notes",newEvent.notes);
       if (newEvent.recurringEvent) {
         event.set("recursIn", newEvent.daysBetween);
       }

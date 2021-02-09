@@ -33,8 +33,15 @@
                   <textarea rows="3" v-model="fOthers"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('fNd')"
+                  >
                     Save
+                  </button>
+                  <button type="button" class="close" @click="hide('fNd')">
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -67,8 +74,15 @@
                   <textarea rows="10" v-model="busiI"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('busiGNI')"
+                  >
                     Save
+                  </button>
+                  <button type="button" class="close" @click="hide('busiGNI')">
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -98,8 +112,15 @@
                   <textarea rows="10" v-model="friends"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('f&f')"
+                  >
                     Save
+                  </button>
+                  <button type="button" class="close" @click="hide('f&f')">
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -136,8 +157,15 @@
                   <textarea rows="10" v-model="hOthers"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('hobbies')"
+                  >
                     Save
+                  </button>
+                  <button type="button" class="close" @click="hide('hobbies')">
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -167,8 +195,19 @@
                   <textarea rows="10" v-model="learningPref"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('learningPref')"
+                  >
                     Save
+                  </button>
+                  <button
+                    type="button"
+                    class="close"
+                    @click="hide('learningPref')"
+                  >
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -198,8 +237,15 @@
                   <textarea rows="10" v-model="achievements"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('achieve')"
+                  >
                     Save
+                  </button>
+                  <button type="button" class="close" @click="hide('achieve')">
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -231,8 +277,19 @@
                   <textarea rows="10" v-model="petPeeves"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('petPeeves')"
+                  >
                     Save
+                  </button>
+                  <button
+                    type="button"
+                    class="close"
+                    @click="hide('petPeeves')"
+                  >
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -262,8 +319,19 @@
                   <textarea rows="10" v-model="lifestylePref"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('lifestyle')"
+                  >
                     Save
+                  </button>
+                  <button
+                    type="button"
+                    class="close"
+                    @click="hide('lifestyle')"
+                  >
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -293,8 +361,15 @@
                   <textarea rows="10" v-model="heroes"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('heroes')"
+                  >
                     Save
+                  </button>
+                  <button type="button" class="close" @click="hide('heroes')">
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -326,8 +401,19 @@
                   <textarea rows="10" v-model="personalHis"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('personalHis')"
+                  >
                     Save
+                  </button>
+                  <button
+                    type="button"
+                    class="close"
+                    @click="hide('personalHis')"
+                  >
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -357,8 +443,19 @@
                   <textarea rows="10" v-model="education"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('education')"
+                  >
                     Save
+                  </button>
+                  <button
+                    type="button"
+                    class="close"
+                    @click="hide('education')"
+                  >
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -377,19 +474,26 @@
                 color="skyblue"
                 opacity="0.7"
               />
-              <p>Other Notes</p>
+              <p>Other Preferences</p>
             </button>
             <div class="field">
               <modal height="auto" name="others">
                 <div id="needb" class="field">
                   <h1>
-                    Other Notes
+                    Other Preferences
                   </h1>
                   <textarea rows="10" v-model="others"></textarea>
                 </div>
                 <div id="needb" class="field">
-                  <button type="submit" class="primary" @click="editing = true">
+                  <button
+                    type="submit"
+                    class="primary"
+                    @click="(editing = true), hide2('others')"
+                  >
                     Save
+                  </button>
+                  <button type="button" class="close" @click="hide('others')">
+                    Cancel
                   </button>
                 </div>
               </modal>
@@ -494,6 +598,10 @@ export default {
     hide(id) {
       this.$modal.hide(id);
     },
+    hide2(id) {
+      alert("Preferences updated");
+      this.$modal.hide(id);
+    },
 
     go() {
       const vm = this;
@@ -521,7 +629,7 @@ export default {
         .save()
         .then(() => {
           if (vm.editing == true) {
-            alert("Preferences updated");
+            // alert("Preferences updated");
           }
           vm.editing = false;
         })
