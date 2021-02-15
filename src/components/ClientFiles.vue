@@ -155,7 +155,6 @@ export default {
     deleteFile(file) {
       const vm = this;
       if (confirm(`Are you sure to delete ${file.get("name")}?`)) {
-        console.log(file);
         vm.client
           .remove("files", file)
           .save()

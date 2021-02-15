@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="column column--right">
-      <div class="card">
+      <!-- <div class="card">
         <section class="fields">
           <h1>Suggestions</h1>
           <p v-if="suggestedEvents.length">
@@ -44,7 +44,7 @@
             </div>
           </form>
         </section>
-      </div>
+      </div> -->
       <div class="card">
         <section class="fields">
           <h1>Events Reported</h1>

@@ -22,7 +22,7 @@
                 <button class="primary">
                   Save
                 </button>
-                 <button type="button" @click="(editingTitle = false)">
+                <button type="button" @click="(editingTitle = false)">
                   Cancel
                 </button>
               </div>
@@ -87,10 +87,25 @@ export default {
       }
     };
   },
+  created() {
+      const vm = this;
+      const clientNoteQuery = new AV.Query("ClientNote");
+      clientNoteQuery
+        .notEqualTo("title",null)
+        .include("client")
+        .get(vm.$route.params.id)
+        .then(clientNote => {
+          vm.clientNote = clientNote;
+          vm.pendingChanges.title = clientNote.get("title");
+          vm.pendingChanges.content = clientNote.get("content");
+        })
+        .catch(error => {
+          alert(error);
+        });
+  },
   methods: {
     saveContent() {
       const vm = this;
-      // console.log(vm.clientNote);
       vm.clientNote
         .set("content", vm.pendingChanges.content)
         .save()
@@ -119,7 +134,7 @@ export default {
             alert(error);
           })
       }
-    }
+    },
   }
 };
 </script>

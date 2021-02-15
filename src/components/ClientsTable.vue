@@ -104,13 +104,13 @@ export default {
       const vm = this;
       if (vm.sortedBy === "company") {
         return vm.clients.sort((a, b) =>
-          a.get("company").get("name") > b.get("company").get("name")
+          a.get("company").get("name").toLowerCase() > b.get("company").get("name").toLowerCase()
             ? vm.sortOrder
             : -vm.sortOrder
         );
       } else {
         return vm.clients.sort((a, b) =>
-          a.get(vm.sortedBy) > b.get(vm.sortedBy) ? vm.sortOrder : -vm.sortOrder
+          a.get(vm.sortedBy).toLowerCase() > b.get(vm.sortedBy).toLowerCase() ? vm.sortOrder : -vm.sortOrder
         );
       }
     }

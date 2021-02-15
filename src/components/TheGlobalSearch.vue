@@ -249,7 +249,6 @@ export default {
         .find();
 
         vm.results = [...clients, ...events, ...notes,...companies,...clientNotes];
-        console.log(vm.results);
         vm.selectedResult = 0;
       } else {
         vm.results = [];

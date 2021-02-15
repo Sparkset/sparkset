@@ -8,13 +8,13 @@
           <form @submit.prevent="go">
             <button @click="show('fNd')" style="width: 250px; height: 250px;">
               <img src="@/assets/pref_food.png" alt="Food and Drink" />
-              <p>Food & Drinks Preferences</p>
+              <p>Food & Drinks</p>
             </button>
             <div class="field">
               <modal height="auto" name="fNd" v-bind:scrollable="true">
                 <div id="needb" class="field">
                   <h1>
-                    Food & Drinks Preferences
+                    Food & Drinks
                   </h1>
                   <p>Allergies:</p>
                   <textarea rows="3" v-model="allergies"></textarea>
@@ -143,13 +143,13 @@
               style="width: 250px; height: 250px;"
             >
               <img src="@/assets/pref_learn.png" alt="Learning Preferences" />
-              <p>Learning Preferences</p>
+              <p>Learning</p>
             </button>
             <div class="field">
               <modal height="auto" name="learningPref">
                 <div id="needb" class="field">
                   <h1>
-                    Learning Preferences
+                    Learning
                   </h1>
                   <textarea rows="10" v-model="learningPref"></textarea>
                 </div>
@@ -232,13 +232,13 @@
               style="width: 250px; height: 250px;"
             >
               <img src="@/assets/pref_life.png" alt="Lifestyle" />
-              <p>Lifestyle Preferences</p>
+              <p>Lifestyle</p>
             </button>
             <div class="field">
               <modal height="auto" name="lifestyle">
                 <div id="needb" class="field">
                   <h1>
-                    Lifestyle Preferences
+                    Lifestyle
                   </h1>
                   <textarea rows="10" v-model="lifestylePref"></textarea>
                 </div>

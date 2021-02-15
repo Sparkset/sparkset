@@ -181,7 +181,6 @@ export default {
     },
     saveNotes() {
       const vm = this;
-      console.log(vm.event);
       vm.event
         .set("notes", vm.pendingChanges.notes)
         .save()

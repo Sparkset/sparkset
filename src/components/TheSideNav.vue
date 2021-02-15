@@ -48,7 +48,7 @@ export default {
           path: "/companies"
         },
         {
-          name: AV.User.current().get("fullName")+"'s Memos",
+          name: AV.User.current().get("fullName").split(" ")[0]+"'s Memos",
           path: "/notes"
         }
       ]
