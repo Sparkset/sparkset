@@ -4,64 +4,67 @@
       <div class="card">
         <section class="fields">
           <h1>
-            {{ clientNote.get("title") }}
-            {{ " " }}
-            <button
-              class="primary"
-              v-if="!editingTitle"
-              @click="editingTitle = true"
-            >
-              Edit
-            </button>
-          </h1>
-            <form v-if="editingTitle" @submit.prevent="saveTitle">
+            {{clientNote.get("title")}}
+            <form v-if="editing" @submit.prevent="save">
               <div class="field">
                 <textarea v-model="pendingChanges.title" />
               </div>
-              <div class="field">
-                <button class="primary">
-                  Save
-                </button>
-                <button type="button" @click="(editingTitle = false)">
-                  Cancel
-                </button>
-              </div>
             </form>
-          <div v-if="clientNote.get('title') && !editingTitle" class="field">
-                <vue-markdown>
-                  {{ clientNote.get("title") }}
-                </vue-markdown>
+          </h1>
+        </section>
+        <section class="fields">
+          <h2>Details</h2>
+          <div class="field">
+            <ul>
+              <li>
+                Created At:
+                {{
+                  clientNote.get("createdAt")
+                    ? clientNote.get("createdAt").toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric"
+                      })
+                    : undefined
+                }}
+              </li>
+              <li v-if="clientNote.get('client')">
+                <router-link :to="`/client/${clientNote.get('client').id}`">
+                  Client: {{ clientNote.get("client").get("fullName") }}
+                </router-link>
+              </li>
+            </ul>
           </div>
         </section>
         <section class="fields">
           <h2>
             Content
-            <button
-              class="primary"
-              v-if="!editingContent"
-              @click="editingContent = true"
-            >
-              Edit
-            </button>
           </h2>
-          <div v-if="clientNote.get('content') && !editingContent" class="field">
+          <div v-if="clientNote.get('content') && !editing" class="field">
             <vue-markdown>
               {{ clientNote.get("content") }}
             </vue-markdown>
           </div>
-          <form v-if="editingContent" @submit.prevent="saveContent">
+          <form v-if="editing" @submit.prevent="save">
             <div class="field">
               <textarea v-model="pendingChanges.content" />
             </div>
-            <div class="field">
-              <button class="primary">
-                Save
+            <div v-if="editing" class="field">
+              <button type="submit" class="primary">Save</button>
+              <button type="button" @click="(editing = false)">
+                Cancel
               </button>
-               <button type="button" @click="(editingContent = false)">
-                  Cancel
-                </button>
             </div>
           </form>
+          <div v-if="!editing" class="field">
+          <button
+          class="primary"
+          @click="editing = true">
+            Edit
+          </button>
+        </div>
         </section>
       </div>
     </div>
@@ -79,8 +82,7 @@ export default {
   data() {
     return {
       clientNote: new AV.Object("ClientNote"),
-      editingContent: false,
-      editingTitle: false,
+      editing:false,
       pendingChanges: {
         content: "",
         title: "",
@@ -104,35 +106,23 @@ export default {
         });
   },
   methods: {
-    saveContent() {
-      const vm = this;
-      vm.clientNote
-        .set("content", vm.pendingChanges.content)
-        .save()
-        .then(() => {
-          vm.editingContent = false;
-        })
-        .catch(error => {
-          alert(error);
-        });
-    },
-    saveTitle()
-    {
+    save(){
       const vm = this;
       if(vm.pendingChanges.title.length === 0)
       {
         alert("Client Note Title Cannot Be Empty!");
       }
       else{
-        vm.clientNote
-          .set("title", vm.pendingChanges.title)
-          .save()
-          .then(() => {
-            vm.editingTitle = false;
-          })
-          .catch(error => {
-            alert(error);
-          })
+      vm.clientNote
+        .set("title",vm.pendingChanges.title)
+        .set("content",vm.pendingChanges.content)
+        .save()
+        .then(() => {
+          vm.editing = false;
+        })
+        .catch(error => {
+          alert(error);
+        });
       }
     },
   }

@@ -207,20 +207,7 @@ export default {
   computed: {
     sortedEvents() {
       const vm = this;
-      // console.log(vm.events);
       if (vm.sortedBy === "name") {
-        // console.log(vm.events.sort((a, b) =>
-        //   vm.compareEventName(a, b) ||
-        //   (a.event.get("name").toLowerCase() ==
-        //     b.event.get("name").toLowerCase() &&
-        //     a.event.get("time") > b.event.get("time")) ||
-        //   (a.event.get("name").toLowerCase() ==
-        //     b.event.get("name").toLowerCase() &&
-        //     a.event.get("time") == b.event.get("time") &&
-        //     vm.compareOwner(a,b))
-        //     ? vm.sortOrder
-        //     : -vm.sortOrder
-        // ));
         return vm.events.sort((a, b) =>
           vm.compareEventName(a, b) ||
           (a.event.get("name").toLowerCase() ==

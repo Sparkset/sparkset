@@ -256,6 +256,7 @@ export default {
         const clientQuery = new AV.Query("Client");
         clientQuery
           .contains(vm.fields[vm.selectedField].key, vm.query)
+          .matches(vm.fields[vm.selectedField].key,new RegExp(vm.query, "i"))
           .include("company")
           .limit(1000)
           .find()
@@ -267,7 +268,9 @@ export default {
           });
       } else if (vm.fields[vm.selectedField].class === "Company") {
         const companyQuery = new AV.Query("Company");
-        companyQuery.contains(vm.fields[vm.selectedField].key, vm.query);
+        companyQuery
+          .contains(vm.fields[vm.selectedField].key, vm.query)
+          .matches(vm.fields[vm.selectedField].key,new RegExp(vm.query, "i"));
         const clientQuery = new AV.Query("Client");
         clientQuery
           .matchesQuery("company", companyQuery)
@@ -284,6 +287,7 @@ export default {
         const revisionQuery = new AV.Query("Revision");
         revisionQuery
           .contains(vm.fields[vm.selectedField].key, vm.query)
+          .matches(vm.fields[vm.selectedField].key,new RegExp(vm.query, "i"))
           .equalTo("isLatest", true)
           .include("client")
           .include("client.company")

@@ -111,11 +111,22 @@
                   {{ result.get("title") }}
                 </div>
                 <div class="secondary">
-                  <span class="type">Client Note</span>
+                  <span class="type">ClientNote</span>
+                  created at
                   {{
-                    result.get("client") != null
-                      ? result.get("client").get("fullName")
-                      :result.get("company").get("name")
+                    result.get("createdAt").toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "numeric"
+                    })
+                  }}
+                  with
+                  {{
+                    result.get("client") != null?
+                    result.get("client").get("fullName")
+                    :""
                   }}
                 </div>
               </div>
@@ -234,10 +245,11 @@ export default {
           ...keywords.map(keyword =>
             new AV.Query("Company").matches("name", new RegExp(keyword, "i"))
           )
-        ).find();
+        )
+        .find();
 
         const clientNotes = await AV.Query.and(
-             ...keywords.map(keyword =>
+          ...keywords.map(keyword =>
             AV.Query.or(
               ...noteFields.map(field =>
                 new AV.Query("ClientNote").matches(field, new RegExp(keyword, "i"))
@@ -245,10 +257,12 @@ export default {
             )
           )
         )
-        .descending("createdAt")
-        .find();
+          .include("client")
+          .descending("createdAt")
+          .find();
 
         vm.results = [...clients, ...events, ...notes,...companies,...clientNotes];
+        // console.log(vm.results);
         vm.selectedResult = 0;
       } else {
         vm.results = [];
@@ -264,7 +278,7 @@ export default {
       }
       if (className === "Event") {
         // vm.$router.push(`/ev0ent/${vm.results[vm.selectedResult].id}`);
-        if(vm.results[this.selectedResult].get("client") != null)
+        if(vm.results[vm.selectedResult].get("client") != null)
         {
           vm.$router.push(`/client/${vm.results[vm.selectedResult].get("client").id}/events/`);
         }

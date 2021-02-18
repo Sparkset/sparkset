@@ -240,13 +240,13 @@
       </div>
       <div v-if="editing" class="field">
         <button type="submit" class="primary">Save</button>
-        <button type="button" @click="(editing = false)">
+        <button type="button" @click="editing = false">
           Cancel
         </button>
       </div>
     </form>
     <div v-if="!editing" class="field">
-      <button @click="editing = true">
+      <button class="primary" @click="editing = true">
         Edit
       </button>
     </div>
@@ -285,6 +285,27 @@ export default {
       jobDescription: "",
       editingCompanyPicture: false
     };
+  },
+  created() {
+    const vm = this;
+    vm.editing = vm.isNew;
+    vm.fullName = vm.client.get("fullName");
+    vm.nickname = vm.client.get("nickname");
+    vm.email = vm.client.get("email");
+    vm.linkedin = vm.client.get("linkedin");
+    vm.cellPhone = vm.client.get("cellPhone");
+    vm.workPhone = vm.client.get("workPhone");
+    vm.address = vm.client.get("address");
+    vm.commChannelPref = vm.client.get("commChannelPref");
+    vm.commTimePref = vm.client.get("commTimePref");
+    vm.commFrequencyPref = vm.client.get("commFrequencyPref");
+    vm.companyName = vm.client.get("company").get("name");
+    vm.company = vm.client.get("company");
+    vm.companyLinkedin = vm.client.get("company").get("linkedin");
+    vm.companyFacebook = vm.client.get("company").get("facebook");
+    vm.companyInstagram = vm.client.get("company").get("instagram");
+    vm.jobTitle = vm.client.get("jobTitle");
+    vm.jobDescription = vm.client.get("jobDescription");
   },
   methods: {
     findCompany() {
@@ -378,27 +399,6 @@ export default {
           alert(error);
         });
     }
-  },
-  created() {
-    const vm = this;
-    vm.editing = vm.isNew;
-    vm.fullName = vm.client.get("fullName");
-    vm.nickname = vm.client.get("nickname");
-    vm.email = vm.client.get("email");
-    vm.linkedin = vm.client.get("linkedin");
-    vm.cellPhone = vm.client.get("cellPhone");
-    vm.workPhone = vm.client.get("workPhone");
-    vm.address = vm.client.get("address");
-    vm.commChannelPref = vm.client.get("commChannelPref");
-    vm.commTimePref = vm.client.get("commTimePref");
-    vm.commFrequencyPref = vm.client.get("commFrequencyPref");
-    vm.companyName = vm.client.get("company").get("name");
-    vm.company = vm.client.get("company");
-    vm.companyLinkedin = vm.client.get("company").get("linkedin");
-    vm.companyFacebook = vm.client.get("company").get("facebook");
-    vm.companyInstagram = vm.client.get("company").get("instagram");
-    vm.jobTitle = vm.client.get("jobTitle");
-    vm.jobDescription = vm.client.get("jobDescription");
   }
 };
 </script>

@@ -80,7 +80,9 @@
           <h1>New Clients</h1>
           <div class="field">
             <p v-for="client in stats.newClients" :key="client.id">
+              <router-link :to="`/client/${client.id}`">
               {{ client.get("fullName") }}
+              </router-link>
             </p>
           </div>
         </section>
