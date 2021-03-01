@@ -112,7 +112,7 @@
       <div class="field field--half field--with--dropdown">
         <label>
           <span>
-            Company
+            Company (Case Sensitive)
             <router-link
               v-if="!editing && client.get('company').id"
               :to="`/company/${client.get('company').id}`"
@@ -127,7 +127,7 @@
             type="text"
             v-model="companyName"
             @input="findCompany"
-            @keydown.down="completeCompanyWithPrediction"
+            @keydown.down = "completeCompanyWithPrediction"
             @blur="completeCompany"
             required
             :disabled="!editing"
@@ -314,6 +314,7 @@ export default {
         const companyQuery = new AV.Query("Company");
         companyQuery
           .equalTo("name", vm.companyName)
+          // .matches("name",new RegExp(vm.companyName, "i"))
           .first()
           .then(company => {
             if (company) {
@@ -330,6 +331,7 @@ export default {
         const companyQueryForPrediction = new AV.Query("Company");
         companyQueryForPrediction
           .startsWith("name", vm.companyName)
+          // .matches("name",new RegExp(vm.companyName, "i"))
           .first()
           .then(company => {
             vm.companyPrediction = company || new AV.Object("Company");
@@ -348,6 +350,9 @@ export default {
       vm.editingCompanyPicture = false;
       vm.company = vm.companyPrediction;
       vm.companyName = vm.company.get("name");
+      vm.companyLinkedin = vm.company.get("linkedin");
+      vm.companyFacebook = vm.company.get("facebook");
+      vm.companyInstagram = vm.company.get("instagram");
       vm.completeCompany();
     },
     completeCompany() {

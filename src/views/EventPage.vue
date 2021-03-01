@@ -9,9 +9,11 @@
               v-if="event.get('company')"
               :icon="['fas', 'building']"
             />{{" "}}
-            <button class="primary" @click="toggle">
-              {{ event.get("done") ? "Undone" : "Done" }}
-            </button>
+            <template v-if="!editing" class="field">
+              <button class="primary" @click="toggle">
+                {{ event.get("done") ? "Undone" : "Done" }}
+              </button>
+            </template>
           </h1>
             <form v-if="editing" @submit.prevent="save">
               <div class="field">
