@@ -3,7 +3,7 @@
     <div class="column">
       <div class="card">
         <section class="fields">
-          <h1>New Note</h1>
+          <h1>New Memo</h1>
           <NoteForm
             :client-options="clientOptions"
             :tag-options="tagOptions"
@@ -17,7 +17,7 @@
         <section class="fields">
           <h1>
             Showing {{ filteredNotes.length }}
-            {{ filteredNotes.length === 1 ? "Note" : "Notes" }}
+            {{ filteredNotes.length === 1 ? "Memo" : "Memos" }}
           </h1>
           <p v-if="tagOptions.length">
             Filter by:
