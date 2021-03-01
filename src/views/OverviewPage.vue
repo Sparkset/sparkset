@@ -71,7 +71,7 @@
             <p>Clients: {{ stats.clients }}</p>
             <p>Companies: {{ stats.companies }}</p>
             <p>Events: {{ stats.events }}</p>
-            <p>Notes: {{ stats.notes }}</p>
+            <p>Memos: {{ stats.notes }}</p>
           </div>
         </section>
       </div>
@@ -103,7 +103,7 @@
       </div>
       <div class="card">
         <section class="fields">
-          <h1>Recent Notes</h1>
+          <h1>Recent Memos</h1>
           <div class="field horizontal-items">
             <div
               v-for="note in recentNotes"
