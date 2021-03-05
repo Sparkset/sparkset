@@ -51,9 +51,13 @@
           <ClientCombo :client="client" />
         </td>
         <td v-if="showCompany">
-          <router-link :to="`/company/${client.get('company').id}`">
-            <CompanyCombo :company="client.get('company')" />
-          </router-link>
+          <span v-if= "client.get('company') == null">
+          </span>
+          <span v-else>
+            <router-link :to="`/company/${client.get('company').id}`">
+              <CompanyCombo :company="client.get('company')" />
+            </router-link>
+          </span>
         </td>
         <td>{{ client.get("jobTitle") }}</td>
         <td>
