@@ -116,7 +116,6 @@ export default {
         .catch(error => {
           alert(error);
         });
-      console.log(vm.lastAddedNote);
     },
     fetchClientOptions() {
       const vm = this;
