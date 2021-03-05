@@ -17,7 +17,7 @@
     >
       <input
         type="text"
-        placeholder="Search clients, events, notes, companies, preferences, client notes…"
+        placeholder="Search clients, events, memos, companies, preferences, client notes…"
         :class="[query ? 'has-query' : null]"
         v-model="query"
         v-focus
