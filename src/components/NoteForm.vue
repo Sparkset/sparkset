@@ -2,13 +2,13 @@
   <form @submit.prevent="go">
     <div class="field">
       <label>
-        <span>Title</span>
+        <span class="required-field">Title</span>
         <input type="text" v-model="title" required />
       </label>
     </div>
     <div class="field">
       <label>
-        <span>Content</span>
+        <span class="required-field">Content</span>
         <textarea rows="5" v-model="content" required></textarea>
       </label>
     </div>
@@ -121,6 +121,12 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
+
+.required-field::after{
+    content:" *";
+    color:red;
+}
+
 .multiselect__tags,
 .multiselect__tag,
 .multiselect__tag-icon {
@@ -155,5 +161,3 @@ export default {
   background-color: #36d5d8;
 }
 </style>
-
-<style scoped></style>

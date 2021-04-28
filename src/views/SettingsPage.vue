@@ -73,6 +73,24 @@
             </div>
           </form>
         </section>
+        <section class="fields">
+          <h1>Outlook Calendar Account</h1>  
+            <div :key="calendarEmail">
+              <div v-if="calendarEmail" class="field field--half">
+                <label> <!-- onload="getEmail()"-->
+                  <span id="email">Email: {{calendarEmail}}</span>
+                </label>
+                <button type="submit" @click="signOutB">
+                  Sign Out
+                </button>
+              </div>
+              <div v-else class="field field--half">
+                <button type="submit" @click="signInB">
+                  Sign In
+                </button>
+              </div>
+            </div>
+        </section>
       </div>
     </div>
   </div>
@@ -80,6 +98,7 @@
 
 <script>
 import AV from "leancloud-storage";
+import {signIn, signOut, getEmail} from "../services/auth"; 
 export default {
   name: "SettingsPage",
   data() {
@@ -90,7 +109,8 @@ export default {
         mobilePhoneNumber: "",
         newPassword: "",
         confirmPassword: ""
-      }
+      },
+      calendarEmail: false,
     };
   },
   created() {
@@ -100,6 +120,7 @@ export default {
     vm.pendingChanges.mobilePhoneNumber = AV.User.current().get(
       "mobilePhoneNumber"
     );
+    vm.calendarEmail = getEmail();
   },
   methods: {
     saveChanges() {
@@ -139,6 +160,12 @@ export default {
           }
         });
     },
+
+
+
+
+
+    
     updatePassword() {
       const vm = this;
       if (vm.pendingChanges.newPassword !== vm.pendingChanges.confirmPassword) {
@@ -154,12 +181,27 @@ export default {
             vm.$router.push("/");
           })
           .catch(error => {
-            alert(error);
+	            alert(error);
           });
       }
+    },
+    signOutB() {
+      const vm = this;
+      signOut();
+      vm.calendarEmail = false;
+    },
+    async signInB() {
+      const vm = this;
+      const response = await signIn();
+      vm.calendarEmail = response;
     }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#email {
+padding-bottom: 15px;
+}
+
+</style>
