@@ -1,5 +1,12 @@
 <template>
   <section class="fields">
+    <div v-if="!creatingCustomEvent" class="field" id="createButton">
+      <button class="primary" @click="creatingCustomEvent = true">
+        Create Custom Event
+      </button>
+    </div>
+    <AddEvent v-else @cancel-event="cancel" @create-event="createEvent" />
+    <div id="eventLists">
     <h1>Upcoming</h1>
     <div class="field field--superwide">
       <EventsTable :events="upcomingEvents" :fetch-events="fetchEvents" />
@@ -12,12 +19,7 @@
     <div class="field field--superwide">
       <EventsTable :events="pastEvents" :fetch-events="fetchEvents" />
     </div>
-    <div v-if="!creatingCustomEvent" class="field">
-      <button class="primary" @click="creatingCustomEvent = true">
-        Create Custom Event
-      </button>
     </div>
-    <AddEvent v-else @cancel-event="cancel" @create-event="createEvent" />
   </section>
 </template>
 
@@ -214,4 +216,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#createButton {
+    margin-bottom: 0;
+}
+#eventLists {
+    float: left;
+}
+</style>

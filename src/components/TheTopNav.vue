@@ -2,7 +2,7 @@
   <nav>
     <ul id="left">
       <li>
-        <span>Welcome {{ fullName }}</span>
+        <span>Welcome, {{ fullName }}</span>
       </li>
     </ul>
     <ul id="right">
