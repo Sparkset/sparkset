@@ -162,6 +162,13 @@ export default {
         .set("done", !event.event.get("done"))
         .save()
         .then(vm.fetchEvents)
+        .then(() => {
+            if (event.event.get("done")) {
+              alert("Event marked as done.");
+            } else {
+              alert("Event marked as undone.");
+            }
+        })
         .catch(error => {
           alert(error);
         });
