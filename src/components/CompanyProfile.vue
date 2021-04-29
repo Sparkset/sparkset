@@ -4,7 +4,7 @@
     <form @submit.prevent="go">
       <div class="field field--half">
         <label>
-          <span>Company Name</span>
+          <span class="required-field">Company Name</span>
           <input
             v-model="pendingChanges.name"
             type="text"
@@ -137,4 +137,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.required-field::after{
+    content:" *";
+    color:red;
+}
+</style>
