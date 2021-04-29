@@ -224,7 +224,6 @@ export default {
 
 <style scoped>
 
-
   .required-field::after{
     content:" *";
     color:red;

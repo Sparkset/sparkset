@@ -3,13 +3,13 @@
     <h1>Create New Client Note</h1>
     <div class="field field--half">
       <label>
-        <span>Title</span>
+        <span class="required-field">Title</span>
         <input type="text" v-model="newClientNote.title" required />
       </label>
     </div>
     <div class="field field--half">
       <label>
-        <span>Content</span>
+        <span class="required-field">Content</span>
         <input type="text" v-model="newClientNote.content"/>
       </label>
     </div>
@@ -48,4 +48,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+  .required-field::after{
+    content:" *";
+    color:red;
+  }
+</style>
