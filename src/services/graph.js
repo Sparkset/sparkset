@@ -1,5 +1,5 @@
 import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
-import * as momentT from "moment-timezone";
+//import * as momentT from "moment-timezone";
 import { getToken } from "./auth.js";
 
 // Create an authentication provider
@@ -23,15 +23,15 @@ export async function getUser() // only used in auth.js
       .get();
 };
 
-export async function getEvents()  // used to retrieve events from calendar, using leancloud for this instead
-{
-    const user = JSON.parse(window.localStorage.getItem('graphUser'));
+// export async function getEvents()  // used to retrieve events from calendar, using leancloud for this instead
+// {
+//     const user = JSON.parse(window.localStorage.getItem('graphUser'));
   
     // Convert user's Windows time zone ("Pacific Standard Time")
     // to IANA format ("America/Los_Angeles")
     // Moment needs IANA format
-    let ianaTimeZone = momentT.getIanaFromWindows(user.mailboxSettings.timeZone);
-    console.log(`Converted: ${ianaTimeZone}`);
+    //let ianaTimeZone = momentT.getIanaFromWindows(user.mailboxSettings.timeZone);
+    //console.log(`Converted: ${ianaTimeZone}`);
   
     /*
     // Configure a calendar view for the current week
@@ -76,7 +76,7 @@ export async function getEvents()  // used to retrieve events from calendar, usi
       //});
   //  }
     
-};
+//};
 
 export async function createNewEvent(name, date, startTime, endTime, notes) //creates new event. click to test
 {
@@ -84,11 +84,11 @@ export async function createNewEvent(name, date, startTime, endTime, notes) //cr
     // events on calendar for employees, don't need attendees
     // add end time at later date per Ted
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
-    console.log("name: " + name);
-    console.log("date: " + date);
-    console.log("startTime: " + startTime);
-    console.log("endTime: " + endTime);
-    console.log("notes: " + notes);
+    // console.log("name: " + name);
+    // console.log("date: " + date);
+    // console.log("startTime: " + startTime);
+    // console.log("endTime: " + endTime);
+    // console.log("notes: " + notes);
     // name = string 
     // date = "2021-05-06"
     // time = "10:00" (24 hour clock) 
@@ -131,13 +131,13 @@ export async function createNewEvent(name, date, startTime, endTime, notes) //cr
   
     try {
       // POST the JSON to the /me/events endpoint
-      console.log("makes it here helllooooo");
+      // console.log("makes it here helllooooo");
       await graphClient
         .api('/me/events')
         .post(newEvent);
   
     } catch (error) {
-        console.log("Error creating event");
+        // console.log("Error creating event");
       //updatePage(Views.error, {                              // update in vue component
       //  message: 'Error creating event',
       //  debug: error
