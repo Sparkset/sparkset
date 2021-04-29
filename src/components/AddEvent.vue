@@ -111,9 +111,9 @@ export default {
   methods: {
     createEvent() {
       const vm = this;
-      console.log("in createEvent");//debugging press "shift + ctrl + J" to see console
+      //console.log("in createEvent");//debugging press "shift + ctrl + J" to see console
       if (this.newEvent.syncing) {
-        console.log("calling sync from createEvent");//debugging
+        //console.log("calling sync from createEvent");//debugging
         this.sync();
       }
       vm.$emit("create-event", vm.newEvent);
@@ -135,24 +135,24 @@ export default {
       if (vm.newEvent.recurringEventType == "Daily") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 1;
-        console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
+        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
       else if (vm.newEvent.recurringEventType == "Weekly") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 7;
-        console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
+        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
       else if (vm.newEvent.recurringEventType == "Monthly") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 30;
-        console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
+        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
       else if (vm.newEvent.recurringEventType == "Yearly") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 365;
-        console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
+        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
-      console.log("in changeRecurringStatus, recurringEvent = " +vm.newEvent.recurringEvent);
+      //console.log("in changeRecurringStatus, recurringEvent = " +vm.newEvent.recurringEvent);
     },
     async sync() {
       const vm = this;
@@ -166,7 +166,7 @@ export default {
       if (vm.newEvent.recurringEventType != "Never") {
         vm.recurringSync();
       }
-      console.log(vm.calendarEmail);
+      //console.log(vm.calendarEmail);
       createNewEvent(vm.newEvent.name, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
     },
     recurringSync() {  
@@ -202,7 +202,7 @@ export default {
           if (currentDate <= endDate) {
             //date needs to look like this "2021-05-06"
             let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            console.log("formattedDate: " + formattedDate);
+            //console.log("formattedDate: " + formattedDate);
             createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
           }
         }
