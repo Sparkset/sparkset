@@ -17,7 +17,7 @@
         <a
           class="social"
           v-if="company.get('linkedin')"
-          :href="`https://www.linkedin.com/company/${company.get('linkedin')}`"
+          :href="company.get('linkedin')"
           target="_blank"
         >
           <font-awesome-icon :icon="['fab', 'linkedin']" />
@@ -25,7 +25,7 @@
         <a
           class="social"
           v-if="company.get('facebook')"
-          :href="`https://www.facebook.com/${company.get('facebook')}`"
+          :href="company.get('facebook')"
           target="_blank"
         >
           <font-awesome-icon :icon="['fab', 'facebook-square']" />
@@ -33,7 +33,7 @@
         <a
           class="social"
           v-if="company.get('instagram')"
-          :href="`https://www.instagram.com/${company.get('instagram')}`"
+          :href="company.get('instagram')"
           target="_blank"
         >
           <font-awesome-icon :icon="['fab', 'instagram-square']" />

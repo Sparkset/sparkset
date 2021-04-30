@@ -19,9 +19,7 @@
             Company LinkedIn
             <a
               v-if="!editing && company.get('linkedin')"
-              :href="
-                `https://www.linkedin.com/company/${company.get('linkedin')}`
-              "
+              :href="company.get('linkedin')"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'linkedin']" />
@@ -40,7 +38,7 @@
             Company Facebook
             <a
               v-if="!editing && company.get('facebook')"
-              :href="`https://www.facebook.com/${company.get('facebook')}`"
+              :href="company.get('facebook')"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'facebook-square']" />
@@ -59,7 +57,7 @@
             Company Instagram
             <a
               v-if="!editing && company.get('instagram')"
-              :href="`https://www.instagram.com/${company.get('instagram')}`"
+              :href="company.get('instagram')"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'instagram-square']" />
