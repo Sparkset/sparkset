@@ -1,40 +1,50 @@
 <template>
   <table>
     <thead>
-        <tr>
-            <ThWithSort by="fullName"
-                        :sorted-by="sortedBy"
-                        :sort-order="sortOrder"
-                        :sort-by="sortBy">
-                Name
-            </ThWithSort>
-            <ThWithSort v-if="showCompany"
-                        by="company"
-                        :sorted-by="sortedBy"
-                        :sort-order="sortOrder"
-                        :sort-by="sortBy">
-                Company
-            </ThWithSort>
-            <ThWithSort by="jobTitle"
-                        :sorted-by="sortedBy"
-                        :sort-order="sortOrder"
-                        :sort-by="sortBy">
-                Job Title
-            </ThWithSort>
-            <ThWithSort by="email"
-                        :sorted-by="sortedBy"
-                        :sort-order="sortOrder"
-                        :sort-by="sortBy">
-                Email
-            </ThWithSort>
-            <ThWithSort by="cellPhone"
-                        :sorted-by="sortedBy"
-                        :sort-order="sortOrder"
-                        :sort-by="sortBy">
-                Cell Phone
-            </ThWithSort>
-            <th>Option</th>
-        </tr>
+      <tr>
+        <ThWithSort
+          by="fullName"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Name
+        </ThWithSort>
+        <ThWithSort
+          v-if="showCompany"
+          by="company"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Company
+        </ThWithSort>
+        <ThWithSort
+          by="jobTitle"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Job Title
+        </ThWithSort>
+        <ThWithSort
+          by="email"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Email
+        </ThWithSort>
+        <ThWithSort
+          by="cellPhone"
+          :sorted-by="sortedBy"
+          :sort-order="sortOrder"
+          :sort-by="sortBy"
+        >
+          Cell Phone
+        </ThWithSort>
+        <th>Option</th>
+      </tr>
     </thead>
     <tbody>
         <tr v-for="client in sortedClients" :key="client.id">
@@ -68,7 +78,7 @@
                 <button v-if="!client.editing"
                         :class="[client.get('archived') ? '' : 'primary']"
                         @click="toggle(client)">
-                    {{ client.get("archived") ? "Archive" : "Unarchive" }}
+                    {{ client.get("archived") ? "Unarchive" : "Archive" }}
                 </button>
             </td>
         </tr>
@@ -106,14 +116,14 @@ export default {
       toggle(client) {
           const vm = this;
           client.client
-              .set("archive", !client.client.get("archive"))
+              .set("archive", !client.get("archive"))
               .save()
               .then(vm.fetchClients)
               .then(() => {
-                  if (client.client.get("archive")) {
+                  if (client.get("archive")) {
                       alert("Client Archived.");
                   } else {
-                      alert("Client .");
+                      alert("Client Unarchived.");
                   }
               })
               .catch(error => {
@@ -121,7 +131,7 @@ export default {
               });
       },
       archive(client) {
-          const vm = this;
+          const vm = this;//this needs to be updated
           client.lastEvent
               .set("archive")
               .save()
