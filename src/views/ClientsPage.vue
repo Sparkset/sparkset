@@ -1,48 +1,61 @@
 <template>
   <div>
-    <div class="column">
-      <div class="card">
-        <section class="fields">
-          <h1>
-            Showing {{ clients.length }}
-            {{ clients.length === 1 || clients.length === 0? "Client" : "Clients" }}
-          </h1>
-          <div class="field field--half">
-            <label>
-              <span>Whose</span>
-              <select v-model="selectedField" @change="search">
-                <option
-                  v-for="(field, index) in fields"
-                  :key="field.name"
-                  :value="index"
-                >
-                  {{ field.name }}
-                </option>
-              </select>
-            </label>
-          </div>
-          <div class="field field--half">
-            <label>
-              <span>Contains</span>
-              <input type="text" v-model="query" @input="search" />
-            </label>
+      <div class="column">
+          <div class="card">
+              <section class="fields">
+                  <h1>
+                      Showing {{ clients.length }}
+                      {{ clients.length === 1 || clients.length === 0? "Client" : "Clients" }}
+                  </h1>
+                  <div class="field field--half">
+                      <label>
+                          <span>Whose</span>
+                          <select v-model="selectedField" @change="search">
+                              <option v-for="(field, index) in fields"
+                                      :key="field.name"
+                                      :value="index">
+                                  {{ field.name }}
+                              </option>
+                          </select>
+                      </label>
+                  </div>
+                  <div class="field field--half">
+                      <label>
+                          <span>Contains</span>
+                          <input type="text" v-model="query" @input="search" />
+                      </label>
+                  </div>
+                  <div class="field">
+                      <button class="primary" @click="$router.push('/clients/add')">
+                          Add Client
+                      </button>
+                  </div>
+                  <!--Clients-->
+                  <h1>
+                      Clients
+                  </h1>
+                  <div class="field field--superwide">
+                      <ClientsTable :clients="clients" show-company />
+                  </div>
+              </section>
           </div>
           <div class="field">
-            <button class="primary" @click="$router.push('/clients/add')">
-              Add Client
-            </button>
+              <button @click="exportPDF()">
+                  Export as PDF
+              </button>
           </div>
-          <div class="field field--superwide">
-            <ClientsTable :clients="clients" show-company />
+          <!--Archived Clients-->
+          <div class="card">
+              <section class="fields">
+                  <h1>
+                      Archived Clients
+                  </h1>
+                  <div class="field field--superwide">
+                      <ClientsTable :clients="clients" show-company />
+                  </div>
+              </section>
           </div>
-        </section>
       </div>
-      <div class="field">
-        <button @click="exportPDF()">
-          Export as PDF
-        </button>
-      </div>
-    </div>
   </div>
 </template>
 
