@@ -10,7 +10,7 @@
               :icon="['fas', 'building']"
             />{{" "}}
             <template v-if="!editing" class="field">
-              <button class="primary" @click="toggle">
+              <button id="statusButton" class="primary" @click="toggle">
                 {{ event.get("done") ? "Undone" : "Done" }}
               </button>
             </template>
@@ -89,9 +89,10 @@
             </div>
           </form>
           <div v-if="!editing" class="field">
-            <button
-            class="primary"
-            @click="editing = true">
+            <button id="deleteEvent" class="primary" @click="deleteEvent = true">
+              Delete
+            </button>
+            <button id="editButton" class="primary" @click="editing = true">
               Edit
             </button>
           </div>
@@ -179,6 +180,18 @@ export default {
       .catch(error => {
         alert(error);
       });
+    }, 
+    deleteEvent() {
+      // const vm = this;
+      // if (confirm(`Are you sure to delete the event?`)) {
+      //   vm.client
+      //     .remove("files", file)
+      //     .save()
+      //     .then(vm.search)
+      //     .catch(error => {
+      //       alert(error);
+      //     });
+      // }
     }
   }
 };
@@ -188,5 +201,20 @@ export default {
 h1 > svg {
   color: #605e5e;
 }
+
+#statusButton {
+  float: right;
+}
+
+#editButton {
+  float: right;
+  margin-right: 16px;
+}
+#deleteEvent {
+  border-color: #e52f2e;
+  background-color: #e52f2e;
+  float: right;
+}
+
 </style>
 
