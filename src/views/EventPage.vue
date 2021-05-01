@@ -86,10 +86,10 @@
               <button type="button" @click="(editing = false)">
                 Cancel
               </button>
-            </div>
+            </div> 
           </form>
           <div v-if="!editing" class="field">
-            <button id="deleteEvent" class="primary" @click="deleteEvent = true">
+            <button id="deleteEvent" class="primary" @click="deleteEvent">
               Delete
             </button>
             <button id="editButton" class="primary" @click="editing = true">
@@ -113,6 +113,7 @@ export default {
   data() {
     return {
       event: new AV.Object("Event"),
+      client: new AV.Object("Client"),
       editing:false,
       pendingChanges: {
         date: "",
@@ -182,19 +183,19 @@ export default {
       });
     }, 
     deleteEvent() {
-      // const vm = this;
-      // if (confirm(`Are you sure to delete the event?`)) {
-      //   vm.client
-      //     .remove("files", file)
-      //     .save()
-      //     .then(vm.search)
-      //     .catch(error => {
-      //       alert(error);
-      //     });
-      // }
+      const vm = this;
+      if (confirm(`Are you sure you want to delete the event?`)) {
+        vm.event
+          .destroy()
+          .catch(error => {
+            alert(error);
+          });
+      }
+      window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events"); 
+
     }
   }
-};
+}
 </script>
 
 <style scoped>
