@@ -79,29 +79,25 @@
         <section class="fields">
           <h1>New Clients</h1>
           <div class="field">
-            <button v-for="client in stats.newClients" :key="client.id" id="clientButton">
-              <router-link :to= "`/client/${client.id}`" tag="button">
-              <div id="container">
-              <!-- <div id="image"> -->
-              <div id="image">
-              <img
-                :src="
-                  client.get('picture')
-                    ? client.get('picture').url()
-                    : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-                "
-                alt="The picture of the client."
-              />   
-              </div>         
-              <!-- </div> -->
-              <div id="client">
-              <p>
-              {{ client.get("fullName") }}
-              </p>
-              </div>
-              </div>
+            <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
+              <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
+                <div id="container">
+                    <div id="image">
+                      <img
+                        :src="
+                          client.get('picture')
+                            ? client.get('picture').url()
+                            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                        "
+                        alt="The picture of the client."
+                      />   
+                    </div>         
+                    <div id="client">
+                      <span>{{ client.get("fullName") }}</span>
+                    </div>
+                </div>
               </router-link>
-            </button>
+            <!-- </button> -->
           </div>
         </section>
       </div>
@@ -314,9 +310,17 @@ export default {
 
 <style scoped>
 #container {
-  width: auto;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-collapse: separate;
+  -webkit-appearance: none;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 0;
 
 }
 
@@ -325,7 +329,13 @@ export default {
 }
 
 #client {
-  float: right;
+  width: auto;
+  /* display: inline-block; */
+  /* position: relative; */
+  /* float: left; */
+  margin-left: 10px;
+  -webkit-box-align: center;
+  
 }
 
 /* #client, #image {
@@ -333,14 +343,14 @@ export default {
 } */
 
 #image {
-  position: relative;
-  display: inline-block;
+  /* position: relative; */
+  /* display: inline-block; */
   width: 40px; 
   height: 40px;
   border-radius: 64px;
   overflow: hidden;
   cursor: pointer;
-  float: left;
+  /* float: left; */
 }
 #image > img {
   width: 100%;
