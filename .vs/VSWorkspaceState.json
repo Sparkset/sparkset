@@ -2,8 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\components"
+    "\\src\\components",
+    "\\src\\store",
+    "\\src\\views"
   ],
-  "SelectedNode": "\\src\\components\\AddEvent.vue",
+  "SelectedNode": "\\src\\components\\ClientEvents.vue",
   "PreviewInSolutionExplorer": false
 }

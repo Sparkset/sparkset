@@ -77,7 +77,7 @@
                 </button>-->
                 <button v-if="!client.editing"
                         :class="[client.get('archived') ? '' : 'primary']"
-                        @click="toggle(client)">
+                        @click="archive(client)">
                     {{ client.get("archived") ? "Unarchive" : "Archive" }}
                 </button>
             </td>
@@ -90,6 +90,7 @@
 import ThWithSort from "@/components/ThWithSort.vue";
 import ClientCombo from "@/components/ClientCombo.vue";
 import CompanyCombo from "@/components/CompanyCombo.vue";
+//import fetchClients from "@/views/ClientsPage.vue";
 export default {
   name: "ClientsTable",
   components: {
@@ -99,7 +100,8 @@ export default {
   },
   props: {
     clients: Array,
-    showCompany: Boolean
+    showCompany: Boolean,
+    //fetchClients: Function
   },
   data() {
     return {
@@ -112,34 +114,26 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
-      },
-      toggle(client) {
-          const vm = this;
-          client.client
-              .set("archive", !client.get("archive"))
-              .save()
-              .then(vm.fetchClients)
-              .then(() => {
-                  if (client.get("archive")) {
-                      alert("Client Archived.");
-                  } else {
-                      alert("Client Unarchived.");
-                  }
-              })
-              .catch(error => {
-                  alert(error);
-              });
-      },
-      archive(client) {
-          const vm = this;//this needs to be updated
-          client.lastEvent
-              .set("archive")
-              .save()
-              .then(vm.fetchClients)
-              .catch(error => {
-                  alert(error);
-              });
-      }
+    },
+    archive(client) { 
+      //const vm = this;
+      console.log("ClientsTable toggle");//debugging
+      console.log(client);
+      console.log(client.get("archived"));
+      client
+          .set("archived", !client.get("archived"))
+          .save()
+          .then(() => {
+              if (client.get("archived")) {
+                  alert("Client Archived.");
+              } else {
+                  alert("Client Unarchived.");
+              }
+          })
+          .catch(error => {
+              alert(error);
+          });
+    }
   },
   computed: {
     sortedClients() {

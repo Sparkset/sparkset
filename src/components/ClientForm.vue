@@ -272,8 +272,7 @@ export default {
       companyInstagram: "",
       jobTitle: "",
       jobDescription: "",
-      editingCompanyPicture: false,
-      archived: false
+      editingCompanyPicture: false
     };
   },
   created() {

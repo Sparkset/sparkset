@@ -279,25 +279,22 @@ export default {
       doc.save("clients.pdf");
     },
     fetchClients() {
-        /*const vm = this;
+        const vm = this;
         const innerClientQuery = new AV.Query("Client");
         innerClientQuery.equalTo(
             "client",
             AV.Object.createWithoutData("Client", vm.$route.params.id)
         );
-        const innerCompanyQuery = new AV.Query("Event");
-        innerCompanyQuery.equalTo("company", vm.company);
-        AV.Query.or(innerClientQuery, innerCompanyQuery)
-            .notEqualTo("time", null)
-            .equalTo("archived", false)
-            .include("client")
-            .limit(1000)
+        // const innerCompanyQuery = new AV.Query("Event");
+        // innerCompanyQuery.equalTo("company", vm.company);
+        console.log(typeof vm.clients);
+        innerClientQuery.equalTo('archived', false)
             .find()
             .then(clients => {
                 vm.clients = clients.map(client => ({
-                    name,
-                    editing: false,
-                    pendingChanges: {
+                    client
+                    //editing: false
+                    /*pendingChanges: {
                         date: `${event.get("time").getFullYear()}-${`0${event
                             .get("time")
                             .getMonth() + 1}`.slice(-2)}-${`0${event
@@ -306,21 +303,21 @@ export default {
                         time: `${`0${event.get("time").getHours()}`.slice(
                             -2
                         )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-                    }
+                    }*/
                 }));
             })
             .catch(error => {
                 alert(error);
             });
-        AV.Query.or(innerClientQuery, innerCompanyQuery)
+        /*AV.Query.or(innerClientQuery, innerCompanyQuery)
             .notEqualTo("time", null)
-            .equalTo("done", true)
+            .equalTo("archived", true)
             .exists("recursIn")
             .include("client")
             .limit(1000)
             .find()
-            .then(clients => {
-                vm.archived_clients = archived_clients.map(clients => {
+            .then(archived_clients => {
+                vm.archived_clients = archived_clients.map(archive_clients => {
                     const rawTime = new Date(
                         new Date(lastEvent.get("time")).setDate(
                             lastEvent.get("time").getDate() + lastEvent.get("recursIn")
@@ -345,7 +342,7 @@ export default {
             })
             .catch(error => {
                 alert(error);
-            });*/
+            });// */
     },
     search() {
       const vm = this;
