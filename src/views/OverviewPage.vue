@@ -79,11 +79,29 @@
         <section class="fields">
           <h1>New Clients</h1>
           <div class="field">
-            <p v-for="client in stats.newClients" :key="client.id">
-              <router-link :to="`/client/${client.id}`">
+            <button v-for="client in stats.newClients" :key="client.id" id="clientButton">
+              <router-link :to= "`/client/${client.id}`" tag="button">
+              <div id="container">
+              <!-- <div id="image"> -->
+              <div id="image">
+              <img
+                :src="
+                  client.get('picture')
+                    ? client.get('picture').url()
+                    : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                "
+                alt="The picture of the client."
+              />   
+              </div>         
+              <!-- </div> -->
+              <div id="client">
+              <p>
               {{ client.get("fullName") }}
+              </p>
+              </div>
+              </div>
               </router-link>
-            </p>
+            </button>
           </div>
         </section>
       </div>
@@ -295,6 +313,59 @@ export default {
 </script>
 
 <style scoped>
+#container {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+#clientButton {
+  width: 200px;
+}
+
+#client {
+  float: right;
+}
+
+/* #client, #image {
+  display: inline;
+} */
+
+#image {
+  position: relative;
+  display: inline-block;
+  width: 40px; 
+  height: 40px;
+  border-radius: 64px;
+  overflow: hidden;
+  cursor: pointer;
+  float: left;
+}
+#image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#image > span {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 32px;
+  background-color: #00000099;
+  color: #fff;
+  line-height: 28px;
+  text-align: center;
+}
+#image:focus > span,
+#image:hover > span {
+  background-color: #000000cc;
+}
+#image + input[type="file"] {
+  display: none;
+}
+
 .horizontal-items {
   display: flex;
   position: relative;
