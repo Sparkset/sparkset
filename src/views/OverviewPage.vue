@@ -78,10 +78,12 @@
       <div class="card">
         <section class="fields">
           <h1>New Clients</h1>
-          <div class="field">
+          <div class="field" id = "fields">
+
+            
             <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
               <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
-                <div id="container">
+                <div id="container" >
                     <div id="image">
                       <img
                         :src="
@@ -91,13 +93,17 @@
                         "
                         alt="The picture of the client."
                       />   
-                    </div>         
+                    </div> 
+    
                     <div id="client">
                       <span>{{ client.get("fullName") }}</span>
                     </div>
+
+
                 </div>
               </router-link>
             <!-- </button> -->
+            
           </div>
         </section>
       </div>
@@ -321,11 +327,20 @@ export default {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   border-radius: 0;
+  
 
 }
 
+
 #clientButton {
   width: 200px;
+  overflow-x: auto;
+  width: 100%;
+  margin: 1px;
+  
+
+
+
 }
 
 #client {
@@ -341,6 +356,8 @@ export default {
 /* #client, #image {
   display: inline;
 } */
+
+
 
 #image {
   /* position: relative; */
