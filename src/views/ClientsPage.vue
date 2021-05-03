@@ -35,7 +35,7 @@
                       Clients
                   </h1>
                   <div class="field field--superwide">
-                      <ClientsTable :clients="clients" show-company />
+                      <ClientsTable :clients="clients" show-company :fetch-clients="fetchClients"/>
                   </div>
               </section>
           </div>
@@ -60,7 +60,7 @@
                       Archived Clients
                   </h1>
                   <div class="field field--superwide">
-                      <ClientsTable :clients="archived_clients" show-company />
+                      <ClientsTable :clients="archived_clients" show-company :fetch-clients="fetchClients" />
                   </div>
               </section>
           </div>
@@ -251,7 +251,7 @@ export default {
   created() {
     const vm = this;
       vm.search();
-      //vm.fetchClients();
+      vm.fetchClients();
   },
   methods: {
     exportPDF() {
@@ -280,69 +280,63 @@ export default {
     },
     fetchClients() {
         const vm = this;
-        const innerClientQuery = new AV.Query("Client");
-        innerClientQuery.equalTo(
+        console.log("ClientsPage fetchClients")//debugging
+        /*const clientQuery = new AV.Query("Client");
+        clientQuery.equalTo(
             "client",
             AV.Object.createWithoutData("Client", vm.$route.params.id)
         );
-        // const innerCompanyQuery = new AV.Query("Event");
-        // innerCompanyQuery.equalTo("company", vm.company);
-        console.log(typeof vm.clients);
-        innerClientQuery.equalTo('archived', false)
+        console.log(typeof vm.clients);*/
+        const clientQuery = new AV.Query("Client");
+        clientQuery.equalTo('archived', false);
+        clientQuery
+            .contains(vm.fields[vm.selectedField].key, vm.query)
+            .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"))
+            .equalTo("archived", false)
+            .include("company")
+            .limit(1000)
             .find()
             .then(clients => {
-                vm.clients = clients.map(client => ({
-                    client
-                    //editing: false
-                    /*pendingChanges: {
-                        date: `${event.get("time").getFullYear()}-${`0${event
-                            .get("time")
-                            .getMonth() + 1}`.slice(-2)}-${`0${event
-                                .get("time")
-                                .getDate()}`.slice(-2)}`,
-                        time: `${`0${event.get("time").getHours()}`.slice(
-                            -2
-                        )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-                    }*/
-                }));
+                vm.clients = clients;
             })
             .catch(error => {
                 alert(error);
             });
-        /*AV.Query.or(innerClientQuery, innerCompanyQuery)
-            .notEqualTo("time", null)
+        const archivedClientQuery = new AV.Query("Client");
+        archivedClientQuery.equalTo('archived', true);
+        archivedClientQuery
+            .contains(vm.fields[vm.selectedField].key, vm.query)
+            .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"))
             .equalTo("archived", true)
-            .exists("recursIn")
-            .include("client")
+            .include("company")
             .limit(1000)
             .find()
             .then(archived_clients => {
-                vm.archived_clients = archived_clients.map(archive_clients => {
-                    const rawTime = new Date(
-                        new Date(lastEvent.get("time")).setDate(
-                            lastEvent.get("time").getDate() + lastEvent.get("recursIn")
-                        )
-                    );
-                    return {
-                        event: new AV.Object("Client")
-                            .set("name", lastEvent.get("name"))
-                            .set("client", lastEvent.get("client"))
-                            .set("recursIn", lastEvent.get("recursIn")),
-                        editing: true,
-                        pendingChanges: {
-                            date: `${rawTime.getFullYear()}-${`0${rawTime.getMonth() +
-                                1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
-                            time: `${`0${rawTime.getHours()}`.slice(
-                                -2
-                            )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
-                        },
-                        lastEvent
-                    };
+                vm.archived_clients = archived_clients;
+            })
+            .catch(error => {
+                alert(error);
+            });
+        /*clientQuery.equalTo('archived', false)
+            .find()
+            .then(clients => {
+                vm.clients = clients.map(client => ({
+                    client
+                }));
+            })
+            .catch(error => {
+                alert(error);
+            });*/
+        /*clientQuery.equalTo('archived', true)
+            .find()
+            .then(archived_clients => {
+                vm.archived_clients = archived_clients.map(client => {
+                    client
                 });
             })
             .catch(error => {
                 alert(error);
-            });// */
+            });*/
     },
     search() {
       const vm = this;

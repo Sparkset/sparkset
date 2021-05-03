@@ -101,7 +101,7 @@ export default {
   props: {
     clients: Array,
     showCompany: Boolean,
-    //fetchClients: Function
+    fetchClients: Function
   },
   data() {
     return {
@@ -116,13 +116,12 @@ export default {
       vm.sortedBy = field;
     },
     archive(client) { 
-      //const vm = this;
-      console.log("ClientsTable toggle");//debugging
-      console.log(client);
-      console.log(client.get("archived"));
+      const vm = this;
+      console.log("ClientsTable client archived/unarchived");//debugging
       client
           .set("archived", !client.get("archived"))
           .save()
+          .then(vm.fetchClients)
           .then(() => {
               if (client.get("archived")) {
                   alert("Client Archived.");
