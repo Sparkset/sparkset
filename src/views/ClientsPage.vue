@@ -3,10 +3,18 @@
       <div class="column">
           <div class="card">
               <section class="fields">
-                  <h1>
-                      Showing {{ clients.length }}
-                      {{ clients.length === 1 || clients.length === 0? "Client" : "Clients" }}
-                  </h1>
+                  <div v-if="newEvent.viewArchived == false">
+                      <h1>
+                          Showing {{ clients.length }}
+                          {{ clients.length === 1 || clients.length === 0? "Client" : "Clients" }}
+                      </h1>
+                  </div>
+                  <div v-else>
+                      <h1>
+                          Showing {{ archived_clients.length }}
+                          {{ archived_clients.length === 1 || archived_clients.length === 0? "Client" : "Clients" }}
+                      </h1>
+                  </div>
                   <div class="field field--half">
                       <label>
                           <span>Whose</span>
@@ -25,17 +33,43 @@
                           <input type="text" v-model="query" @input="search" />
                       </label>
                   </div>
-                  <div class="field">
+                  <div class="field field--half">
                       <button class="primary" @click="$router.push('/clients/add')">
                           Add Client
                       </button>
                   </div>
-                  <!--Clients-->
-                  <h1>
-                      Clients
-                  </h1>
-                  <div class="field field--superwide">
-                      <ClientsTable :clients="clients" show-company :fetch-clients="fetchClients"/>
+                  <div class="field field--half" id="archivedToggle">
+                      <label>
+                          <span>View Archived Clients</span>
+                          <toggle-button :value="newEvent.viewArchived"
+                                         :color="{
+                                            checked: '#36d5d8',
+                                            unchecked: '#e52f2e'
+                                          }"
+                                         :labels="{
+                                            checked: 'Yes',
+                                            unchecked: 'No'
+                                          }"
+                                         :width="72"
+                                         :height="42"
+                                         :font-size="12"
+                                         @change="changeViewArchived"></toggle-button>
+                      </label>
+                  </div>
+                  <div></div>
+                  <!--Show unarchived clients if viewArchived is false-->
+                  <div v-if="newEvent.viewArchived == false">
+                      <h1>Clients</h1>
+                      <div class="field field--superwide">
+                          <ClientsTable :clients="clients" show-company :fetch-clients="fetchClients" />
+                      </div>
+                  </div>
+                  <!--Show archived clients if viewArchived is true-->
+                  <div v-else>
+                      <h1>Archived Clients</h1>
+                      <div class="field field--superwide">
+                          <ClientsTable :clients="archived_clients" show-company :fetch-clients="fetchClients" />
+                      </div>
                   </div>
               </section>
           </div>
@@ -43,26 +77,6 @@
               <button @click="exportPDF()">
                   Export as PDF
               </button>
-          </div>
-          <!--example
-          <h1>Upcoming</h1>
-          <div class="field field--superwide">
-              <EventsTable :events="upcomingEvents" :fetch-events="fetchEvents" />
-          </div>
-          <h1>Suggested</h1>
-          <div class="field field--superwide">
-              <EventsTable :events="suggestedEvents" :fetch-events="fetchEvents" />
-          </div>-->
-          <!--Archived Clients-->
-          <div class="card">
-              <section class="fields">
-                  <h1>
-                      Archived Clients
-                  </h1>
-                  <div class="field field--superwide">
-                      <ClientsTable :clients="archived_clients" show-company :fetch-clients="fetchClients" />
-                  </div>
-              </section>
           </div>
       </div>
   </div>
@@ -235,13 +249,11 @@ export default {
           class: "Revision",
           key: "notes",
           name: "Notes"
-        },
-        {
-          class: "Client",
-          key: "archived",
-          name: "Archived"
         }
-      ],
+        ],
+      newEvent: {
+          viewArchived: false
+      },
       selectedField: 0,
       query: "",
       clients: [],
@@ -251,42 +263,24 @@ export default {
   created() {
     const vm = this;
       vm.search();
-      vm.fetchClients();
   },
   methods: {
-    exportPDF() {
-      const vm = this;
-      const rows = vm.clients.map(row => ({
-        fullName: row.get("fullName"),
-        company: row.get("company").get("name"),
-        jobTitle: row.get("jobTitle"),
-        email: row.get("email"),
-        cellPhone: row.get("cellPhone")
-      }));
-      const columns = [
-        { title: "Name", key: "fullName" },
-        { title: "Company", key: "company" },
-        { title: "Job Title", key: "jobTitle" },
-        { title: "Email", key: "email" },
-        { title: "Cell Phone", key: "cellPhone" }
-      ];
-      var doc = new jsPDF("p", "pt");
-      doc.text("Client Information", 40, 40);
-      doc.autoTable(columns, rows, {
-        margin: { top: 60 },
-        headerStyles: { fillColor: [54, 213, 216] }
-      });
-      doc.save("clients.pdf");
+    
+    changeViewArchived(e) {
+        const vm = this;
+        vm.newEvent.viewArchived = e.value;
+        vm.search();
+      },
+    search() {
+        const vm = this;
+        vm.searchClient();//fill clients table
+        vm.searchArchivedClient();//fill archived clients tabl
+        vm.fetchClients();//show results to screen
     },
     fetchClients() {
         const vm = this;
         console.log("ClientsPage fetchClients")//debugging
-        /*const clientQuery = new AV.Query("Client");
-        clientQuery.equalTo(
-            "client",
-            AV.Object.createWithoutData("Client", vm.$route.params.id)
-        );
-        console.log(typeof vm.clients);*/
+        //show clients table
         const clientQuery = new AV.Query("Client");
         clientQuery.equalTo('archived', false);
         clientQuery
@@ -302,6 +296,7 @@ export default {
             .catch(error => {
                 alert(error);
             });
+        //show archived clients table
         const archivedClientQuery = new AV.Query("Client");
         archivedClientQuery.equalTo('archived', true);
         archivedClientQuery
@@ -317,77 +312,160 @@ export default {
             .catch(error => {
                 alert(error);
             });
-        /*clientQuery.equalTo('archived', false)
-            .find()
-            .then(clients => {
-                vm.clients = clients.map(client => ({
-                    client
-                }));
-            })
-            .catch(error => {
-                alert(error);
-            });*/
-        /*clientQuery.equalTo('archived', true)
-            .find()
-            .then(archived_clients => {
-                vm.archived_clients = archived_clients.map(client => {
-                    client
-                });
-            })
-            .catch(error => {
-                alert(error);
-            });*/
     },
-    search() {
+    searchClient() {
+        const vm = this;
+        if (vm.fields[vm.selectedField].class === "Client") {
+            const clientQuery = new AV.Query("Client");
+            clientQuery
+                .contains(vm.fields[vm.selectedField].key, vm.query)
+                .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"))
+                .equalTo("archived", false)
+                .include("company")
+                .limit(1000)
+                .find()
+                .then(clients => {
+                    vm.clients = clients;
+                })
+                .catch(error => {
+                    alert(error);
+                });
+        } else if (vm.fields[vm.selectedField].class === "Company") {
+            const companyQuery = new AV.Query("Company");
+            companyQuery
+                .contains(vm.fields[vm.selectedField].key, vm.query)
+                .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"));
+            const clientQuery = new AV.Query("Client");
+            clientQuery
+                .matchesQuery("company", companyQuery)
+                .equalTo("archived", false)
+                .include("company")
+                .limit(1000)
+                .find()
+                .then(clients => {
+                    vm.clients = clients;
+                })
+                .catch(error => {
+                    alert(error);
+                });
+        } else if (vm.fields[vm.selectedField].class === "Revision") {
+            const revisionQuery = new AV.Query("Revision");
+            revisionQuery
+                .contains(vm.fields[vm.selectedField].key, vm.query)
+                .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"))
+                .equalTo("isLatest", true)
+                .include("client")
+                .include("client.company")
+                .limit(1000)
+                .find()
+                .then(revisions => {
+                    vm.clients = revisions.map(revision => revision.get("client"));
+                })
+                .catch(error => {
+                    alert(error);
+                });
+        }
+    },
+    searchArchivedClient() {
       const vm = this;
       if (vm.fields[vm.selectedField].class === "Client") {
         const clientQuery = new AV.Query("Client");
         clientQuery
-          .contains(vm.fields[vm.selectedField].key, vm.query)
-          .matches(vm.fields[vm.selectedField].key,new RegExp(vm.query, "i"))
-          .include("company")
-          .limit(1000)
-          .find()
-          .then(clients => {
-            vm.clients = clients;
-          })
-          .catch(error => {
-            alert(error);
-          });
-      } else if (vm.fields[vm.selectedField].class === "Company") {
-        const companyQuery = new AV.Query("Company");
-        companyQuery
-          .contains(vm.fields[vm.selectedField].key, vm.query)
-          .matches(vm.fields[vm.selectedField].key,new RegExp(vm.query, "i"));
-        const clientQuery = new AV.Query("Client");
-        clientQuery
-          .matchesQuery("company", companyQuery)
-          .include("company")
-          .limit(1000)
-          .find()
-          .then(clients => {
-            vm.clients = clients;
-          })
-          .catch(error => {
-            alert(error);
-          });
-      } else if (vm.fields[vm.selectedField].class === "Revision") {
-        const revisionQuery = new AV.Query("Revision");
-        revisionQuery
-          .contains(vm.fields[vm.selectedField].key, vm.query)
-          .matches(vm.fields[vm.selectedField].key,new RegExp(vm.query, "i"))
-          .equalTo("isLatest", true)
-          .include("client")
-          .include("client.company")
-          .limit(1000)
-          .find()
-          .then(revisions => {
-            vm.clients = revisions.map(revision => revision.get("client"));
-          })
-          .catch(error => {
-            alert(error);
-          });
-      }
+            .contains(vm.fields[vm.selectedField].key, vm.query)
+            .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"))
+            .equalTo("archived", true)
+            .include("company")
+            .limit(1000)
+            .find()
+            .then(archived_clients => {
+                vm.archived_clients = archived_clients;
+            })
+            .catch(error => {
+                alert(error);
+            });
+        } else if (vm.fields[vm.selectedField].class === "Company") {
+            const companyQuery = new AV.Query("Company");
+            companyQuery
+                .contains(vm.fields[vm.selectedField].key, vm.query)
+                .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"));
+            const clientQuery = new AV.Query("Client");
+            clientQuery
+                .matchesQuery("company", companyQuery)
+                .equalTo("archived", true)
+                .include("company")
+                .limit(1000)
+                .find()
+                .then(archived_clients => {
+                    vm.archived_clients = archived_clients;
+                })
+                .catch(error => {
+                    alert(error);
+                });
+        } else if (vm.fields[vm.selectedField].class === "Revision") {
+            const revisionQuery = new AV.Query("Revision");
+            revisionQuery
+                .contains(vm.fields[vm.selectedField].key, vm.query)
+                .matches(vm.fields[vm.selectedField].key, new RegExp(vm.query, "i"))
+                .equalTo("isLatest", true)
+                .include("client")
+                .include("client.company")
+                .limit(1000)
+                .find()
+                .then(revisions => {
+                    vm.archived_clients = revisions.map(revision => revision.get("client"));
+                })
+                .catch(error => {
+                    alert(error);
+                });
+        }
+      },
+    exportPDF() {
+        const vm = this;
+        var doc = new jsPDF("p", "pt");
+        if (vm.newEvent.viewArchived) {
+            const rows = vm.clients.map(row => ({
+                fullName: row.get("fullName"),
+                company: row.get("company").get("name"),
+                jobTitle: row.get("jobTitle"),
+                email: row.get("email"),
+                cellPhone: row.get("cellPhone")
+            }));
+            const columns = [
+                { title: "Name", key: "fullName" },
+                { title: "Company", key: "company" },
+                { title: "Job Title", key: "jobTitle" },
+                { title: "Email", key: "email" },
+                { title: "Cell Phone", key: "cellPhone" }
+            ];
+            doc.text("Client Information", 40, 40);
+            doc.autoTable(columns, rows, {
+                margin: { top: 60 },
+                headerStyles: { fillColor: [54, 213, 216] }
+            });
+            doc.save("clients.pdf");
+        }
+        else {
+            const rows = vm.archivedclients.map(row => ({
+                fullName: row.get("fullName"),
+                company: row.get("company").get("name"),
+                jobTitle: row.get("jobTitle"),
+                email: row.get("email"),
+                cellPhone: row.get("cellPhone")
+            }));
+            const columns = [
+                { title: "Name", key: "fullName" },
+                { title: "Company", key: "company" },
+                { title: "Job Title", key: "jobTitle" },
+                { title: "Email", key: "email" },
+                { title: "Cell Phone", key: "cellPhone" }
+            ];
+            doc.text("Archived Client Information", 40, 40);
+            doc.autoTable(columns, rows, {
+                margin: { top: 60 },
+                headerStyles: { fillColor: [54, 213, 216] }
+            });
+            doc.save("archived clients.pdf");
+        }
     }
   }
 };
