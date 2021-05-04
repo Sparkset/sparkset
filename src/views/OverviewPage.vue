@@ -327,20 +327,13 @@ export default {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   border-radius: 0;
-  
-
 }
 
 
 #clientButton {
-  width: 200px;
   overflow-x: auto;
   width: 100%;
-  margin: 1px;
-  
-
-
-
+  margin: 2px;
 }
 
 #client {
