@@ -159,11 +159,7 @@
             Company LinkedIn
             <a
               v-if="!editing && client.get('company').get('linkedin')"
-              :href="
-                `https://www.linkedin.com/company/${client
-                  .get('company')
-                  .get('linkedin')}`
-              "
+              :href="client.get('company').get('linkedin')"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'linkedin']" />
@@ -178,11 +174,7 @@
             Company Facebook
             <a
               v-if="!editing && client.get('company').get('facebook')"
-              :href="
-                `https://www.facebook.com/${client
-                  .get('company')
-                  .get('facebook')}`
-              "
+              :href="client.get('company').get('facebook')"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'facebook-square']" />
@@ -197,15 +189,12 @@
             Company Instagram
             <a
               v-if="!editing && client.get('company').get('instagram')"
-              :href="
-                `https://www.instagram.com/${client
-                  .get('company')
-                  .get('instagram')}`
-              "
+              :href="client.get('company').get('instagram')"
               target="_blank"
             >
               <font-awesome-icon :icon="['fab', 'instagram-square']" />
             </a>
+
           </span>
           <input v-model="companyInstagram" type="text" :disabled="!editing" />
         </label>

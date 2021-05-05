@@ -78,12 +78,32 @@
       <div class="card">
         <section class="fields">
           <h1>New Clients</h1>
-          <div class="field">
-            <p v-for="client in stats.newClients" :key="client.id">
-              <router-link :to="`/client/${client.id}`">
-              {{ client.get("fullName") }}
+          <div class="field" id = "fields">
+
+            
+            <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
+              <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
+                <div id="container" >
+                    <div id="image">
+                      <img
+                        :src="
+                          client.get('picture')
+                            ? client.get('picture').url()
+                            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                        "
+                        alt="The picture of the client."
+                      />   
+                    </div> 
+    
+                    <div id="client">
+                      <span>{{ client.get("fullName") }}</span>
+                    </div>
+
+
+                </div>
               </router-link>
-            </p>
+            <!-- </button> -->
+            
           </div>
         </section>
       </div>
@@ -295,6 +315,77 @@ export default {
 </script>
 
 <style scoped>
+#container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-collapse: separate;
+  -webkit-appearance: none;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+
+#clientButton {
+  overflow-x: auto;
+  width: 100%;
+  margin: 2px;
+}
+
+#client {
+  width: auto;
+  /* display: inline-block; */
+  /* position: relative; */
+  /* float: left; */
+  margin-left: 10px;
+  -webkit-box-align: center;
+  
+}
+
+/* #client, #image {
+  display: inline;
+} */
+
+
+
+#image {
+  /* position: relative; */
+  /* display: inline-block; */
+  width: 40px; 
+  height: 40px;
+  border-radius: 64px;
+  overflow: hidden;
+  cursor: pointer;
+  /* float: left; */
+}
+#image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#image > span {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 32px;
+  background-color: #00000099;
+  color: #fff;
+  line-height: 28px;
+  text-align: center;
+}
+#image:focus > span,
+#image:hover > span {
+  background-color: #000000cc;
+}
+#image + input[type="file"] {
+  display: none;
+}
+
 .horizontal-items {
   display: flex;
   position: relative;

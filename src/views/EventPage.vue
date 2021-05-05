@@ -10,7 +10,7 @@
               :icon="['fas', 'building']"
             />{{" "}}
             <template v-if="!editing" class="field">
-              <button class="primary" @click="toggle">
+              <button id="statusButton" class="primary" @click="toggle">
                 {{ event.get("done") ? "Undone" : "Done" }}
               </button>
             </template>
@@ -86,12 +86,13 @@
               <button type="button" @click="(editing = false)">
                 Cancel
               </button>
-            </div>
+            </div> 
           </form>
           <div v-if="!editing" class="field">
-            <button
-            class="primary"
-            @click="editing = true">
+            <button id="deleteEvent" class="primary" @click="deleteEvent">
+              Delete
+            </button>
+            <button id="editButton" class="primary" @click="editing = true">
               Edit
             </button>
           </div>
@@ -112,6 +113,7 @@ export default {
   data() {
     return {
       event: new AV.Object("Event"),
+      client: new AV.Object("Client"),
       editing:false,
       pendingChanges: {
         date: "",
@@ -179,14 +181,41 @@ export default {
       .catch(error => {
         alert(error);
       });
+    }, 
+    deleteEvent() {
+      const vm = this;
+      if (confirm(`Are you sure you want to delete the event?`)) {
+        vm.event
+          .destroy()
+          .catch(error => {
+            alert(error);
+          });
+      }
+      window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events"); 
+
     }
   }
-};
+}
 </script>
 
 <style scoped>
 h1 > svg {
   color: #605e5e;
 }
+
+#statusButton {
+  float: right;
+}
+
+#editButton {
+  float: right;
+  margin-right: 16px;
+}
+#deleteEvent {
+  border-color: #e52f2e;
+  background-color: #e52f2e;
+  float: right;
+}
+
 </style>
 
