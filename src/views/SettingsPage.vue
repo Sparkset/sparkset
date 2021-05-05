@@ -4,44 +4,68 @@
       <div class="card">
         <section class="fields">
           <h1>Basic Information</h1>
+          <!-- saveChanges is a method... check the bottom for what it does-->
           <form @submit.prevent="saveChanges">
             <div class="field field--half">
               <label>
-                <span>Full Name</span>
+                <a v-if="editing">
+                  <span class="required-field">Full Name</span>
+                </a>
+                <a v-else>
+                  <span>Full Name </span>
+                </a>
                 <input
-                  v-model="pendingChanges.fullName"
+                  v-model="fullName"
                   type="text"
                   autocomplete="name"
                   required
+                  :disabled="!editing"
                 />
               </label>
             </div>
             <div class="field field--half">
               <label>
-                <span>Email</span>
+                <a v-if="editing">
+                  <span class="required-field">Email</span>
+                </a>
+                <a v-else>
+                  <span>Email </span>
+                </a>
                 <input
-                  v-model="pendingChanges.email"
+                  v-model="email"
                   type="email"
                   autocomplete="email"
                   required
+                  :disabled="!editing"
                 />
               </label>
             </div>
             <div class="field field--half">
               <label>
-                <span>Phone Number</span>
+                <!-- <span>Phone Number</span> -->
+                <a v-if="editing">
+                  <span class="required-field">Phone Number</span>
+                </a>
+                <a v-else>
+                  <span>Phone Number </span>
+                </a>
                 <input
-                  v-model="pendingChanges.mobilePhoneNumber"
+                  v-model="mobilePhoneNumber"
                   type="tel"
-                  autocomplete="tel"
                   required
+                  :disabled="!editing"
+                  autocomplete="tel"
                 />
               </label>
             </div>
-            <div class="field">
-              <button type="submit" class="primary">Save Changes</button>
+            <div v-if="editing" class="field">
+              <button type="submit" class="primary">Save</button>
+              <button type="button" @click="editing = false">Cancel</button>
             </div>
           </form>
+          <div v-if="!editing" class="field">
+            <button @click="editing = true" class="primary">Edit</button>
+          </div>
         </section>
         <section class="fields">
           <h1>Change Password</h1>
@@ -50,7 +74,7 @@
               <label>
                 <span>New Password</span>
                 <input
-                  v-model="pendingChanges.newPassword"
+                  v-model="newPassword"
                   type="password"
                   autocomplete="new-password"
                   required
@@ -61,7 +85,7 @@
               <label>
                 <span>Confirm Password</span>
                 <input
-                  v-model="pendingChanges.confirmPassword"
+                  v-model="confirmPassword"
                   type="password"
                   autocomplete="new-password"
                   required
@@ -74,22 +98,19 @@
           </form>
         </section>
         <section class="fields">
-          <h1>Outlook Calendar Account</h1>  
-            <div :key="calendarEmail">
-              <div v-if="calendarEmail" class="field field--half">
-                <label> <!-- onload="getEmail()"-->
-                  <span id="email">Email: {{calendarEmail}}</span>
-                </label>
-                <button type="submit" @click="signOutB">
-                  Sign Out
-                </button>
-              </div>
-              <div v-else class="field field--half">
-                <button type="submit" @click="signInB">
-                  Sign In
-                </button>
-              </div>
+          <h1>Outlook Calendar Account</h1>
+          <div :key="calendarEmail">
+            <div v-if="calendarEmail" class="field field--half">
+              <label>
+                <!-- onload="getEmail()"-->
+                <span id="email">Email: {{ calendarEmail }}</span>
+              </label>
+              <button type="submit" @click="signOutB">Sign Out</button>
             </div>
+            <div v-else class="field field--half">
+              <button type="submit" @click="signInB">Sign In</button>
+            </div>
+          </div>
         </section>
       </div>
     </div>
@@ -98,47 +119,46 @@
 
 <script>
 import AV from "leancloud-storage";
-import {signIn, signOut, getEmail} from "../services/auth"; 
+import { signIn, signOut, getEmail } from "../services/auth";
 export default {
   name: "SettingsPage",
   data() {
     return {
-      pendingChanges: {
-        fullName: "",
-        email: "",
-        mobilePhoneNumber: "",
-        newPassword: "",
-        confirmPassword: ""
-      },
+      editing: false,
+      fullName: "",
+      email: "",
+      mobilePhoneNumber: "",
+      newPassword: "",
+      confirmPassword: "",
       calendarEmail: false,
     };
   },
   created() {
     const vm = this;
-    vm.pendingChanges.fullName = AV.User.current().get("fullName");
-    vm.pendingChanges.email = AV.User.current().get("email");
-    vm.pendingChanges.mobilePhoneNumber = AV.User.current().get(
-      "mobilePhoneNumber"
-    );
+    vm.editing = vm.isNew;
+    vm.fullName = AV.User.current().get("fullName");
+    vm.email = AV.User.current().get("email");
+    vm.mobilePhoneNumber = AV.User.current().get("mobilePhoneNumber");
     vm.calendarEmail = getEmail();
   },
   methods: {
     saveChanges() {
       const vm = this;
       AV.User.current()
-        .set("fullName", vm.pendingChanges.fullName)
-        .setEmail(vm.pendingChanges.email)
-        .setUsername(vm.pendingChanges.email)
+        .set("fullName", vm.fullName)
+        .setEmail(vm.email)
+        .setUsername(vm.email)
         .setMobilePhoneNumber(
-          !vm.pendingChanges.mobilePhoneNumber.startsWith("+")
-            ? `+1${vm.pendingChanges.mobilePhoneNumber}`
-            : vm.pendingChanges.mobilePhoneNumber
+          !vm.mobilePhoneNumber.startsWith("+")
+            ? `+1${vm.mobilePhoneNumber}`
+            : vm.mobilePhoneNumber
         )
         .save()
         .then(() => {
+          vm.editing = false;
           alert("Profile saved.");
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.code === 125) {
             alert(
               "The email address you entered is not a valid one. Please check your input."
@@ -161,18 +181,13 @@ export default {
         });
     },
 
-
-
-
-
-    
     updatePassword() {
       const vm = this;
-      if (vm.pendingChanges.newPassword !== vm.pendingChanges.confirmPassword) {
+      if (vm.newPassword !== vm.confirmPassword) {
         alert("The passwords you entered did not match.");
       } else {
         AV.User.current()
-          .set("password", vm.pendingChanges.newPassword)
+          .set("password", vm.newPassword)
           .save()
           .then(() => {
             alert(
@@ -180,8 +195,8 @@ export default {
             );
             vm.$router.push("/");
           })
-          .catch(error => {
-	            alert(error);
+          .catch((error) => {
+            alert(error);
           });
       }
     },
@@ -194,14 +209,13 @@ export default {
       const vm = this;
       const response = await signIn();
       vm.calendarEmail = response;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
 #email {
-padding-bottom: 15px;
+  padding-bottom: 15px;
 }
-
 </style>
