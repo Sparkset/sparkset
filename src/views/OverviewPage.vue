@@ -1,6 +1,16 @@
 <template>
   <div>
     <div class="column column--right">
+      <div class="card">
+        <section class="fields">
+          <h1>Least Interacted With</h1>
+          <div class="field">
+            <div id="chart">
+              <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+            </div>
+          </div>
+        </section>
+      </div>
       <!-- <div class="card">
         <section class="fields">
           <h1>Suggestions</h1>
@@ -145,9 +155,11 @@
 import EventsTable from "@/components/EventsTable.vue";
 import NoteCard from "@/components/NoteCard.vue";
 import AV from "leancloud-storage";
+import VueApexCharts from 'vue-apexcharts'; 
 export default {
   name: "OverviewPage",
   components: {
+    apexchart: VueApexCharts,
     EventsTable,
     NoteCard
   },
@@ -165,8 +177,34 @@ export default {
         events: 0,
         notes: 0,
         newClients: []
-      }
-    };
+      },
+      series: [{
+        data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+      }],
+      chartOptions: {
+        chart: {
+          type: 'bar',
+          height: 350
+        },
+        fill:
+        {
+        colors: ['#36d5d8']
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
+            'United States', 'China', 'Germany'],
+        }
+      }      
+    }
   },
   created() {
     const vm = this;
