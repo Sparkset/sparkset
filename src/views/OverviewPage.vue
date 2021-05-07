@@ -409,13 +409,13 @@ export default {
       console.log("step 1 ", vm.items);
 
       vm.items.sort(function(first, second) {
-        return first[1]- second[1];
+        return second[1] - first[1];
       });
       vm.items = vm.items.slice(0,3);
       console.log("items", vm.items);
       console.log("blah", vm.items[0][1]);
-      vm.series.data = [vm.items[0][1], vm.items[1][1], vm.items[2][1]]; 
-      console.log(vm.series.data);
+      vm.series[0].data = [vm.items[0][1], vm.items[1][1], vm.items[2][1]]; 
+      console.log(vm.series[0].data);
       vm.chartOptions.xaxis.categories = [vm.items[0][0], vm.items[1][0], vm.items[2][0]];
       vm.modified = true;
        
