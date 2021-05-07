@@ -4,9 +4,9 @@
       <div class="card">
         <section class="fields">
           <h1>Least Interacted With</h1>
-          <div class="field">
-            <div id="chart">
-              <apexchart type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+          <div class="field" >
+            <div id="chart" >
+              <apexchart type="bar" height="350" :options="chartOptions" :series="series" :key="modified"></apexchart>
             </div>
           </div>
         </section>
@@ -178,14 +178,21 @@ export default {
         notes: 0,
         newClients: []
       },
+      doneEventData: [],
+      items: [],
+      modified: false,
+      doneEvents: [],
+      doneEventDataMap: {},
+      event: new AV.Object("Event"),
+      client: new AV.Object("Client"),
       series: [{
-        data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+        data: []
       }],
       chartOptions: {
         chart: {
           type: 'bar',
           height: 350
-        },
+        }, 
         fill:
         {
         colors: ['#36d5d8']
@@ -200,8 +207,7 @@ export default {
           enabled: false
         },
         xaxis: {
-          categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-            'United States', 'China', 'Germany'],
+          categories: []
         }
       }      
     }
@@ -210,6 +216,12 @@ export default {
     const vm = this;
     vm.fetchEvents();
     vm.fetchNotes();
+    //vm.fetchData();
+    vm.sortData();
+    console.log(vm.doneEventDataMap);
+    console.log("hello");
+    console.log(vm.items);
+    
   },
   methods: {
     fetchEvents() {
@@ -242,6 +254,7 @@ export default {
         .catch(error => {
           alert(error);
         });
+      //console.log("upcoming events " +  vm.upcomingEvents[0][0]);
       const lastEventQuery = new AV.Query("Event"); //suggestions section
       lastEventQuery
         .equalTo("done", true)
@@ -317,6 +330,95 @@ export default {
       } catch (error) {
         alert(error);
       }
+    },
+    async fetchData() { //bottom 5?
+      const vm = this;
+      var pastMonth = new Date();
+      pastMonth.setMonth(pastMonth.getMonth() - 1);
+      vm.doneEvents = await new AV.Query("Event")
+        .equalTo("done", true)
+        .include("client") //need this to include client child
+        .find()
+        .then(events => {
+          vm.doneEventData = events.forEach(function (event) { ///fails if event of deleted client
+            try {
+              // console.log(event);
+              // console.log(event.get("client").get("fullName"));
+              if (event.get("time") >= pastMonth) //but less than current time 
+              {
+                if (event.get("client").get("fullName") in vm.doneEventDataMap)
+                {
+                  console.log("client name:" + event.get("client").get("fullName"));
+                  vm.doneEventDataMap[event.get("client").get("fullName")] += 1;              }
+                else 
+                {
+                  console.log("client name: " + event.get("client").get("fullName"));
+                  vm.doneEventDataMap[event.get("client").get("fullName")] = 1;
+                }
+              }
+            }
+            catch (error) {
+              console.log("event with deleted client");
+            }
+          });
+          
+        });
+
+
+        // .then(events => {
+        //   var i;
+        //   for (i=0; i< events.length; i++)
+        //   {
+        //     //console.log(events[i].get("time"));
+            // if (events[i].get("time") >= pastMonth)
+            // {
+            //   if (events[i].get("client").get("fullName") in vm.doneEventData)
+            //   {
+            //     vm.doneEventData[events[i].get("client").get("fullName")] += 1;              }
+            //   else 
+            //   {
+            //     vm.doneEventData[events[i].get("client").get("fullName")] = 1;
+            //   }
+            // }
+        //     console.log("done event" + Object.keys(vm.doneEventData));
+        //     console.log("Micael Ito " +vm.doneEventData["Michael Ito"]);
+        //     console.log(vm.doneEventData[events[i].get("client").get("fullName")]);
+        //   }
+        // });
+        // .then(events => {
+        //   vm.doneEventData = events.map(event => ({
+        //     event,
+        //   }));
+        // });
+
+      //console.log(vm.doneEventData["Michael Ito"]);
+
+      //from here create the data for least interacted with. 
+      
+    },
+    async sortData() {
+      const vm = this;
+      const status = await vm.fetchData();
+      console.log(vm.doneEventDataMap);
+      console.log(status);
+
+      vm.items =  Object.keys(vm.doneEventDataMap).map(function(key) {
+        return [key, vm.doneEventDataMap[key]];
+      });
+      
+      console.log("step 1 ", vm.items);
+
+      vm.items.sort(function(first, second) {
+        return first[1]- second[1];
+      });
+      vm.items = vm.items.slice(0,3);
+      console.log("items", vm.items);
+      console.log("blah", vm.items[0][1]);
+      vm.series.data = [vm.items[0][1], vm.items[1][1], vm.items[2][1]]; 
+      console.log(vm.series.data);
+      vm.chartOptions.xaxis.categories = [vm.items[0][0], vm.items[1][0], vm.items[2][0]];
+      vm.modified = true;
+       
     },
     add(event) {
       const vm = this;
