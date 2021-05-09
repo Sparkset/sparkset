@@ -206,8 +206,30 @@ export default {
         dataLabels: {
           enabled: false
         },
+        noData: {
+            text: 'Loading...'
+        },
         xaxis: {
-          categories: []
+          type: 'category',
+          categories: [],
+          labels: {
+            show: true,
+            allowDecimals: false
+          },
+
+          tickPlacement: 'on',
+          title: {
+              text: "helloooo",
+              offsetX: 0,
+              offsetY: 0,
+              style: {
+                  color: undefined,
+                  fontSize: '12px',
+                  fontFamily: 'Helvetica, Arial, sans-serif',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-xaxis-title',
+              }
+          }
         }
       }      
     }
@@ -411,12 +433,21 @@ export default {
       vm.items.sort(function(first, second) {
         return second[1] - first[1];
       });
-      vm.items = vm.items.slice(0,3);
-      console.log("items", vm.items);
-      console.log("blah", vm.items[0][1]);
-      vm.series[0].data = [vm.items[0][1], vm.items[1][1], vm.items[2][1]]; 
+      var len = vm.items.length;
+      if (len > 5) {
+        vm.items = vm.items.slice(0,5);   //cap at 5 
+      }
+      // console.log("items", vm.items);
+      // console.log("blah", vm.items[0][1]);
+      var i;
+      for (i = 0; i <len; i++) {
+        vm.series[0].data.push(vm.items[i][1]);
+        vm.chartOptions.xaxis.categories.push(vm.items[i][0]);
+
+      }
+      //vm.series[0].data = [vm.items[0][1], vm.items[1][1], vm.items[2][1]]; 
       console.log(vm.series[0].data);
-      vm.chartOptions.xaxis.categories = [vm.items[0][0], vm.items[1][0], vm.items[2][0]];
+      //vm.chartOptions.xaxis.categories = [vm.items[0][0], vm.items[1][0], vm.items[2][0]];
       vm.modified = true;
        
     },
