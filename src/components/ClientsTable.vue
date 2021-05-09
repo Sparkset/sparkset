@@ -43,34 +43,45 @@
         >
           Cell Phone
         </ThWithSort>
+        <th>Option</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in sortedClients" :key="client.id">
-        <td>
-          <ClientCombo :client="client" />
-        </td>
-        <td v-if="showCompany">
-          <span v-if= "client.get('company') == null">
-          </span>
-          <span v-else>
-            <router-link :to="`/company/${client.get('company').id}`">
-              <CompanyCombo :company="client.get('company')" />
-            </router-link>
-          </span>
-        </td>
-        <td>{{ client.get("jobTitle") }}</td>
-        <td>
-          <a :href="`mailto:${client.get('email')}`">
-            {{ client.get("email") }}
-          </a>
-        </td>
-        <td>
-          <a :href="`tel:${client.get('cellPhone')}`">
-            {{ client.get("cellPhone") }}
-          </a>
-        </td>
-      </tr>
+        <tr v-for="client in sortedClients" :key="client.id">
+            <td>
+                <ClientCombo :client="client" />
+            </td>
+            <td v-if="showCompany">
+                <span v-if="client.get('company') == null">
+                </span>
+                <span v-else>
+                    <router-link :to="`/company/${client.get('company').id}`">
+                        <CompanyCombo :company="client.get('company')" />
+                    </router-link>
+                </span>
+            </td>
+            <td>{{ client.get("jobTitle") }}</td>
+            <td>
+                <a :href="`mailto:${client.get('email')}`">
+                    {{ client.get("email") }}
+                </a>
+            </td>
+            <td>
+                <a :href="`tel:${client.get('cellPhone')}`">
+                    {{ client.get("cellPhone") }}
+                </a>
+            </td>
+            <td>
+                <!--<button v-if="!client.archived" @click="archive(client)">
+                    Archive
+                </button>-->
+                <button v-if="!client.editing"
+                        :class="[client.get('archived') ? '' : 'primary']"
+                        @click="archive(client)">
+                    {{ client.get("archived") ? "Unarchive" : "Archive" }}
+                </button>
+            </td>
+        </tr>
     </tbody>
   </table>
 </template>
@@ -79,6 +90,7 @@
 import ThWithSort from "@/components/ThWithSort.vue";
 import ClientCombo from "@/components/ClientCombo.vue";
 import CompanyCombo from "@/components/CompanyCombo.vue";
+//import fetchClients from "@/views/ClientsPage.vue";
 export default {
   name: "ClientsTable",
   components: {
@@ -88,7 +100,8 @@ export default {
   },
   props: {
     clients: Array,
-    showCompany: Boolean
+    showCompany: Boolean,
+    fetchClients: Function
   },
   data() {
     return {
@@ -101,6 +114,24 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
+    },
+    archive(client) { 
+      const vm = this;
+      console.log("ClientsTable client archived/unarchived");//debugging
+      client
+          .set("archived", !client.get("archived"))
+          .save()
+          .then(vm.fetchClients)
+          .then(() => {
+              if (client.get("archived")) {
+                  alert("Client Archived.");
+              } else {
+                  alert("Client Unarchived.");
+              }
+          })
+          .catch(error => {
+              alert(error);
+          });
     }
   },
   computed: {
