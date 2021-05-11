@@ -3,9 +3,8 @@
     "",
     "\\src",
     "\\src\\components",
-    "\\src\\store",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\components\\ClientEvents.vue",
+  "SelectedNode": "\\src\\components\\ClientForm.vue",
   "PreviewInSolutionExplorer": false
 }

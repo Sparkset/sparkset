@@ -40,7 +40,7 @@
                   </div>
                   <div class="field field--half" id="archivedToggle">
                       <label>
-                          <span>View Archived Clients</span>
+                          <!--<span>View Archived Clients</span>-->
                           <toggle-button :value="newEvent.viewArchived"
                                          :color="{
                                             checked: '#36d5d8',
@@ -55,6 +55,7 @@
                                          :font-size="12"
                                          @change="changeViewArchived"></toggle-button>
                       </label>
+                      View Archived Clients
                   </div>
                   <div></div>
                   <!--Show unarchived clients if viewArchived is false-->

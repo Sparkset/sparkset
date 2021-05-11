@@ -43,7 +43,6 @@
         >
           Cell Phone
         </ThWithSort>
-        <th>Option</th>
       </tr>
     </thead>
     <tbody>
@@ -70,16 +69,6 @@
                 <a :href="`tel:${client.get('cellPhone')}`">
                     {{ client.get("cellPhone") }}
                 </a>
-            </td>
-            <td>
-                <!--<button v-if="!client.archived" @click="archive(client)">
-                    Archive
-                </button>-->
-                <button v-if="!client.editing"
-                        :class="[client.get('archived') ? '' : 'primary']"
-                        @click="archive(client)">
-                    {{ client.get("archived") ? "Unarchive" : "Archive" }}
-                </button>
             </td>
         </tr>
     </tbody>
@@ -114,24 +103,6 @@ export default {
       const vm = this;
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
-    },
-    archive(client) { 
-      const vm = this;
-      console.log("ClientsTable client archived/unarchived");//debugging
-      client
-          .set("archived", !client.get("archived"))
-          .save()
-          .then(vm.fetchClients)
-          .then(() => {
-              if (client.get("archived")) {
-                  alert("Client Archived.");
-              } else {
-                  alert("Client Unarchived.");
-              }
-          })
-          .catch(error => {
-              alert(error);
-          });
     }
   },
   computed: {
