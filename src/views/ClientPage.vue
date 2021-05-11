@@ -23,6 +23,9 @@
             <input type="file" @change="uploadPicture" ref="picturesInput" />
           </div>
           <div class="field">
+            <div id = "clientName">
+              {{client.get("fullName")}}
+              </div>
             <p>
               Since
               {{
@@ -121,6 +124,13 @@ export default {
 </script>
 
 <style scoped>
+
+#clientName
+{
+  font-size: 20px;
+  /* font-weight: 400; */
+}
+
 #image {
   position: relative;
   display: inline-block;
