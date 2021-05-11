@@ -250,13 +250,13 @@ export default {
             }
           },
           title: {
-              text: "Undone Events",
+              text: "Uncompleted Events",
               offsetX: 0,
               offsetY: 0,
               style: {
                   color: undefined,
                   align: 'right',
-                  fontSize: '17px',
+                  fontSize: '15px',
                   fontFamily: 'avenir next, sans-serif',
                   fontWeight: 400,
                   cssClass: 'apexcharts-xaxis-title',
