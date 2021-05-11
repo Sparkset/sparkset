@@ -11,6 +11,53 @@
           </div>
         </section>
       </div>
+
+
+      <div class="card">
+        <section class="fields">
+          <h1>New Clients</h1>
+          <div class="field" id = "fields">
+
+            
+            <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
+              <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
+                <div id="container" >
+                    <div id="image">
+                      <img
+                        :src="
+                          client.get('picture')
+                            ? client.get('picture').url()
+                            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                        "
+                        alt="The picture of the client."
+                      />   
+                    </div> 
+    
+                    <div id="client">
+                      <span>{{ client.get("fullName") }}</span>
+                    </div>
+
+
+                </div>
+              </router-link>
+            <!-- </button> -->
+            
+          </div>
+        </section>
+      </div>
+
+
+       <div class="card">
+        <section class="fields">
+          <h1>Data at a Glance</h1>
+          <div class="field">
+            <p>Clients: {{ stats.clients }}</p>
+            <p>Companies: {{ stats.companies }}</p>
+            <p>Events: {{ stats.events }}</p>
+            <p>Memos: {{ stats.notes }}</p>
+          </div>
+        </section>
+      </div>
       <!-- <div class="card">
         <section class="fields">
           <h1>Suggestions</h1>
@@ -74,49 +121,9 @@
           </div>
         </section>
       </div>
-      <div class="card">
-        <section class="fields">
-          <h1>Data at a Glance</h1>
-          <div class="field">
-            <p>Clients: {{ stats.clients }}</p>
-            <p>Companies: {{ stats.companies }}</p>
-            <p>Events: {{ stats.events }}</p>
-            <p>Memos: {{ stats.notes }}</p>
-          </div>
-        </section>
-      </div>
-      <div class="card">
-        <section class="fields">
-          <h1>New Clients</h1>
-          <div class="field" id = "fields">
-
-            
-            <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
-              <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
-                <div id="container" >
-                    <div id="image">
-                      <img
-                        :src="
-                          client.get('picture')
-                            ? client.get('picture').url()
-                            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-                        "
-                        alt="The picture of the client."
-                      />   
-                    </div> 
-    
-                    <div id="client">
-                      <span>{{ client.get("fullName") }}</span>
-                    </div>
-
-
-                </div>
-              </router-link>
-            <!-- </button> -->
-            
-          </div>
-        </section>
-      </div>
+     
+      
+      
     </div>
     <div class="column column--left">
       <div class="card">
@@ -209,24 +216,49 @@ export default {
         noData: {
             text: 'Loading...'
         },
+
+        yaxis: {
+          show: true,
+          tickAmount: 5,
+          labels: {
+            show: true,
+            align: 'right',
+            minWidth: 0,
+            maxWidth: 160,
+            style: {
+                colors: [],
+                fontSize: '12px',
+                fontFamily: 'avenir next, sans-serif',
+                fontWeight: 400,
+                cssClass: 'apexcharts-yaxis-label',
+            }
+          }
+        },
+
         xaxis: {
           type: 'category',
           categories: [],
           labels: {
             show: true,
-            allowDecimals: false
+            allowDecimals: false,
+            style: {
+              colors: [],
+              fontSize: '13px',
+              fontFamily: 'avenir next, sans-serif',
+              fontWeight: 400,
+              cssClass: 'apexcharts-xaxis-label',
+            }
           },
-
-          tickPlacement: 'on',
           title: {
-              text: "helloooo",
+              text: "Undone Events",
               offsetX: 0,
               offsetY: 0,
               style: {
                   color: undefined,
-                  fontSize: '12px',
-                  fontFamily: 'Helvetica, Arial, sans-serif',
-                  fontWeight: 600,
+                  align: 'right',
+                  fontSize: '17px',
+                  fontFamily: 'avenir next, sans-serif',
+                  fontWeight: 400,
                   cssClass: 'apexcharts-xaxis-title',
               }
           }
@@ -486,6 +518,7 @@ export default {
 </script>
 
 <style scoped>
+
 #container {
   width: 100%;
   height: 100%;
