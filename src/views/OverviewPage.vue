@@ -3,7 +3,7 @@
     <div class="column column--right">
       <div class="card">
         <section class="fields">
-          <h1>Least Interacted With</h1>
+          <h1>Most Uncompleted Events</h1>
           <div class="field" >
             <div id="chart" >
               <apexchart type="bar" height="350" :options="chartOptions" :series="series" :key="modified"></apexchart>
