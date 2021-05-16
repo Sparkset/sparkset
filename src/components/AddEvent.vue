@@ -98,7 +98,8 @@ export default {
         daysBetween: 1,
         recurringEventType: "", // takes in "Daily", "Weekly", "Monthly", "Yearly"
         endRepeatDate: "",
-        syncing: true
+        syncing: true,
+        id: ""
       }, 
       calendarEmail: false
     };
@@ -109,12 +110,12 @@ export default {
     vm.newEvent.recurringEventType = "Never";
   },
   methods: {
-    createEvent() {
+    async createEvent() { //turned this async and made it wait on sync
       const vm = this;
       //console.log("in createEvent");//debugging press "shift + ctrl + J" to see console
-      if (this.newEvent.syncing) {
+      if (vm.newEvent.syncing) {
         //console.log("calling sync from createEvent");//debugging
-        this.sync();
+        await vm.sync();
       }
       vm.$emit("create-event", vm.newEvent);
     },
@@ -166,8 +167,12 @@ export default {
       if (vm.newEvent.recurringEventType != "Never") {
         vm.recurringSync();
       }
-      //console.log(vm.calendarEmail);
-      createNewEvent(vm.newEvent.name, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+      const event = await createNewEvent(vm.newEvent.name, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+      if (event) {
+        vm.newEvent.id = event.id;  
+      }
+      // console.log(event);
+      // console.log(vm.newEvent.id);
     },
     recurringSync() {  
       // let async sync() do original event so this can be called from async sync()

@@ -272,9 +272,9 @@ export default {
     vm.fetchNotes();
     //vm.fetchData();
     vm.sortData();
-    console.log(vm.doneEventDataMap);
-    console.log("hello");
-    console.log(vm.items);
+    // console.log(vm.doneEventDataMap);
+    // console.log("hello");
+    // console.log(vm.items);
     
   },
   methods: {
@@ -402,11 +402,11 @@ export default {
               {
                 if (event.get("client").get("fullName") in vm.doneEventDataMap)
                 {
-                  console.log("client name:" + event.get("client").get("fullName"));
+                  // console.log("client name:" + event.get("client").get("fullName"));
                   vm.doneEventDataMap[event.get("client").get("fullName")] += 1;              }
                 else 
                 {
-                  console.log("client name: " + event.get("client").get("fullName"));
+                  // console.log("client name: " + event.get("client").get("fullName"));
                   vm.doneEventDataMap[event.get("client").get("fullName")] = 1;
                 }
               }
@@ -452,15 +452,15 @@ export default {
     },
     async sortData() {
       const vm = this;
-      const status = await vm.fetchData();
-      console.log(vm.doneEventDataMap);
-      console.log(status);
+      await vm.fetchData();
+      // console.log(vm.doneEventDataMap);
+      // console.log(status);
 
       vm.items =  Object.keys(vm.doneEventDataMap).map(function(key) {
         return [key, vm.doneEventDataMap[key]];
       });
       
-      console.log("step 1 ", vm.items);
+      // console.log("step 1 ", vm.items);
 
       vm.items.sort(function(first, second) {
         return second[1] - first[1];
@@ -478,7 +478,7 @@ export default {
 
       }
       //vm.series[0].data = [vm.items[0][1], vm.items[1][1], vm.items[2][1]]; 
-      console.log(vm.series[0].data);
+      // console.log(vm.series[0].data);
       //vm.chartOptions.xaxis.categories = [vm.items[0][0], vm.items[1][0], vm.items[2][0]];
       vm.modified = true;
        

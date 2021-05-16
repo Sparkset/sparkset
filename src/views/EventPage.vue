@@ -89,7 +89,7 @@
             </div> 
           </form>
           <div v-if="!editing" class="field">
-            <button id="deleteEvent" class="primary" @click="deleteEvent">
+            <button id="deleteEvent" class="primary" @click="deleteE">
               Delete
             </button>
             <button id="editButton" class="primary" @click="editing = true">
@@ -105,6 +105,8 @@
 <script>
 import AV from "leancloud-storage";
 import VueMarkdown from "vue-markdown";
+import {getEmail} from "../services/auth"; 
+import {updateEvent, deleteEvent} from "../services/graph";
 export default {
   name: "EventPage",
   components: {
@@ -120,11 +122,15 @@ export default {
         time: "",
         notes: "",
         name: "",
-      }
+      },
+      calendarEmail: false
+      //eventSyncing: true 
+      // would be automatically t/f based on settings, not doing this rn tho
     };
   },
   created() {
     const vm = this;
+    vm.calendarEmail = getEmail();
     const eventQuery = new AV.Query("Event");
     eventQuery
       .notEqualTo("time", null)
@@ -181,20 +187,38 @@ export default {
       .catch(error => {
         alert(error);
       });
+      if (vm.calendarEmail) { //if signed in, do a sync delete
+          let endTime = new Date(vm.event.get('time')); 
+          endTime.setHours(endTime.getHours()+1);     //current default adds one hour, but fails when it's 11pm
+          let end = endTime.toTimeString().slice(0,5);
+          updateEvent(vm.event.get('syncId'), vm.pendingChanges.name, vm.pendingChanges.date, vm.pendingChanges.time, end, vm.pendingChanges.notes);
+      }
     }, 
-    deleteEvent() {
+    deleteE() { //here
       const vm = this;
       if (confirm(`Are you sure you want to delete the event?`)) {
-        vm.event
+        if (vm.calendarEmail) { //if signed in, do a sync delete
+          vm.syncDelete();
+        }
+        vm.event                
           .destroy()
           .catch(error => {
             alert(error);
-          });
+          }); 
       }
       window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events"); 
 
+    },
+    syncDelete() {
+      // if (vm.calendarEmail == false) {       //only needed if they want to be reminded to sign in
+      //   const response = await signIn();
+      //   vm.calendarEmail = response;
+      // }
+      //here is where the magic happens
+      const vm = this;
+      deleteEvent(vm.event.get('syncId'));
     }
-  }
+  } 
 }
 </script>
 

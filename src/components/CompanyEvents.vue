@@ -150,6 +150,9 @@ export default {
       if (newEvent.recurringEvent) {
         event.set("recursIn", newEvent.daysBetween);
       }
+      if (newEvent.id) {                    //added this 
+        event.set("syncId", newEvent.id);
+      }
       event
         .save()
         .then(() => {
