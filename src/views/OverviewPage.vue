@@ -290,21 +290,24 @@ export default {
         .limit(10)
         .find()
         .then(upcomingEvents => {
-          vm.upcomingEvents = upcomingEvents.map(event => ({
-            event,
-            editing: false,
-            pendingChanges: {
-              date: `${event.get("time").getFullYear()}-${`0${event
-                .get("time")
-                .getMonth() + 1}`.slice(-2)}-${`0${event
-                .get("time")
-                .getDate()}`.slice(-2)}`,
-              time: `${`0${event.get("time").getHours()}`.slice(
-                -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-            }
-          }));
+          vm.upcomingEvents = upcomingEvents.filter(function(e) {
+            return (!e.get('client').get('archived')); }).map(event => ({
+              event,
+              editing: false,
+              pendingChanges: {
+                date: `${event.get("time").getFullYear()}-${`0${event
+                  .get("time")
+                  .getMonth() + 1}`.slice(-2)}-${`0${event
+                  .get("time")
+                  .getDate()}`.slice(-2)}`,
+                time: `${`0${event.get("time").getHours()}`.slice(
+                  -2
+                )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+              }
+          
+            }));
         })
+        
         .catch(error => {
           alert(error);
         });
@@ -373,12 +376,15 @@ export default {
         vm.stats.eventsOpen = await new AV.Query("Event")
           .equalTo("done", false)
           .count();
-        vm.stats.clients = await new AV.Query("Client").count();
+        vm.stats.clients = await new AV.Query("Client")
+          .equalTo("archived", false)
+          .count();
         vm.stats.companies = await new AV.Query("Company").count();
         vm.stats.events = await new AV.Query("Event").count();
         vm.stats.notes = await new AV.Query("Note").count();
         vm.stats.newClients = await new AV.Query("Client")
           .descending("createdAt")
+          .equalTo("archived", false)
           .limit(3)
           .find();
       } catch (error) {
@@ -398,12 +404,13 @@ export default {
             try {
               // console.log(event);
               // console.log(event.get("client").get("fullName"));
-              if (event.get("time") >= pastMonth) //but less than current time 
+              if (event.get("time") >= pastMonth && event.get('client').get('archived') == false) //but less than current time 
               {
                 if (event.get("client").get("fullName") in vm.doneEventDataMap)
                 {
                   // console.log("client name:" + event.get("client").get("fullName"));
-                  vm.doneEventDataMap[event.get("client").get("fullName")] += 1;              }
+                  vm.doneEventDataMap[event.get("client").get("fullName")] += 1;              
+                }
                 else 
                 {
                   // console.log("client name: " + event.get("client").get("fullName"));
