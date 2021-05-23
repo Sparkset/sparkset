@@ -47,10 +47,10 @@
     </thead>
     <tbody>
         <tr v-for="client in sortedClients" :key="client.id">
-            <td>
+            <td id="clickable">
                 <ClientCombo :client="client" />
             </td>
-            <td v-if="showCompany">
+            <td id="clickable" v-if="showCompany">
                 <span v-if="client.get('company') == null">
                 </span>
                 <span v-else>
@@ -60,12 +60,12 @@
                 </span>
             </td>
             <td>{{ client.get("jobTitle") }}</td>
-            <td>
+            <td id="clickable">
                 <a :href="`mailto:${client.get('email')}`">
                     {{ client.get("email") }}
                 </a>
             </td>
-            <td>
+            <td id="clickable">
                 <a :href="`tel:${client.get('cellPhone')}`">
                     {{ client.get("cellPhone") }}
                 </a>
@@ -124,4 +124,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+    #clickable {
+        color: #605e5e;
+    }
+
+    #clickable:hover {
+        color: #36d5d8;
+    }
+</style>
