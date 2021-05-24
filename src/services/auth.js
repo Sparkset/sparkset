@@ -19,7 +19,6 @@ export async function signIn() //use this to sign in
       window.localStorage.setItem('msalAccount', authResult.account.username);  //save the profile in leancloud acc
       // mine window.localStorage.setItem('msEmailAccount', JSON.stringify(authResult.account));
       // Get the user's profile from Graph
-      window.localStorage.setItem('authResult', JSON.stringify(authResult));
       let user = await getUser();
       // Save the profile in session
       window.localStorage.setItem('graphUser', JSON.stringify(user));
@@ -50,7 +49,6 @@ export async function handleResponse(response) {
   if (response !== null) {
     account = response.account.username;
     window.localStorage.setItem('msalAccount', response.account.username);  
-    window.localStorage.setItem('authResult', JSON.stringify(response));
     let user = await getUser();
     window.localStorage.setItem('graphUser', JSON.stringify(user));
     // Display signed-in user content, call API, etc.
@@ -63,7 +61,6 @@ export async function handleResponse(response) {
           try {
             const authResult = await msalClient.loginRedirect(m.msalRequest);
             window.localStorage.setItem('msalAccount', authResult.account.username);  
-            window.localStorage.setItem('authResult', JSON.stringify(authResult));
             let user = await getUser();
             window.localStorage.setItem('graphUser', JSON.stringify(user));
           }
@@ -115,14 +112,12 @@ export async function getToken() {//only used in graph.js
 };
 
 export async function signOut() {//use this to sign out
-  window.localStorage.removeItem('graphUser');
   account = window.localStorage.getItem('msalAccount');
   const logoutRequest = {
     account: msalClient.getAccountByUsername(account),
     mainWindowRedirectUri: "http://localhost:8080/settings"       //rememebr to change this in live 
   }
   account = null;
+  window.localStorage.removeItem('graphUser');
   await msalClient.logoutPopup(logoutRequest); 
-  
-  //msalClient.logout(); //fix this 
 };
