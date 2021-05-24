@@ -266,16 +266,11 @@ export default {
       }      
     }
   },
-  created() {
+  created() {  
     const vm = this;
     vm.fetchEvents();
     vm.fetchNotes();
-    //vm.fetchData();
     vm.sortData();
-    // console.log(vm.doneEventDataMap);
-    // console.log("hello");
-    // console.log(vm.items);
-    
   },
   methods: {
     fetchEvents() {
@@ -309,6 +304,7 @@ export default {
         })
         
         .catch(error => {
+          console.log("goes wrong here");
           alert(error);
         });
       //console.log("upcoming events " +  vm.upcomingEvents[0][0]);
@@ -391,29 +387,25 @@ export default {
         alert(error);
       }
     },
-    async fetchData() { //bottom 5?
+    async fetchData() {
       const vm = this;
       var pastMonth = new Date();
       pastMonth.setMonth(pastMonth.getMonth() - 1);
       vm.doneEvents = await new AV.Query("Event")
-        .equalTo("done", true)
+        .equalTo("done", false)
         .include("client") //need this to include client child
         .find()
         .then(events => {
           vm.doneEventData = events.forEach(function (event) { ///fails if event of deleted client
             try {
-              // console.log(event);
-              // console.log(event.get("client").get("fullName"));
               if (event.get("time") >= pastMonth && event.get('client').get('archived') == false) //but less than current time 
               {
                 if (event.get("client").get("fullName") in vm.doneEventDataMap)
                 {
-                  // console.log("client name:" + event.get("client").get("fullName"));
                   vm.doneEventDataMap[event.get("client").get("fullName")] += 1;              
                 }
                 else 
                 {
-                  // console.log("client name: " + event.get("client").get("fullName"));
                   vm.doneEventDataMap[event.get("client").get("fullName")] = 1;
                 }
               }
@@ -424,69 +416,32 @@ export default {
           });
           
         });
-
-
-        // .then(events => {
-        //   var i;
-        //   for (i=0; i< events.length; i++)
-        //   {
-        //     //console.log(events[i].get("time"));
-            // if (events[i].get("time") >= pastMonth)
-            // {
-            //   if (events[i].get("client").get("fullName") in vm.doneEventData)
-            //   {
-            //     vm.doneEventData[events[i].get("client").get("fullName")] += 1;              }
-            //   else 
-            //   {
-            //     vm.doneEventData[events[i].get("client").get("fullName")] = 1;
-            //   }
-            // }
-        //     console.log("done event" + Object.keys(vm.doneEventData));
-        //     console.log("Micael Ito " +vm.doneEventData["Michael Ito"]);
-        //     console.log(vm.doneEventData[events[i].get("client").get("fullName")]);
-        //   }
-        // });
-        // .then(events => {
-        //   vm.doneEventData = events.map(event => ({
-        //     event,
-        //   }));
-        // });
-
-      //console.log(vm.doneEventData["Michael Ito"]);
-
-      //from here create the data for least interacted with. 
       
     },
     async sortData() {
       const vm = this;
       await vm.fetchData();
-      // console.log(vm.doneEventDataMap);
-      // console.log(status);
 
       vm.items =  Object.keys(vm.doneEventDataMap).map(function(key) {
         return [key, vm.doneEventDataMap[key]];
       });
-      
-      // console.log("step 1 ", vm.items);
-
+    
       vm.items.sort(function(first, second) {
         return second[1] - first[1];
       });
+
       var len = vm.items.length;
       if (len > 5) {
         vm.items = vm.items.slice(0,5);   //cap at 5 
+        len = 5;
       }
-      // console.log("items", vm.items);
-      // console.log("blah", vm.items[0][1]);
+
       var i;
       for (i = 0; i <len; i++) {
         vm.series[0].data.push(vm.items[i][1]);
         vm.chartOptions.xaxis.categories.push(vm.items[i][0]);
 
       }
-      //vm.series[0].data = [vm.items[0][1], vm.items[1][1], vm.items[2][1]]; 
-      // console.log(vm.series[0].data);
-      //vm.chartOptions.xaxis.categories = [vm.items[0][0], vm.items[1][0], vm.items[2][0]];
       vm.modified = true;
        
     },

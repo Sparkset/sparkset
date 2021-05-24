@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import AV from "leancloud-storage";
+import { autoSignIn } from "../services/auth";
 Vue.use(VueRouter);
 async function isLoggedIn() {
   const user = AV.User.current();
@@ -19,6 +20,14 @@ async function isLoggedIn() {
   }
   return false;
 }
+async function isLoggedInMicrosoft() {
+  AV.User.current()
+    .get("calendarAccSignedIn")
+    .then(result => {
+      return result;
+    });
+}
+
 const routes = [
   {
     path: "/",
@@ -34,8 +43,11 @@ const routes = [
         path: "/",
         component: () => import("../views/AuthPage.vue"),
         beforeEnter: (to, from, next) => {
-          isLoggedIn().then(result => {
-            if (result) {
+          isLoggedIn().then(async result => {
+            if (result) { 
+              if (isLoggedInMicrosoft()) {
+                await autoSignIn();
+              }
               next("/overview");
             } else {
               next();

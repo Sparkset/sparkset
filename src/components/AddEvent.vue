@@ -81,7 +81,7 @@
 </template>
 
 <script> 
-// here is where it starts 
+import AV from "leancloud-storage";
 import {createNewEvent} from "../services/graph";
 import {signIn, getEmail} from "../services/auth"; 
 export default {
@@ -101,15 +101,29 @@ export default {
         syncing: true,
         id: ""
       }, 
-      calendarEmail: false
+      calendarEmail: false,
+      clientName: ""
     };
   },
   created() {
     const vm = this;
     vm.calendarEmail = getEmail();
     vm.newEvent.recurringEventType = "Never";
+    vm.fetchClientName();
+    // vm.client = client;
+    // console.log(client);
+    
   },
   methods: {
+    fetchClientName() {
+      const vm = this;
+      const clientyQuery = new AV.Query("Client");
+      clientyQuery
+        .get(vm.$route.params.id)
+        .then(client => {
+          vm.clientName = client.get("fullName");
+        })
+    },
     async createEvent() { //turned this async and made it wait on sync
       const vm = this;
       //console.log("in createEvent");//debugging press "shift + ctrl + J" to see console
@@ -167,12 +181,12 @@ export default {
       if (vm.newEvent.recurringEventType != "Never") {
         vm.recurringSync();
       }
-      const event = await createNewEvent(vm.newEvent.name, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+      const eventName = vm.clientName + " - " + vm.newEvent.name;
+      const event = await createNewEvent(eventName, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+      // saves event id from call to microsoft graph API
       if (event) {
         vm.newEvent.id = event.id;  
       }
-      // console.log(event);
-      // console.log(vm.newEvent.id);
     },
     recurringSync() {  
       // let async sync() do original event so this can be called from async sync()
@@ -188,7 +202,8 @@ export default {
 
           //date needs to look like this "2021-05-06"
           let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-          createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+          const eventName = vm.clientName + " - " + vm.newEvent.name;
+          createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
         }
         else if (vm.newEvent.recurringEventType == "Weekly") {
           //require adding 7 days to date object
@@ -197,7 +212,8 @@ export default {
           if (currentDate <= endDate) {
             //date needs to look like this "2021-05-06"
             let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+            const eventName = vm.clientName + " - " + vm.newEvent.name;
+            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
           }
         }
         else if (vm.newEvent.recurringEventType == "Monthly") {
@@ -208,7 +224,8 @@ export default {
             //date needs to look like this "2021-05-06"
             let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
             //console.log("formattedDate: " + formattedDate);
-            createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+            const eventName = vm.clientName + " - " + vm.newEvent.name;
+            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
           }
         }
         else { //assuming it's yearly here
@@ -218,7 +235,8 @@ export default {
           if (currentDate <= endDate) {
             //date needs to look like this "2021-05-06"
             let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+            const eventName = vm.clientName + " - " + vm.newEvent.name;
+            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
           }
         }
       }
