@@ -21,11 +21,8 @@ async function isLoggedIn() {
   return false;
 }
 async function isLoggedInMicrosoft() {
-  AV.User.current()
-    .get("calendarAccSignedIn")
-    .then(result => {
-      return result;
-    });
+  const result = await AV.User.current().get("calendarAccSignedIn");
+  return result;
 }
 
 const routes = [
@@ -45,7 +42,8 @@ const routes = [
         beforeEnter: (to, from, next) => {
           isLoggedIn().then(async result => {
             if (result) { 
-              if (isLoggedInMicrosoft()) {
+              const response = await isLoggedInMicrosoft();
+              if (response) {
                 await autoSignIn();
               }
               next("/overview");

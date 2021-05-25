@@ -202,11 +202,11 @@ export default {
     },
     signOutB() {
       const vm = this;
-      signOut();
       vm.calendarEmail = false;
       AV.User.current()
         .set("calendarAccSignedIn", false)
         .save();
+      signOut();
       //update boolean in leancloud
     },
     async signInB() {
