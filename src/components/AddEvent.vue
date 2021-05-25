@@ -45,7 +45,7 @@
     </div>
     <div class="field field--half" id="repeatEnd" :key="newEvent.recurringEventType">
       <label v-if="newEvent.recurringEventType != 'Never'"> 
-        <span class="required-field">End Repeat</span> 
+        <span>End Repeat</span> 
         <input type="date" max="2099-12-31" v-model="newEvent.endRepeatDate" @click="changeRecurringStatus" required />
       </label> 
     </div>
@@ -81,7 +81,7 @@
 </template>
 
 <script> 
-// here is where it starts 
+import AV from "leancloud-storage";
 import {createNewEvent} from "../services/graph";
 import {signIn, getEmail} from "../services/auth"; 
 export default {
@@ -97,24 +97,39 @@ export default {
         recurringEvent: false,
         daysBetween: 1,
         recurringEventType: "", // takes in "Daily", "Weekly", "Monthly", "Yearly"
-        endRepeatDate: "",
-        syncing: true
+        endRepeatDate: "2099-12-31",
+        syncing: true,
+        id: ""
       }, 
-      calendarEmail: false
+      calendarEmail: false,
+      clientName: ""
     };
   },
   created() {
     const vm = this;
     vm.calendarEmail = getEmail();
     vm.newEvent.recurringEventType = "Never";
+    vm.fetchClientName();
+    // vm.client = client;
+    // console.log(client);
+    
   },
   methods: {
-    createEvent() {
+    fetchClientName() {
+      const vm = this;
+      const clientyQuery = new AV.Query("Client");
+      clientyQuery
+        .get(vm.$route.params.id)
+        .then(client => {
+          vm.clientName = client.get("fullName");
+        })
+    },
+    async createEvent() { //turned this async and made it wait on sync
       const vm = this;
       //console.log("in createEvent");//debugging press "shift + ctrl + J" to see console
-      if (this.newEvent.syncing) {
+      if (vm.newEvent.syncing) {
         //console.log("calling sync from createEvent");//debugging
-        this.sync();
+        await vm.sync();
       }
       vm.$emit("create-event", vm.newEvent);
     },
@@ -163,11 +178,18 @@ export default {
         vm.calendarEmail = response;
       }
       //call recurringsync using conditional here
+      
       if (vm.newEvent.recurringEventType != "Never") {
+      //   let recurr = [type, day, end repeat]
+      // { pattern: { type: "weekly", interval: 1, daysOfWeek: [ "Monday" ] }, range: {type: "endDate",startDate: "2017-09-04",endDate: "2017-12-31"};
         vm.recurringSync();
       }
-      //console.log(vm.calendarEmail);
-      createNewEvent(vm.newEvent.name, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+      const eventName = vm.clientName + " - " + vm.newEvent.name;
+      const event = await createNewEvent(eventName, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+      // saves event id from call to microsoft graph API
+      if (event) {
+        vm.newEvent.id = event.id;  
+      }
     },
     recurringSync() {  
       // let async sync() do original event so this can be called from async sync()
@@ -183,7 +205,8 @@ export default {
 
           //date needs to look like this "2021-05-06"
           let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-          createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+          const eventName = vm.clientName + " - " + vm.newEvent.name;
+          createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
         }
         else if (vm.newEvent.recurringEventType == "Weekly") {
           //require adding 7 days to date object
@@ -192,7 +215,8 @@ export default {
           if (currentDate <= endDate) {
             //date needs to look like this "2021-05-06"
             let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+            const eventName = vm.clientName + " - " + vm.newEvent.name;
+            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
           }
         }
         else if (vm.newEvent.recurringEventType == "Monthly") {
@@ -203,7 +227,8 @@ export default {
             //date needs to look like this "2021-05-06"
             let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
             //console.log("formattedDate: " + formattedDate);
-            createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+            const eventName = vm.clientName + " - " + vm.newEvent.name;
+            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
           }
         }
         else { //assuming it's yearly here
@@ -213,7 +238,8 @@ export default {
           if (currentDate <= endDate) {
             //date needs to look like this "2021-05-06"
             let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            createNewEvent(vm.newEvent.name, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+            const eventName = vm.clientName + " - " + vm.newEvent.name;
+            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
           }
         }
       }

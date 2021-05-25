@@ -1,6 +1,63 @@
 <template>
   <div>
     <div class="column column--right">
+      <div class="card">
+        <section class="fields">
+          <h1>Needs Attention</h1>
+          <div class="field" >
+            <div id="chart" >
+              <apexchart type="bar" height="350" :options="chartOptions" :series="series" :key="modified"></apexchart>
+            </div>
+          </div>
+        </section>
+      </div>
+
+
+      <div class="card">
+        <section class="fields">
+          <h1>New Clients</h1>
+          <div class="field" id = "fields">
+
+            
+            <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
+              <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
+                <div id="container" >
+                    <div id="image">
+                      <img
+                        :src="
+                          client.get('picture')
+                            ? client.get('picture').url()
+                            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+                        "
+                        alt="The picture of the client."
+                      />   
+                    </div> 
+    
+                    <div id="client">
+                      <span>{{ client.get("fullName") }}</span>
+                    </div>
+
+
+                </div>
+              </router-link>
+            <!-- </button> -->
+            
+          </div>
+        </section>
+      </div>
+
+
+       <div class="card">
+        <section class="fields">
+          <h1>Data at a Glance</h1>
+          <div class="field">
+            <p>Clients: {{ stats.clients }}</p>
+            <p>Companies: {{ stats.companies }}</p>
+            <p>Events: {{ stats.events }}</p>
+            <p>Memos: {{ stats.notes }}</p>
+          </div>
+        </section>
+      </div>
       <!-- <div class="card">
         <section class="fields">
           <h1>Suggestions</h1>
@@ -64,49 +121,9 @@
           </div>
         </section>
       </div>
-      <div class="card">
-        <section class="fields">
-          <h1>Data at a Glance</h1>
-          <div class="field">
-            <p>Clients: {{ stats.clients }}</p>
-            <p>Companies: {{ stats.companies }}</p>
-            <p>Events: {{ stats.events }}</p>
-            <p>Memos: {{ stats.notes }}</p>
-          </div>
-        </section>
-      </div>
-      <div class="card">
-        <section class="fields">
-          <h1>New Clients</h1>
-          <div class="field" id = "fields">
-
-            
-            <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
-              <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
-                <div id="container" >
-                    <div id="image">
-                      <img
-                        :src="
-                          client.get('picture')
-                            ? client.get('picture').url()
-                            : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
-                        "
-                        alt="The picture of the client."
-                      />   
-                    </div> 
-    
-                    <div id="client">
-                      <span>{{ client.get("fullName") }}</span>
-                    </div>
-
-
-                </div>
-              </router-link>
-            <!-- </button> -->
-            
-          </div>
-        </section>
-      </div>
+     
+      
+      
     </div>
     <div class="column column--left">
       <div class="card">
@@ -145,9 +162,11 @@
 import EventsTable from "@/components/EventsTable.vue";
 import NoteCard from "@/components/NoteCard.vue";
 import AV from "leancloud-storage";
+import VueApexCharts from 'vue-apexcharts'; 
 export default {
   name: "OverviewPage",
   components: {
+    apexchart: VueApexCharts,
     EventsTable,
     NoteCard
   },
@@ -165,13 +184,93 @@ export default {
         events: 0,
         notes: 0,
         newClients: []
-      }
-    };
+      },
+      doneEventData: [],
+      items: [],
+      modified: false,
+      doneEvents: [],
+      doneEventDataMap: {},
+      event: new AV.Object("Event"),
+      client: new AV.Object("Client"),
+      series: [{
+        data: []
+      }],
+      chartOptions: {
+        chart: {
+          type: 'bar',
+          height: 350
+        }, 
+        fill:
+        {
+        colors: ['#36d5d8']
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        noData: {
+            text: 'Loading...'
+        },
+
+        yaxis: {
+          show: true,
+          tickAmount: 5,
+          labels: {
+            show: true,
+            align: 'right',
+            minWidth: 0,
+            maxWidth: 160,
+            style: {
+                colors: [],
+                fontSize: '12px',
+                fontFamily: 'avenir next, sans-serif',
+                fontWeight: 400,
+                cssClass: 'apexcharts-yaxis-label',
+            }
+          }
+        },
+
+        xaxis: {
+          type: 'category',
+          categories: [],
+          labels: {
+            show: true,
+            allowDecimals: false,
+            style: {
+              colors: [],
+              fontSize: '13px',
+              fontFamily: 'avenir next, sans-serif',
+              fontWeight: 400,
+              cssClass: 'apexcharts-xaxis-label',
+            }
+          },
+          title: {
+              text: "Uncompleted Events",
+              offsetX: 0,
+              offsetY: 0,
+              style: {
+                  color: undefined,
+                  align: 'right',
+                  fontSize: '15px',
+                  fontFamily: 'avenir next, sans-serif',
+                  fontWeight: 400,
+                  cssClass: 'apexcharts-xaxis-title',
+              }
+          }
+        }
+      }      
+    }
   },
-  created() {
+  created() {  
     const vm = this;
     vm.fetchEvents();
     vm.fetchNotes();
+    vm.sortData();
   },
   methods: {
     fetchEvents() {
@@ -186,24 +285,29 @@ export default {
         .limit(10)
         .find()
         .then(upcomingEvents => {
-          vm.upcomingEvents = upcomingEvents.map(event => ({
-            event,
-            editing: false,
-            pendingChanges: {
-              date: `${event.get("time").getFullYear()}-${`0${event
-                .get("time")
-                .getMonth() + 1}`.slice(-2)}-${`0${event
-                .get("time")
-                .getDate()}`.slice(-2)}`,
-              time: `${`0${event.get("time").getHours()}`.slice(
-                -2
-              )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
-            }
-          }));
+          vm.upcomingEvents = upcomingEvents.filter(function(e) {
+            return (!e.get('client').get('archived')); }).map(event => ({
+              event,
+              editing: false,
+              pendingChanges: {
+                date: `${event.get("time").getFullYear()}-${`0${event
+                  .get("time")
+                  .getMonth() + 1}`.slice(-2)}-${`0${event
+                  .get("time")
+                  .getDate()}`.slice(-2)}`,
+                time: `${`0${event.get("time").getHours()}`.slice(
+                  -2
+                )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
+              }
+          
+            }));
         })
+        
         .catch(error => {
+          console.log("goes wrong here");
           alert(error);
         });
+      //console.log("upcoming events " +  vm.upcomingEvents[0][0]);
       const lastEventQuery = new AV.Query("Event"); //suggestions section
       lastEventQuery
         .equalTo("done", true)
@@ -268,17 +372,78 @@ export default {
         vm.stats.eventsOpen = await new AV.Query("Event")
           .equalTo("done", false)
           .count();
-        vm.stats.clients = await new AV.Query("Client").count();
+        vm.stats.clients = await new AV.Query("Client")
+          .equalTo("archived", false)
+          .count();
         vm.stats.companies = await new AV.Query("Company").count();
         vm.stats.events = await new AV.Query("Event").count();
         vm.stats.notes = await new AV.Query("Note").count();
         vm.stats.newClients = await new AV.Query("Client")
           .descending("createdAt")
+          .equalTo("archived", false)
           .limit(3)
           .find();
       } catch (error) {
         alert(error);
       }
+    },
+    async fetchData() {
+      const vm = this;
+      var pastMonth = new Date();
+      pastMonth.setMonth(pastMonth.getMonth() - 1);
+      vm.doneEvents = await new AV.Query("Event")
+        .equalTo("done", false)
+        .include("client") //need this to include client child
+        .find()
+        .then(events => {
+          vm.doneEventData = events.forEach(function (event) { ///fails if event of deleted client
+            try {
+              if (event.get("time") >= pastMonth && event.get('client').get('archived') == false) //but less than current time 
+              {
+                if (event.get("client").get("fullName") in vm.doneEventDataMap)
+                {
+                  vm.doneEventDataMap[event.get("client").get("fullName")] += 1;              
+                }
+                else 
+                {
+                  vm.doneEventDataMap[event.get("client").get("fullName")] = 1;
+                }
+              }
+            }
+            catch (error) {
+              console.log("event with deleted client");
+            }
+          });
+          
+        });
+      
+    },
+    async sortData() {
+      const vm = this;
+      await vm.fetchData();
+
+      vm.items =  Object.keys(vm.doneEventDataMap).map(function(key) {
+        return [key, vm.doneEventDataMap[key]];
+      });
+    
+      vm.items.sort(function(first, second) {
+        return second[1] - first[1];
+      });
+
+      var len = vm.items.length;
+      if (len > 5) {
+        vm.items = vm.items.slice(0,5);   //cap at 5 
+        len = 5;
+      }
+
+      var i;
+      for (i = 0; i <len; i++) {
+        vm.series[0].data.push(vm.items[i][1]);
+        vm.chartOptions.xaxis.categories.push(vm.items[i][0]);
+
+      }
+      vm.modified = true;
+       
     },
     add(event) {
       const vm = this;
@@ -292,6 +457,16 @@ export default {
           event.pendingChanges.time.slice(3, 5),
           0
         )
+      ).set(
+          "endTime",
+          new Date(
+            event.pendingChanges.date.slice(0, 4),
+            event.pendingChanges.date.slice(5, 7) - 1,
+            event.pendingChanges.date.slice(8, 10),
+            event.pendingChanges.endTime.slice(0, 2),
+            event.pendingChanges.endTime.slice(3, 5),
+            0
+          )
       );
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
@@ -315,6 +490,7 @@ export default {
 </script>
 
 <style scoped>
+
 #container {
   width: 100%;
   height: 100%;

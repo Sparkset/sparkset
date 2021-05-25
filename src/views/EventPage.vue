@@ -27,7 +27,7 @@
             <ul>
               <li>
                 <a v-if="!editing" @click="editing = true">
-                  Time:
+                  Start Time:
                   {{
                     event.get("time")
                       ? event.get("time").toLocaleString("en-US", {
@@ -39,9 +39,11 @@
                         })
                       : undefined
                   }}
+                  
+  
                 </a>
                 <form v-else @submit.prevent="save">
-                  <p>New Time</p>
+                  <p>New Start Time</p>
                   <div class="field">
                     <input
                       type="date"
@@ -52,6 +54,35 @@
                   </div>
                   <div class="field">
                     <input type="time" v-model="pendingChanges.time" required />
+                  </div>
+                </form>
+              </li>
+            <li>
+                <a v-if="!editing" @click="editing = true">
+                  End Time:
+                  {{ 
+                    event.get("time")
+                      ? event.get("time").toLocaleString("en-US", {year: "numeric", month: "numeric", day: "numeric"})
+                      : undefined
+                  }}
+                  {{
+                    event.get("endTime")
+                      ? event.get("endTime").toLocaleString("en-US", {hour: "numeric", minute: "numeric" })
+                      : undefined
+                  }} 
+                </a>
+                <form v-else @submit.prevent="save">
+                  <p>New End Time</p>
+                  <div class="field">
+                    <input
+                      type="date"
+                      max="2099-12-31"
+                      v-model="pendingChanges.date"
+                      required
+                    />
+                  </div>
+                  <div class="field">
+                    <input type="time" v-model="pendingChanges.endTime" required />
                   </div>
                 </form>
               </li>
@@ -89,7 +120,7 @@
             </div> 
           </form>
           <div v-if="!editing" class="field">
-            <button id="deleteEvent" class="primary" @click="deleteEvent">
+            <button id="deleteEvent" class="primary" @click="deleteE">
               Delete
             </button>
             <button id="editButton" class="primary" @click="editing = true">
@@ -105,6 +136,8 @@
 <script>
 import AV from "leancloud-storage";
 import VueMarkdown from "vue-markdown";
+import {getEmail} from "../services/auth"; 
+import {updateEvent, deleteEvent} from "../services/graph";
 export default {
   name: "EventPage",
   components: {
@@ -118,15 +151,20 @@ export default {
       pendingChanges: {
         date: "",
         time: "",
+        endTime: "",
         notes: "",
         name: "",
-      }
+      },
+      calendarEmail: false
+      //eventSyncing: true 
+      // would be automatically t/f based on settings, not doing this rn tho
     };
   },
   created() {
     const vm = this;
+    vm.calendarEmail = getEmail();
     const eventQuery = new AV.Query("Event");
-    eventQuery
+    eventQuery            
       .notEqualTo("time", null)
       .include("client")
       .include("company")
@@ -141,6 +179,9 @@ export default {
         vm.pendingChanges.time = `${`0${event.get("time").getHours()}`.slice(
           -2
         )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`;
+        vm.pendingChanges.endTime = `${`0${event.get("endTime").getHours()}`.slice(
+          -2
+        )}:${`0${event.get("endTime").getMinutes()}`.slice(-2)}`;
         vm.pendingChanges.notes = event.get("notes");
         vm.pendingChanges.name = event.get("name");
       })
@@ -173,6 +214,17 @@ export default {
             0
           )
         )
+      .set(
+          "endTime",
+          new Date(
+            vm.pendingChanges.date.slice(0, 4),
+            vm.pendingChanges.date.slice(5, 7) - 1,
+            vm.pendingChanges.date.slice(8, 10),
+            vm.pendingChanges.endTime.slice(0, 2),
+            vm.pendingChanges.endTime.slice(3, 5),
+            0
+          )
+        )
       .set("notes",vm.pendingChanges.notes)
       .save()
       .then(() => {
@@ -181,20 +233,35 @@ export default {
       .catch(error => {
         alert(error);
       });
+      if (vm.calendarEmail) { //if signed in, do a sync delete
+          updateEvent(vm.event.get('syncId'), vm.pendingChanges.name, vm.pendingChanges.date, vm.pendingChanges.time, vm.pendingChanges.endTime, vm.pendingChanges.notes);
+      }
     }, 
-    deleteEvent() {
+    deleteE() { //here
       const vm = this;
       if (confirm(`Are you sure you want to delete the event?`)) {
-        vm.event
+        if (vm.calendarEmail) { //if signed in, do a sync delete
+          vm.syncDelete();
+        }
+        vm.event                
           .destroy()
           .catch(error => {
             alert(error);
-          });
+          }); 
       }
       window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events"); 
 
+    },
+    syncDelete() {
+      // if (vm.calendarEmail == false) {       //only needed if they want to be reminded to sign in
+      //   const response = await signIn();
+      //   vm.calendarEmail = response;
+      // }
+      //here is where the magic happens
+      const vm = this;
+      deleteEvent(vm.event.get('syncId'));
     }
-  }
+  } 
 }
 </script>
 

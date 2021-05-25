@@ -61,19 +61,33 @@ AV.Cloud.afterSave("Client", request => {
       new AV.Object("Event")
         .set("client", request.object)
         .set("name", event.name)
-        .set("recursIn", event.recursIn)
-        .set(
-          "time",
-          new Date(
-            new Date(
-              new Date().setDate(
-                new Date().getDate() +
-                  (event.recursIn || 0) +
-                  (event.delay || 0)
-              )
-            ).setSeconds(0)
-          )
-        )
+        .set("recursIn", event.recursIn) 
+        // .set(
+        //   "time",
+        //   new Date(
+        //     new Date(
+        //       new Date().setDate(
+        //         new Date().getDate() +
+        //           (event.recursIn || 0) +
+        //           (event.delay || 0)
+        //       )
+        //     ).setSeconds(0)
+        //   )
+        // )
+        // .set(
+        //   "endTime",
+        //   new Date(
+        //     new Date(
+        //       new Date(
+        //         new Date().setDate(
+        //           new Date().getDate() +
+        //             (event.recursIn || 0) +
+        //             (event.delay || 0)
+        //         )
+        //       ).setSeconds(0)
+        //     ).setHours(new Date().getHours()+1)
+        //   )
+        // )
     )
-  );
+  ); 
 });

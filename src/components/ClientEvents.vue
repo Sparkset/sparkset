@@ -167,6 +167,17 @@ export default {
           event.pendingChanges.time.slice(3, 5),
           0
         )
+      )
+      .set(
+          "endTime",
+          new Date(
+            event.pendingChanges.date.slice(0, 4),
+            event.pendingChanges.date.slice(5, 7) - 1,
+            event.pendingChanges.date.slice(8, 10),
+            event.pendingChanges.endTime.slice(0, 2),
+            event.pendingChanges.endTime.slice(3, 5),
+            0
+          )
       );
       event.lastEvent.unset("recursIn");
       AV.Object.saveAll([event.event, event.lastEvent])
@@ -193,9 +204,23 @@ export default {
             0
           )
         )
+        .set(
+          "endTime",
+          new Date(
+            newEvent.date.slice(0, 4),
+            newEvent.date.slice(5, 7) - 1,
+            newEvent.date.slice(8, 10),
+            newEvent.endTime.slice(0, 2),
+            newEvent.endTime.slice(3, 5),
+            0
+          )
+        )
         .set("notes",newEvent.notes);
       if (newEvent.recurringEvent) {
         event.set("recursIn", newEvent.daysBetween);
+      }
+      if (newEvent.id) {                    //added this 
+        event.set("syncId", newEvent.id);
       }
       event
         .save()

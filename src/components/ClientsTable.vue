@@ -46,31 +46,31 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in sortedClients" :key="client.id">
-        <td>
-          <ClientCombo :client="client" />
-        </td>
-        <td v-if="showCompany">
-          <span v-if= "client.get('company') == null">
-          </span>
-          <span v-else>
-            <router-link :to="`/company/${client.get('company').id}`">
-              <CompanyCombo :company="client.get('company')" />
-            </router-link>
-          </span>
-        </td>
-        <td>{{ client.get("jobTitle") }}</td>
-        <td>
-          <a :href="`mailto:${client.get('email')}`">
-            {{ client.get("email") }}
-          </a>
-        </td>
-        <td>
-          <a :href="`tel:${client.get('cellPhone')}`">
-            {{ client.get("cellPhone") }}
-          </a>
-        </td>
-      </tr>
+        <tr v-for="client in sortedClients" :key="client.id">
+            <td id="clickable">
+                <ClientCombo :client="client" />
+            </td>
+            <td id="clickable" v-if="showCompany">
+                <span v-if="client.get('company') == null">
+                </span>
+                <span v-else>
+                    <router-link :to="`/company/${client.get('company').id}`">
+                        <CompanyCombo :company="client.get('company')" />
+                    </router-link>
+                </span>
+            </td>
+            <td>{{ client.get("jobTitle") }}</td>
+            <td id="clickable">
+                <a :href="`mailto:${client.get('email')}`">
+                    {{ client.get("email") }}
+                </a>
+            </td>
+            <td id="clickable">
+                <a :href="`tel:${client.get('cellPhone')}`">
+                    {{ client.get("cellPhone") }}
+                </a>
+            </td>
+        </tr>
     </tbody>
   </table>
 </template>
@@ -79,6 +79,7 @@
 import ThWithSort from "@/components/ThWithSort.vue";
 import ClientCombo from "@/components/ClientCombo.vue";
 import CompanyCombo from "@/components/CompanyCombo.vue";
+//import fetchClients from "@/views/ClientsPage.vue";
 export default {
   name: "ClientsTable",
   components: {
@@ -88,7 +89,8 @@ export default {
   },
   props: {
     clients: Array,
-    showCompany: Boolean
+    showCompany: Boolean,
+    fetchClients: Function
   },
   data() {
     return {
@@ -122,4 +124,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+    #clickable {
+        color: #605e5e;
+    }
+
+    #clickable:hover {
+        color: #36d5d8;
+    }
+</style>

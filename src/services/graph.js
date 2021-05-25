@@ -13,7 +13,6 @@ const authProvider = {
 // Initialize the Graph client
 const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
-
 export async function getUser() // only used in auth.js
 {
     return await graphClient
@@ -27,58 +26,103 @@ export async function getUser() // only used in auth.js
 // {
 //     const user = JSON.parse(window.localStorage.getItem('graphUser'));
   
-    // Convert user's Windows time zone ("Pacific Standard Time")
-    // to IANA format ("America/Los_Angeles")
-    // Moment needs IANA format
-    //let ianaTimeZone = momentT.getIanaFromWindows(user.mailboxSettings.timeZone);
-    //console.log(`Converted: ${ianaTimeZone}`);
+//     // Convert user's Windows time zone ("Pacific Standard Time")
+//     // to IANA format ("America/Los_Angeles")
+//     // Moment needs IANA format
+//     // let ianaTimeZone = momentT.getIanaFromWindows(user.mailboxSettings.timeZone);
+//     // console.log(`Converted: ${ianaTimeZone}`);
   
-    /*
-    // Configure a calendar view for the current week
-    // Get midnight on the start of the current week in the user's timezone,
-    // but in UTC. For example, for Pacific Standard Time, the time value would be
-    // 07:00:00Z
-    let startOfWeek = moment.tz('America/Los_Angeles').startOf('week').utc();
-    // Set end of the view to 7 days after start of week
-    let endOfWeek = moment(startOfWeek).add(7, 'day');
+//     /*
+//     // Configure a calendar view for the current week
+//     // Get midnight on the start of the current week in the user's timezone,
+//     // but in UTC. For example, for Pacific Standard Time, the time value would be
+//     // 07:00:00Z
+//     let startOfWeek = moment.tz('America/Los_Angeles').startOf('week').utc();
+//     // Set end of the view to 7 days after start of week
+//     let endOfWeek = moment(startOfWeek).add(7, 'day');
   
-    */
+//     */
 
-   // try {
-      // GET /me/calendarview?startDateTime=''&endDateTime=''
-      // &$select=subject,organizer,start,end
-      // &$orderby=start/dateTime
-      // &$top=50
+//    try {
+//       // GET /me/calendarview?startDateTime=''&endDateTime=''
+//       // &$select=subject,organizer,start,end
+//       // &$orderby=start/dateTime
+//       // &$top=50
 
-      /* currently not using in test
-      let response = await graphClient
-        .api('/me/calendarview')
-        // Set the Prefer=outlook.timezone header so date/times are in
-        // user's preferred time zone
-        .header("Prefer", `outlook.timezone="${user.mailboxSettings.timeZone}"`)
-        // Add the startDateTime and endDateTime query parameters
-        .query({ startDateTime: startOfWeek.format(), endDateTime: endOfWeek.format() })
-        // Select just the fields we are interested in
-        .select('subject,organizer,start,end')
-        // Sort the results by start, earliest first
-        .orderby('start/dateTime')
-        // Maximum 50 events in response
-        .top(50)
-        .get();
-      */
+//       let response = await graphClient
+//         .api('/me/calendarview')
+//         // Set the Prefer=outlook.timezone header so date/times are in
+//         // user's preferred time zone
+//         .header("Prefer", `outlook.timezone="${user.mailboxSettings.timeZone}"`)
+//         // Add the startDateTime and endDateTime query parameters
+//         .query({ startDateTime: startOfWeek.format(), endDateTime: endOfWeek.format() })
+//         // Select just the fields we are interested in
+//         .select('id')
+//         // Sort the results by start, earliest first
+//         //.orderby('start/dateTime')
+//         // Maximum 50 events in response
+//         .top(50)
+//         .get();
+      
      
-      //updatePage(Views.calendar, response.value);             // update in vue component
-   // } catch (error) {
-   //     console.log('Error getting events'); //we added this
-      //updatePage(Views.error, {                               // update in vue component
-      //  message: 'Error getting events',
-      //  debug: error
-      //});
-  //  }
+//       updatePage(Views.calendar, response.value);             // update in vue component
+//    } 
+//    catch (error) {
+//        console.log('Error getting events'); //we added this
+//       // updatePage(Views.error, {                               // update in vue component
+//       //  message: 'Error getting events',
+//       //  debug: error
+//       // });
+//    }
     
-//};
+// };
 
-export async function createNewEvent(name, date, startTime, endTime, notes) //creates new event. click to test
+export async function updateEvent(id, name, date, startTime, endTime, notes)
+{
+    console.log(endTime);
+    const user = JSON.parse(window.localStorage.getItem('graphUser')); 
+    const start = date + "T" + startTime;  
+    const end = date + "T" + endTime;
+    const url = '/me/events/' + id;
+    const event = {
+      subject: name,
+      start: {
+        dateTime: start,
+        timeZone: user.mailboxSettings.timeZone
+      },
+      end: {
+        dateTime: end,
+        timeZone: user.mailboxSettings.timeZone
+      },
+      body: {
+        contentType: 'text',
+        content: notes
+      }
+    };
+    try {
+      return await graphClient
+        .api(url)
+        .update(event);
+    }
+    catch (error) {
+      console.log("something went wrong");  //something else here porb
+    }
+}
+
+export async function deleteEvent(id) 
+{
+    const url = '/me/events/' + id;
+    try {
+      return await graphClient
+        .api(url)
+        .delete();
+    } 
+    catch (error) {
+      console.log("something went wrong");  //something else here porb
+    }
+}
+
+export async function createNewEvent(name, date, startTime, endTime, notes, recurring = null) //creates new event. click to test
 {
     // Get the user's input in this function 
     // events on calendar for employees, don't need attendees
@@ -98,16 +142,6 @@ export async function createNewEvent(name, date, startTime, endTime, notes) //cr
     const end = date + "T" + endTime;
     const body = notes;
 
-    /*   THIS IS ERROR CATCHING - MAY NOT NEED THIS
-    // Require at least subject, start, and end
-    if (!subject || !start || !end) {                       // update in vue component
-      updatePage(Views.error, {                     
-        message: 'Please provide a subject, start, and end.'
-      });
-      return;
-    }
-    */
-
     // Build the JSON payload of the event
     let newEvent = {
       subject: subject,
@@ -121,26 +155,25 @@ export async function createNewEvent(name, date, startTime, endTime, notes) //cr
       }
     };
 
-    if (body)
-    {
+    if (body) {
       newEvent.body = {
         contentType: 'text',
         content: body
       };
     }
+    if (recurring) {
+      newEvent.recurrence = recurring;
+    }
   
     try {
       // POST the JSON to the /me/events endpoint
       // console.log("makes it here helllooooo");
-      await graphClient
+      return await graphClient
         .api('/me/events')
         .post(newEvent);
   
-    } catch (error) {
-        // console.log("Error creating event");
-      //updatePage(Views.error, {                              // update in vue component
-      //  message: 'Error creating event',
-      //  debug: error
-      //});
+    } 
+    catch (error) {
+      return false; //donn't think this is needed
     }
 };

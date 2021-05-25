@@ -32,14 +32,14 @@
     </thead>
     <tbody>
       <tr v-for="event in sortedEvents" :key="event.event.id">
-        <td v-if="showClient">
+        <td id="clickable" v-if="showClient">
           <CompanyCombo
             v-if="event.event.get('company')"
             :company="event.event.get('company')"
           />
           <ClientCombo v-else :client="event.event.get('client')" />
         </td>
-        <td>
+        <td id="clickable">
           <router-link :to="`/event/${event.event.id}`">
             {{ event.event.get("name") }}
             <font-awesome-icon
@@ -48,7 +48,7 @@
             />
           </router-link>
         </td>
-        <td>
+        <td id="clickable">
           <form v-if="event.editing" @submit.prevent="update(event)">
             <div class="field">
               <input
@@ -58,7 +58,7 @@
                 required
               />
             </div>
-            <div class="field">
+            <div id="clickable" class="field">
               <input type="time" v-model="event.pendingChanges.time" required />
             </div>
             <div class="field">
@@ -79,7 +79,7 @@
             }}
           </a>
         </td>
-        <td>
+        <td id="clickable">
           <button v-if="!event.event.id" @click="dismiss(event)">
             Dismiss
           </button>
@@ -125,6 +125,7 @@ export default {
       vm.sortOrder = vm.sortedBy === field ? -vm.sortOrder : 1;
       vm.sortedBy = field;
     },
+
     update(event) {
       const vm = this;
       event.event.set(
@@ -137,6 +138,16 @@ export default {
           event.pendingChanges.time.slice(3, 5),
           0
         )
+      ).set(
+          "endTime",
+          new Date(
+            event.pendingChanges.date.slice(0, 4),
+            event.pendingChanges.date.slice(5, 7) - 1,
+            event.pendingChanges.date.slice(8, 10),
+            event.pendingChanges.endTime.slice(0, 2),
+            event.pendingChanges.endTime.slice(3, 5),
+            0
+          )
       );
       if (event.lastEvent) {
         event.lastEvent.unset("recursIn");
@@ -263,4 +274,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+    #clickable {
+        color: #605e5e;
+    }
+
+    #clickable:hover {
+        color: #36d5d8;
+    }
+</style>

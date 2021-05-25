@@ -202,13 +202,21 @@ export default {
     },
     signOutB() {
       const vm = this;
-      signOut();
       vm.calendarEmail = false;
+      AV.User.current()
+        .set("calendarAccSignedIn", false)
+        .save();
+      signOut();
+      //update boolean in leancloud
     },
     async signInB() {
       const vm = this;
       const response = await signIn();
       vm.calendarEmail = response;
+      AV.User.current()
+        .set("calendarAccSignedIn", true)
+        .save();
+      //update boolean in leancloud
     },
   },
 };
