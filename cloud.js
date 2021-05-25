@@ -74,6 +74,8 @@ AV.Cloud.afterSave("Client", request => {
             ).setSeconds(0)
           )
         )
+        .save()
+        .set("endTime", event.get("time").setHours(event.get("time").getHours()+1))
     )
   );
 });

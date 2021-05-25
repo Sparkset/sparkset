@@ -122,7 +122,7 @@ export async function deleteEvent(id)
     }
 }
 
-export async function createNewEvent(name, date, startTime, endTime, notes) //creates new event. click to test
+export async function createNewEvent(name, date, startTime, endTime, notes, recurring = null) //creates new event. click to test
 {
     // Get the user's input in this function 
     // events on calendar for employees, don't need attendees
@@ -155,12 +155,14 @@ export async function createNewEvent(name, date, startTime, endTime, notes) //cr
       }
     };
 
-    if (body)
-    {
+    if (body) {
       newEvent.body = {
         contentType: 'text',
         content: body
       };
+    }
+    if (recurring) {
+      newEvent.recurrence = recurring;
     }
   
     try {

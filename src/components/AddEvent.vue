@@ -178,7 +178,10 @@ export default {
         vm.calendarEmail = response;
       }
       //call recurringsync using conditional here
+      
       if (vm.newEvent.recurringEventType != "Never") {
+      //   let recurr = [type, day, end repeat]
+      // { pattern: { type: "weekly", interval: 1, daysOfWeek: [ "Monday" ] }, range: {type: "endDate",startDate: "2017-09-04",endDate: "2017-12-31"};
         vm.recurringSync();
       }
       const eventName = vm.clientName + " - " + vm.newEvent.name;

@@ -193,6 +193,17 @@ export default {
             0
           )
         )
+        .set(
+          "endTime",
+          new Date(
+            newEvent.date.slice(0, 4),
+            newEvent.date.slice(5, 7) - 1,
+            newEvent.date.slice(8, 10),
+            newEvent.endTime.slice(0, 2),
+            newEvent.endTime.slice(3, 5),
+            0
+          )
+        )
         .set("notes",newEvent.notes);
       if (newEvent.recurringEvent) {
         event.set("recursIn", newEvent.daysBetween);
