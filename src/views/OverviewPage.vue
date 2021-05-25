@@ -304,7 +304,7 @@ export default {
         })
         
         .catch(error => {
-          console.log("goes wrong here");
+          // console.log("goes wrong here");
           alert(error);
         });
       //console.log("upcoming events " +  vm.upcomingEvents[0][0]);
@@ -411,7 +411,7 @@ export default {
               }
             }
             catch (error) {
-              console.log("event with deleted client");
+              // console.log("event with deleted client");
             }
           });
           
