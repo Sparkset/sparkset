@@ -45,7 +45,7 @@
     </div>
     <div class="field field--half" id="repeatEnd" :key="newEvent.recurringEventType">
       <label v-if="newEvent.recurringEventType != 'Never'"> 
-        <span>End Repeat</span> 
+        <span class="required-field">End Repeat</span> 
         <input type="date" max="2099-12-31" v-model="newEvent.endRepeatDate" @click="changeRecurringStatus" required />
       </label> 
     </div>
@@ -97,7 +97,7 @@ export default {
         recurringEvent: false,
         daysBetween: 1,
         recurringEventType: "", // takes in "Daily", "Weekly", "Monthly", "Yearly"
-        endRepeatDate: "2099-12-31",
+        endRepeatDate: "",
         syncing: true,
         id: ""
       }, 
