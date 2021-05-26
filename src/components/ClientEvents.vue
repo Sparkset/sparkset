@@ -109,6 +109,11 @@ export default {
                 lastEvent.get("time").getDate() + lastEvent.get("recursIn")
               )
             );
+            const rawEndTime = new Date(
+              new Date(lastEvent.get("endTime")).setDate(
+                lastEvent.get("endTime").getDate() + lastEvent.get("recursIn")
+              )
+            );
             return {
               event: new AV.Object("Event")
                 .set("name", lastEvent.get("name"))
@@ -120,7 +125,10 @@ export default {
                   1}`.slice(-2)}-${`0${rawTime.getDate()}`.slice(-2)}`,
                 time: `${`0${rawTime.getHours()}`.slice(
                   -2
-                )}:${`0${rawTime.getMinutes()}`.slice(-2)}`
+                )}:${`0${rawEndTime.getMinutes()}`.slice(-2)}`,
+                endTime: `${`0${rawEndTime.getHours()}`.slice(
+                  -2
+                )}:${`0${rawEndTime.getMinutes()}`.slice(-2)}`
               },
               lastEvent
             };
