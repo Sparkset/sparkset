@@ -4,33 +4,38 @@
     <div class="column column">
       <div class="card">
         <section>
-          <ul class="tabs">
-            <li>
-              <router-link :to="`/client/${clientRoute}`">
-                <span>Profile</span>
-              </router-link>
-            </li>
-            <li>
-              <router-link :to="`/client/${clientRoute}/events`">
-                <span>Events</span>
-              </router-link>
-            </li>
-            <li>
-              <router-link :to="`/client/${clientRoute}/preferences`">
-                <span>Preferences</span>
-              </router-link>
-            </li>
-            <li>
-              <router-link :to="`/client/${clientRoute}/files`">
-                <span>Files</span>
-              </router-link>
-            </li>
-            <li>
-              <router-link :to="`/client/${clientRoute}/clientNotes`">
-                <span>Client Notes</span>
-              </router-link>
-            </li>
-          </ul>
+            <ul class="tabs">
+                <li>
+                    <router-link :to="`${routerLink}`">
+                        <span>Back</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :to="`/client/${clientRoute}`">
+                        <span>Profile</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :to="`/client/${clientRoute}/events`">
+                        <span>Events</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :to="`/client/${clientRoute}/preferences`">
+                        <span>Preferences</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :to="`/client/${clientRoute}/files`">
+                        <span>Files</span>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :to="`/client/${clientRoute}/clientNotes`">
+                        <span>Client Notes</span>
+                    </router-link>
+                </li>
+            </ul>
         </section>
         <router-view :key="$route.path"></router-view>
       </div>
@@ -209,6 +214,7 @@ export default {
       event: new AV.Object("Event"),
       client: new AV.Object("Client"),
       clientRoute: "6093265e9b9be32e4a492af4",//right now this is Alexa Anteater's id. we need to get this as a param.
+      routerLink: "/client/6093265e9b9be32e4a492af4/preferences",//for back button
       editing:false,
       pendingChanges: {
         date: "",
