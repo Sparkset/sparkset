@@ -22,61 +22,6 @@ export async function getUser() // only used in auth.js
       .get();
 };
 
-// export async function getEvents()  // used to retrieve events from calendar, using leancloud for this instead
-// {
-//     const user = JSON.parse(window.localStorage.getItem('graphUser'));
-  
-//     // Convert user's Windows time zone ("Pacific Standard Time")
-//     // to IANA format ("America/Los_Angeles")
-//     // Moment needs IANA format
-//     // let ianaTimeZone = momentT.getIanaFromWindows(user.mailboxSettings.timeZone);
-//     // console.log(`Converted: ${ianaTimeZone}`);
-  
-//     /*
-//     // Configure a calendar view for the current week
-//     // Get midnight on the start of the current week in the user's timezone,
-//     // but in UTC. For example, for Pacific Standard Time, the time value would be
-//     // 07:00:00Z
-//     let startOfWeek = moment.tz('America/Los_Angeles').startOf('week').utc();
-//     // Set end of the view to 7 days after start of week
-//     let endOfWeek = moment(startOfWeek).add(7, 'day');
-  
-//     */
-
-//    try {
-//       // GET /me/calendarview?startDateTime=''&endDateTime=''
-//       // &$select=subject,organizer,start,end
-//       // &$orderby=start/dateTime
-//       // &$top=50
-
-//       let response = await graphClient
-//         .api('/me/calendarview')
-//         // Set the Prefer=outlook.timezone header so date/times are in
-//         // user's preferred time zone
-//         .header("Prefer", `outlook.timezone="${user.mailboxSettings.timeZone}"`)
-//         // Add the startDateTime and endDateTime query parameters
-//         .query({ startDateTime: startOfWeek.format(), endDateTime: endOfWeek.format() })
-//         // Select just the fields we are interested in
-//         .select('id')
-//         // Sort the results by start, earliest first
-//         //.orderby('start/dateTime')
-//         // Maximum 50 events in response
-//         .top(50)
-//         .get();
-      
-     
-//       updatePage(Views.calendar, response.value);             // update in vue component
-//    } 
-//    catch (error) {
-//        console.log('Error getting events'); //we added this
-//       // updatePage(Views.error, {                               // update in vue component
-//       //  message: 'Error getting events',
-//       //  debug: error
-//       // });
-//    }
-    
-// };
-
 export async function updateEvent(id, name, date, startTime, endTime, notes)
 {
     console.log(endTime);
@@ -124,19 +69,12 @@ export async function deleteEvent(id)
 
 export async function createNewEvent(name, date, startTime, endTime, notes, recurring = null) //creates new event. click to test
 {
-    // Get the user's input in this function 
-    // events on calendar for employees, don't need attendees
-    // add end time at later date per Ted
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
-    // console.log("name: " + name);
-    // console.log("date: " + date);
-    // console.log("startTime: " + startTime);
-    // console.log("endTime: " + endTime);
-    // console.log("notes: " + notes);
     // name = string 
     // date = "2021-05-06"
     // time = "10:00" (24 hour clock) 
     // notes = string
+    // { pattern: { type: "weekly", interval: 1, daysOfWeek: [ "Monday" ] }, range: {type: "endDate",startDate: "2017-09-04",endDate: "2017-12-31"};
     const subject = name;
     const start = date + "T" + startTime;
     const end = date + "T" + endTime;
@@ -162,18 +100,28 @@ export async function createNewEvent(name, date, startTime, endTime, notes, recu
       };
     }
     if (recurring) {
-      newEvent.recurrence = recurring;
+      newEvent.recurrence = { 
+        pattern: {
+          type: recurring[0],
+          interval: 1, 
+          daysOfWeek: [recurring[1]]
+        },
+        range: {
+          type: "endDate", 
+          startDate: date,
+          endDate: recurring[2]
+        }
+      };
     }
   
     try {
       // POST the JSON to the /me/events endpoint
-      // console.log("makes it here helllooooo");
       return await graphClient
         .api('/me/events')
         .post(newEvent);
   
     } 
     catch (error) {
-      return false; //donn't think this is needed
+      return false; //don't think this is needed
     }
 };
