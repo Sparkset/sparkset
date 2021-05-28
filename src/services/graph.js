@@ -67,17 +67,29 @@ export async function deleteEvent(id)
     }
 }
 
-export async function createNewEvent(name, date, startTime, endTime, notes, recurring = null) //creates new event. click to test
+export async function createNewEvent(name, startTime, endTime, notes, recurring = null) //creates new event. click to test
 {
-    const user = JSON.parse(window.localStorage.getItem('graphUser')); 
+    //getting startTime, endTime, recurring[2] to be date objects
+
     // name = string 
     // date = "2021-05-06"
     // time = "10:00" (24 hour clock) 
     // notes = string
     // { pattern: { type: "weekly", interval: 1, daysOfWeek: [ "Monday" ] }, range: {type: "endDate",startDate: "2017-09-04",endDate: "2017-12-31"};
+    // const start = date + "T" + startTime;
+    // const end = date + "T" + endTime;
+    const user = JSON.parse(window.localStorage.getItem('graphUser')); 
+    const start = startTime.getFullYear().toString() + "-" 
+                    + (startTime.getMonth() + 1).toString() + "-" 
+                    + startTime.getDate().toString() + "T" 
+                    + startTime.getHours().toString() + ":" 
+                    + startTime.getMintues().toString();
+    const end = endTime.getFullYear().toString() + "-" 
+                    + (endTime.getMonth() + 1).toString() + "-" 
+                    + endTime.getDate().toString() + "T" 
+                    + endTime.getHours().toString() + ":" 
+                    + endTime.getMintues().toString();
     const subject = name;
-    const start = date + "T" + startTime;
-    const end = date + "T" + endTime;
     const body = notes;
 
     // Build the JSON payload of the event
@@ -100,16 +112,23 @@ export async function createNewEvent(name, date, startTime, endTime, notes, recu
       };
     }
     if (recurring) {
+      //adjust recurring[2]
+      const recur = recurring[2].getFullYear().toString() + "-" 
+                    + (recurring[2].getMonth() + 1).toString() + "-" 
+                    + recurring[2].getDate().toString();
+      const date = startTime.getFullYear().toString() + "-" 
+                    + (startTime.getMonth() + 1).toString() + "-" 
+                    + startTime.getDate().toString();
       newEvent.recurrence = { 
         pattern: {
           type: recurring[0],
-          interval: 1, 
-          daysOfWeek: [recurring[1]]
+          interval: recurring[3],  
+          daysOfWeek: [recurring[1]]    // don't think this should work but check either way.  
         },
         range: {
           type: "endDate", 
-          startDate: date,
-          endDate: recurring[2]
+          startDate: date, //this
+          endDate: recur
         }
       };
     }

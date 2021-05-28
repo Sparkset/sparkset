@@ -170,18 +170,20 @@ export default {
       }
       //call recurringsync using conditional here
       const eventName = vm.clientName + " - " + vm.newEvent.name;
+      let startDate = new Date(vm.newEvent.date + "T" + vm.newEvent.time + ":00");
+      let endDate = new Date(vm.newEvent.date + "T" + vm.newEvent.endTime + ":00");
       let result = null;
-      if (vm.newEvent.recurringEventType != "Never") {  //here do some work 
+      if (vm.newEvent.recurringEventType != "Never") { 
         const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
-        let dateObj = new Date(vm.newEvent.date + "T" + vm.newEvent.time + ":00");
-        const daysOfWeek = days[dateObj.getDay()];
-        const type = vm.newEvent.recurringEventType.toLowerCase();
-        const recurr = [type, daysOfWeek, vm.newEvent.endRepeatDate];
-        //vm.recurringSync();
-        result = await createNewEvent(eventName, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes, recurr);
+        const type = {"Daily": "daily", "Weekly": "weekly", "Monthly": "absoluteMonthly", "Yearly":"absoluteYearly"};
+        const daysOfWeek = days[startDate.getDay()];
+        //const type = vm.newEvent.recurringEventType.toLowerCase();
+        let endRepeat = new Date(vm.newEvent.endRepeatDate + "T" + vm.newEvent.endTime + ":00");
+        const recurr = [type[vm.newEvent.recurringEventType], daysOfWeek, endRepeat, 1]; 
+        result = await createNewEvent(eventName, startDate, endDate, vm.newEvent.notes, recurr);
       }
       else {
-        result = await createNewEvent(eventName, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+        result = await createNewEvent(eventName, startDate, endDate, vm.newEvent.notes);
       }
       // saves event id from call to microsoft graph API
       if (result) {
