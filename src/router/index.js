@@ -142,11 +142,9 @@ const routes = [
           }
         ]
       },
-        {
-          name: 'event',
+      {
           path: "/event/:id",
-          component: () => import("../views/EventPage.vue"),
-        props: true
+          component: () => import("../views/EventPage.vue")
       },
       {
         path: "/notes",

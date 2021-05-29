@@ -1,70 +1,11 @@
 <template>
   <div>
-    <!--entire bar-->
-    <div class="column column">
-      <div class="card">
-        <section>
-            <ul class="tabs">
-                <li>
-                    <router-link :to="`${routerLink}`">
-                        <span>Back</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="`/client/${clientRoute}`">
-                        <span>Profile</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="`/client/${clientRoute}/events`">
-                        <span>Events</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="`/client/${clientRoute}/preferences`">
-                        <span>Preferences</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="`/client/${clientRoute}/files`">
-                        <span>Files</span>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="`/client/${clientRoute}/clientNotes`">
-                        <span>Client Notes</span>
-                    </router-link>
-                </li>
-            </ul>
-        </section>
-        <router-view :key="$route.path"></router-view>
+    <!--Back Button-->
+      <div class="column">
+          <div v-if="!editing" class="field">
+              <button class="primary" @click="back">Go Back</button>
+          </div>
       </div>
-    </div>
-    <!--just one button-->
-    <!--<div class="column column">
-        <div class="card">
-            <section>
-                <ul class="tabs">
-                    <li>
-                        <router-link :to="`/client/${$route.params.id}/events`">
-                            <span>Events</span>
-                        </router-link>
-                    </li>
-                </ul>
-            </section>
-            <button class="primary" @click="getRoute">
-                <router-link :to="`/client/${$route.params.id}/events`">
-                    <span>Back to Events</span>
-                </router-link>
-            </button>
-            <template v-if="!editing" class="field">
-                <button class="primary" @click="toggle">
-                    { { event.get("done") ? "Undone" : "Done" }}
-                </button>
-            </template>
-            <router-view :key="$route.path"></router-view>
-        </div>
-    </div>-->
     <!--start original form-->
     <div class="column">
       <div class="card">
@@ -328,6 +269,10 @@ export default {
       //here is where the magic happens
       const vm = this;
       deleteEvent(vm.event.get('syncId'));
+    },
+    back() {
+      const vm = this;
+      window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events");
     }
   } 
 }
