@@ -40,13 +40,11 @@
           <ClientCombo v-else :client="event.event.get('client')" />
         </td>
         <td id="clickable">
-          <router-link :to="`/event/${event.event.id}`">
-            {{ event.event.get("name") }}
-            <font-awesome-icon
-              v-if="event.event.get('company')"
-              :icon="['fas', 'building']"
-            />
-          </router-link>
+            <router-link :to="`/event/${event.event.id}`">
+                {{ event.event.get("name") }}
+                <font-awesome-icon v-if="event.event.get('company')"
+                                   :icon="['fas', 'building']" />
+            </router-link>
         </td>
         <td id="clickable">
           <form v-if="event.editing" @submit.prevent="update(event)">

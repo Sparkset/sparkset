@@ -1,5 +1,12 @@
 <template>
   <div>
+    <!--Back Button-->
+      <div class="column">
+          <div v-if="!editing" class="field">
+              <button class="primary" @click="back">Go Back</button>
+          </div>
+      </div>
+    <!--start original form-->
     <div class="column">
       <div class="card">
         <section class="fields">
@@ -147,6 +154,8 @@ export default {
     return {
       event: new AV.Object("Event"),
       client: new AV.Object("Client"),
+      clientRoute: "6093265e9b9be32e4a492af4",//right now this is Alexa Anteater's id. we need to get this as a param.
+      routerLink: "/client/6093265e9b9be32e4a492af4/preferences",//for back button
       editing:false,
       pendingChanges: {
         date: "",
@@ -273,6 +282,10 @@ export default {
         const result = await deleteEvent(id);
         console.log(result);
       }
+    },
+    back() {
+      const vm = this;
+      window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events");
     }
   } 
 }
