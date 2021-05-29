@@ -174,15 +174,18 @@ export default {
       let endDate = new Date(vm.newEvent.date + "T" + vm.newEvent.endTime + ":00");
       let result = null;
       if (vm.newEvent.recurringEventType != "Never") { 
+        console.log(" sync");
         const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
         const type = {"Daily": "daily", "Weekly": "weekly", "Monthly": "absoluteMonthly", "Yearly":"absoluteYearly"};
-        const daysOfWeek = days[startDate.getDay()];
-        //const type = vm.newEvent.recurringEventType.toLowerCase();
+        
+        const dayInput = (vm.newEvent.recurringEventType == "Daily" || vm.newEvent.recurringEventType == "Weekly") ? days[startDate.getDay()] : startDate.getDate();
+        console.log(dayInput);
         let endRepeat = new Date(vm.newEvent.endRepeatDate + "T" + vm.newEvent.endTime + ":00");
-        const recurr = [type[vm.newEvent.recurringEventType], daysOfWeek, endRepeat, 1]; 
+        const recurr = [type[vm.newEvent.recurringEventType], dayInput, endRepeat, 1]; 
         result = await createNewEvent(eventName, startDate, endDate, vm.newEvent.notes, recurr);
       }
       else {
+        console.log("not sync");
         result = await createNewEvent(eventName, startDate, endDate, vm.newEvent.notes);
       }
       // saves event id from call to microsoft graph API

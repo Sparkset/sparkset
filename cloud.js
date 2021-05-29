@@ -77,13 +77,11 @@ AV.Cloud.afterSave("Client", async request => {
     let result = null;
     events.forEach(async event => {    // remember delay is part of start date/end/recurr!!!!, also special case 60
       const eventName = clientName + " - " + event.name;
-      //let startDate = new Date(vm.newEvent.date + "T" + vm.newEvent.time + ":00"); //change
       let startDate = new Date(
                         new Date(
                           new Date().setDate(new Date().getDate() + (event.delay || 0)) //are these kept????
                         ).setSeconds(0)
                       );
-      //let endDate = new Date(vm.newEvent.date + "T" + vm.newEvent.endTime + ":00"); //change
       let endDate = new Date( 
                       new Date( 
                         new Date( 
@@ -92,8 +90,7 @@ AV.Cloud.afterSave("Client", async request => {
                       ).setHours(new Date().getHours()+1)
                     );
       if (event.recursIn) {  //  make sure to test this. double check this works and doesn't break
-        const daysOfWeek = days[startDate.getDay()];
-        // let endRepeat = new Date(vm.newEvent.endRepeatDate + "T" + vm.newEvent.endTime + ":00"); //change
+        const dayInput = (vm.newEvent.recurringEventType == "Daily" || vm.newEvent.recurringEventType == "Weekly") ? days[startDate.getDay()] : startDate.getDate();
         let endRepeat = new Date(
                           new Date( 
                             new Date( 
@@ -101,9 +98,9 @@ AV.Cloud.afterSave("Client", async request => {
                                 new Date().setDate(new Date().getDate() + (event.delay || 0))
                               ).setSeconds(0) 
                             ).setHours(new Date().getHours()+1)
-                          ).setFullYear(new Date().getFullYear()+1)
+                          ).setFullYear(new Date().getFullYear()+2)
                         );
-        const recurr = [type[event.recursIn], daysOfWeek, endRepeat, 1]; //let's think about endREpeatDAte: set 1 year automatically
+        const recurr = [type[event.recursIn], dayInput, endRepeat, 1]; //let's think about endREpeatDAte: set 2 year automatically
         if (event.recursIn == 60) {
           recurr[3] = 2; //  make sure to test this. not sure if this will work 
         }
