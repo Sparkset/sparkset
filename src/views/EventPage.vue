@@ -3,7 +3,7 @@
     <!--Back Button-->
       <div class="column">
           <div v-if="!editing" class="field">
-              <button class="primary" @click="back">Go Back</button>
+              <button class="primary" @click="back">Back to Events</button>
           </div>
       </div>
     <!--start original form-->
