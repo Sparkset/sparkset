@@ -1,5 +1,12 @@
 <template>
   <div>
+    <!--Back Button-->
+      <div id="top">
+          <div v-if="!editing" class="field" id="back">
+              <button class="primary" @click="back">Back to Events</button>
+          </div>
+      </div>
+    <!--start original form-->
     <div class="column">
       <div class="card">
         <section class="fields">
@@ -136,7 +143,7 @@
 <script>
 import AV from "leancloud-storage";
 import VueMarkdown from "vue-markdown";
-import {getEmail} from "../services/auth"; 
+import {getEmail, signIn} from "../services/auth"; 
 import {updateEvent, deleteEvent} from "../services/graph";
 export default {
   name: "EventPage",
@@ -147,6 +154,8 @@ export default {
     return {
       event: new AV.Object("Event"),
       client: new AV.Object("Client"),
+      clientRoute: "6093265e9b9be32e4a492af4",//right now this is Alexa Anteater's id. we need to get this as a param.
+      routerLink: "/client/6093265e9b9be32e4a492af4/preferences",//for back button
       editing:false,
       pendingChanges: {
         date: "",
@@ -155,7 +164,8 @@ export default {
         notes: "",
         name: "",
       },
-      calendarEmail: false
+      calendarEmail: false,
+      clientName: ""
       //eventSyncing: true 
       // would be automatically t/f based on settings, not doing this rn tho
     };
@@ -171,6 +181,7 @@ export default {
       .get(vm.$route.params.id)
       .then(event => {
         vm.event = event;
+        vm.clientName = event.get("client").get("fullName");
         vm.pendingChanges.date = `${event
           .get("time")
           .getFullYear()}-${`0${event.get("time").getMonth() + 1}`.slice(
@@ -234,16 +245,17 @@ export default {
         alert(error);
       });
       if (vm.calendarEmail) { //if signed in, do a sync delete
-          updateEvent(vm.event.get('syncId'), vm.pendingChanges.name, vm.pendingChanges.date, vm.pendingChanges.time, vm.pendingChanges.endTime, vm.pendingChanges.notes);
+        const eventName = vm.clientName + " - " + vm.pendingChanges.name;
+        updateEvent(vm.event.get('syncId'), eventName, vm.pendingChanges.date, vm.pendingChanges.time, vm.pendingChanges.endTime, vm.pendingChanges.notes);
       }
     }, 
-    deleteE() { //here
+    async deleteE() { //here
       const vm = this;
       if (confirm(`Are you sure you want to delete the event?`)) {
         if (vm.calendarEmail) { //if signed in, do a sync delete
-          vm.syncDelete();
+          await vm.syncDelete(); //sometimes this fails
         }
-        vm.event                
+        await vm.event                
           .destroy()
           .catch(error => {
             alert(error);
@@ -252,14 +264,28 @@ export default {
       window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events"); 
 
     },
-    syncDelete() {
+    async syncDelete() {
       // if (vm.calendarEmail == false) {       //only needed if they want to be reminded to sign in
       //   const response = await signIn();
       //   vm.calendarEmail = response;
       // }
       //here is where the magic happens
       const vm = this;
-      deleteEvent(vm.event.get('syncId'));
+      if (vm.calendarEmail == false) {
+        //log in first 
+        const response = await signIn();
+        vm.calendarEmail = response;
+      }
+      const id = vm.event.get('syncId');
+      if (id) {
+        console.log(id);
+        const result = await deleteEvent(id);
+        console.log(result);
+      }
+    },
+    back() {
+      const vm = this;
+      window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events");
     }
   } 
 }
@@ -272,6 +298,7 @@ h1 > svg {
 
 #statusButton {
   float: right;
+  margin-bottom: 8px;
 }
 
 #editButton {
@@ -284,5 +311,14 @@ h1 > svg {
   float: right;
 }
 
+#top {
+  margin-top: 25px
+}
+.column {
+  margin-top: 25px
+}
+#back {
+  margin: 0
+}
 </style>
 
