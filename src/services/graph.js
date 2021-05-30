@@ -76,9 +76,7 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
 
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = (new Date(startTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
-    console.log(start);
     const end = (new Date(endTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
-    console.log(end);
     const subject = name;
     const body = notes;
 
@@ -127,7 +125,6 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
         newEvent.recurrence.pattern.month = startTime.getMonth() + 1;
       }
     }
-    console.log(newEvent);
     try {
       // POST the JSON to the /me/events endpoint
       return await graphClient
@@ -136,7 +133,6 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
   
     } 
     catch (error) {
-      console.log(error);
       return false; //don't think this is needed
     }
 };
