@@ -45,7 +45,7 @@
     </div>
     <div class="field field--half" id="repeatEnd" :key="newEvent.recurringEventType">
       <label v-if="newEvent.recurringEventType != 'Never'"> 
-        <span>End Repeat</span> 
+        <span class="required-field">End Repeat</span> 
         <input type="date" max="2099-12-31" v-model="newEvent.endRepeatDate" @click="changeRecurringStatus" required />
       </label> 
     </div>
@@ -97,7 +97,7 @@ export default {
         recurringEvent: false,
         daysBetween: 1,
         recurringEventType: "", // takes in "Daily", "Weekly", "Monthly", "Yearly"
-        endRepeatDate: "2099-12-31",
+        endRepeatDate: "",
         syncing: true,
         id: ""
       }, 
@@ -110,9 +110,6 @@ export default {
     vm.calendarEmail = getEmail();
     vm.newEvent.recurringEventType = "Never";
     vm.fetchClientName();
-    // vm.client = client;
-    // console.log(client);
-    
   },
   methods: {
     fetchClientName() {
@@ -128,12 +125,11 @@ export default {
       const vm = this;
       //console.log("in createEvent");//debugging press "shift + ctrl + J" to see console
       if (vm.newEvent.syncing) {
-        //console.log("calling sync from createEvent");//debugging
         await vm.sync();
       }
       vm.$emit("create-event", vm.newEvent);
     },
-    changeRecurringEvent(e) { //we won't end up needing this
+    changeRecurringEvent(e) { 
       const vm = this;
       vm.newEvent.recurringEvent = e.value;
     },
@@ -150,24 +146,19 @@ export default {
       if (vm.newEvent.recurringEventType == "Daily") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 1;
-        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
       else if (vm.newEvent.recurringEventType == "Weekly") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 7;
-        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
       else if (vm.newEvent.recurringEventType == "Monthly") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 30;
-        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
       else if (vm.newEvent.recurringEventType == "Yearly") {
         vm.newEvent.recurringEvent = true; 
         vm.newEvent.daysBetween = 365;
-        //console.log("in changeRecurringStatus, daysBetween = " + vm.newEvent.daysBetween);
       }
-      //console.log("in changeRecurringStatus, recurringEvent = " +vm.newEvent.recurringEvent);
     },
     async sync() {
       const vm = this;
@@ -178,72 +169,83 @@ export default {
         vm.calendarEmail = response;
       }
       //call recurringsync using conditional here
-      
-      if (vm.newEvent.recurringEventType != "Never") {
-      //   let recurr = [type, day, end repeat]
-      // { pattern: { type: "weekly", interval: 1, daysOfWeek: [ "Monday" ] }, range: {type: "endDate",startDate: "2017-09-04",endDate: "2017-12-31"};
-        vm.recurringSync();
-      }
       const eventName = vm.clientName + " - " + vm.newEvent.name;
-      const event = await createNewEvent(eventName, vm.newEvent.date, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
-      // saves event id from call to microsoft graph API
-      if (event) {
-        vm.newEvent.id = event.id;  
+      let startDate = new Date(vm.newEvent.date + "T" + vm.newEvent.time + ":00");
+      let endDate = new Date(vm.newEvent.date + "T" + vm.newEvent.endTime + ":00");
+      let result = null;
+      if (vm.newEvent.recurringEventType != "Never") { 
+        console.log(" sync");
+        const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
+        const type = {"Daily": "daily", "Weekly": "weekly", "Monthly": "absoluteMonthly", "Yearly":"absoluteYearly"};
+        
+        const dayInput = (vm.newEvent.recurringEventType == "Daily" || vm.newEvent.recurringEventType == "Weekly") ? days[startDate.getDay()] : startDate.getDate();
+        console.log(dayInput);
+        let endRepeat = new Date(vm.newEvent.endRepeatDate + "T" + vm.newEvent.endTime + ":00");
+        const recurr = [type[vm.newEvent.recurringEventType], dayInput, endRepeat, 1]; 
+        result = await createNewEvent(eventName, startDate, endDate, vm.newEvent.notes, recurr);
       }
-    },
-    recurringSync() {  
-      // let async sync() do original event so this can be called from async sync()
-      const vm = this; 
-      let currentDate = new Date(vm.newEvent.date + "T" + vm.newEvent.time + ":00"); // original or start date given
-      let endDate = new Date(vm.newEvent.endRepeatDate + "T" + vm.newEvent.time + ":00"); // end repeat date 
-      
-      while (currentDate < endDate) { //start date comes before end date 
-        if (vm.newEvent.recurringEventType == "Daily") {   //remember to make sure recurringEvent can't be False w type being something
-          //require adding days to date object 
-          currentDate.setDate(currentDate.getDate() + 1);
-          //check again current date is valid, don't have to do this for daily. assuming end date inclusive
-
-          //date needs to look like this "2021-05-06"
-          let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-          const eventName = vm.clientName + " - " + vm.newEvent.name;
-          createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
-        }
-        else if (vm.newEvent.recurringEventType == "Weekly") {
-          //require adding 7 days to date object
-          currentDate.setDate(currentDate.getDate() + 7);
-          //check again current date is valid, don't have to do this for daily. assuming end date inclusive
-          if (currentDate <= endDate) {
-            //date needs to look like this "2021-05-06"
-            let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            const eventName = vm.clientName + " - " + vm.newEvent.name;
-            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
-          }
-        }
-        else if (vm.newEvent.recurringEventType == "Monthly") {
-          //require adding a month to date object
-          currentDate.setMonth(currentDate.getMonth() + 1);
-          //check again current date is valid, don't have to do this for daily. assuming end date inclusive
-          if (currentDate <= endDate) {
-            //date needs to look like this "2021-05-06"
-            let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            //console.log("formattedDate: " + formattedDate);
-            const eventName = vm.clientName + " - " + vm.newEvent.name;
-            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
-          }
-        }
-        else { //assuming it's yearly here
-          //require adding a year to date object
-          currentDate.setFullYear(currentDate.getFullYear() + 1);
-          //check again current date is valid, don't have to do this for daily. assuming end date inclusive
-          if (currentDate <= endDate) {
-            //date needs to look like this "2021-05-06"
-            let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
-            const eventName = vm.clientName + " - " + vm.newEvent.name;
-            createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
-          }
-        }
+      else {
+        console.log("not sync");
+        result = await createNewEvent(eventName, startDate, endDate, vm.newEvent.notes);
+      }
+      // saves event id from call to microsoft graph API
+      if (result) {
+        vm.newEvent.id = result.id;
       }
     }
+    // recurringSync() {  
+    //   // let async sync() do original event so this can be called from async sync()
+    //   const vm = this; 
+    //   let currentDate = new Date(vm.newEvent.date + "T" + vm.newEvent.time + ":00"); // original or start date given
+    //   let endDate = new Date(vm.newEvent.endRepeatDate + "T" + vm.newEvent.time + ":00"); // end repeat date 
+      
+    //   while (currentDate < endDate) { //start date comes before end date 
+    //     if (vm.newEvent.recurringEventType == "Daily") {   //remember to make sure recurringEvent can't be False w type being something
+    //       //require adding days to date object 
+    //       currentDate.setDate(currentDate.getDate() + 1);
+    //       //check again current date is valid, don't have to do this for daily. assuming end date inclusive
+
+    //       //date needs to look like this "2021-05-06"
+    //       let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
+    //       const eventName = vm.clientName + " - " + vm.newEvent.name;
+    //       createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+    //     }
+    //     else if (vm.newEvent.recurringEventType == "Weekly") {
+    //       //require adding 7 days to date object
+    //       currentDate.setDate(currentDate.getDate() + 7);
+    //       //check again current date is valid, don't have to do this for daily. assuming end date inclusive
+    //       if (currentDate <= endDate) {
+    //         //date needs to look like this "2021-05-06"
+    //         let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
+    //         const eventName = vm.clientName + " - " + vm.newEvent.name;
+    //         createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+    //       }
+    //     }
+    //     else if (vm.newEvent.recurringEventType == "Monthly") {
+    //       //require adding a month to date object
+    //       currentDate.setMonth(currentDate.getMonth() + 1);
+    //       //check again current date is valid, don't have to do this for daily. assuming end date inclusive
+    //       if (currentDate <= endDate) {
+    //         //date needs to look like this "2021-05-06"
+    //         let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
+    //         //console.log("formattedDate: " + formattedDate);
+    //         const eventName = vm.clientName + " - " + vm.newEvent.name;
+    //         createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+    //       }
+    //     }
+    //     else { //assuming it's yearly here
+    //       //require adding a year to date object
+    //       currentDate.setFullYear(currentDate.getFullYear() + 1);
+    //       //check again current date is valid, don't have to do this for daily. assuming end date inclusive
+    //       if (currentDate <= endDate) {
+    //         //date needs to look like this "2021-05-06"
+    //         let formattedDate = currentDate.getFullYear().toString() + "-" + (currentDate.getMonth() + 1).toString() + "-" + currentDate.getDate().toString();
+    //         const eventName = vm.clientName + " - " + vm.newEvent.name;
+    //         createNewEvent(eventName, formattedDate, vm.newEvent.time, vm.newEvent.endTime, vm.newEvent.notes);
+    //       }
+    //     }
+    //   }
+    // }
   }
 };
 </script>
@@ -260,7 +262,6 @@ export default {
 
   .submitForm .field {
     float: none;
-    /* display: inline-block; */
     margin-bottom: 0;
   }
 

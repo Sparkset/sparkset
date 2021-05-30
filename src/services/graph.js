@@ -22,61 +22,6 @@ export async function getUser() // only used in auth.js
       .get();
 };
 
-// export async function getEvents()  // used to retrieve events from calendar, using leancloud for this instead
-// {
-//     const user = JSON.parse(window.localStorage.getItem('graphUser'));
-  
-//     // Convert user's Windows time zone ("Pacific Standard Time")
-//     // to IANA format ("America/Los_Angeles")
-//     // Moment needs IANA format
-//     // let ianaTimeZone = momentT.getIanaFromWindows(user.mailboxSettings.timeZone);
-//     // console.log(`Converted: ${ianaTimeZone}`);
-  
-//     /*
-//     // Configure a calendar view for the current week
-//     // Get midnight on the start of the current week in the user's timezone,
-//     // but in UTC. For example, for Pacific Standard Time, the time value would be
-//     // 07:00:00Z
-//     let startOfWeek = moment.tz('America/Los_Angeles').startOf('week').utc();
-//     // Set end of the view to 7 days after start of week
-//     let endOfWeek = moment(startOfWeek).add(7, 'day');
-  
-//     */
-
-//    try {
-//       // GET /me/calendarview?startDateTime=''&endDateTime=''
-//       // &$select=subject,organizer,start,end
-//       // &$orderby=start/dateTime
-//       // &$top=50
-
-//       let response = await graphClient
-//         .api('/me/calendarview')
-//         // Set the Prefer=outlook.timezone header so date/times are in
-//         // user's preferred time zone
-//         .header("Prefer", `outlook.timezone="${user.mailboxSettings.timeZone}"`)
-//         // Add the startDateTime and endDateTime query parameters
-//         .query({ startDateTime: startOfWeek.format(), endDateTime: endOfWeek.format() })
-//         // Select just the fields we are interested in
-//         .select('id')
-//         // Sort the results by start, earliest first
-//         //.orderby('start/dateTime')
-//         // Maximum 50 events in response
-//         .top(50)
-//         .get();
-      
-     
-//       updatePage(Views.calendar, response.value);             // update in vue component
-//    } 
-//    catch (error) {
-//        console.log('Error getting events'); //we added this
-//       // updatePage(Views.error, {                               // update in vue component
-//       //  message: 'Error getting events',
-//       //  debug: error
-//       // });
-//    }
-    
-// };
-
 export async function updateEvent(id, name, date, startTime, endTime, notes)
 {
     // console.log(endTime);
@@ -106,6 +51,7 @@ export async function updateEvent(id, name, date, startTime, endTime, notes)
     }
     catch (error) {
       // console.log("something went wrong");  //something else here porb
+
     }
 }
 
@@ -122,24 +68,16 @@ export async function deleteEvent(id)
     }
 }
 
-export async function createNewEvent(name, date, startTime, endTime, notes, recurring = null) //creates new event. click to test
+export async function createNewEvent(name, startTime, endTime, notes, recurring = null) //creates new event. click to test
 {
-    // Get the user's input in this function 
-    // events on calendar for employees, don't need attendees
-    // add end time at later date per Ted
+    //compare add event and graph.js side by side before pushing
+
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
-    // console.log("name: " + name);
-    // console.log("date: " + date);
-    // console.log("startTime: " + startTime);
-    // console.log("endTime: " + endTime);
-    // console.log("notes: " + notes);
-    // name = string 
-    // date = "2021-05-06"
-    // time = "10:00" (24 hour clock) 
-    // notes = string
+    const start = (new Date(startTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
+    console.log(start);
+    const end = (new Date(endTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
+    console.log(end);
     const subject = name;
-    const start = date + "T" + startTime;
-    const end = date + "T" + endTime;
     const body = notes;
 
     // Build the JSON payload of the event
@@ -161,19 +99,42 @@ export async function createNewEvent(name, date, startTime, endTime, notes, recu
         content: body
       };
     }
-    if (recurring) {
-      newEvent.recurrence = recurring;
+
+    if (recurring !== null) {
+      const recur = (new Date(recurring[2].toString().split('GMT')[0]+' UTC').toISOString()).split("T")[0];
+      const date = (new Date(startTime.toString().split('GMT')[0]+' UTC').toISOString()).split("T")[0];
+      newEvent.recurrence = { 
+        pattern: {
+          type: recurring[0],
+          interval: recurring[3]
+        },
+        range: {
+          type: "endDate", 
+          startDate: date, //this
+          endDate: recur
+        }
+      };
+      if (recurring[0] == "weekly") {
+        newEvent.recurrence.pattern.daysOfWeek = [recurring[1]];
+      }
+      else if (recurring[0] == "absoluteMonthly") {
+        newEvent.recurrence.pattern.dayOfMonth = recurring[1];
+      }
+      else if (recurring[0] == "absoluteYearly") {
+        newEvent.recurrence.pattern.dayOfMonth = recurring[1];
+        newEvent.recurrence.pattern.month = startTime.getMonth() + 1;
+      }
     }
-  
+    console.log(newEvent);
     try {
       // POST the JSON to the /me/events endpoint
-      // console.log("makes it here helllooooo");
       return await graphClient
         .api('/me/events')
         .post(newEvent);
   
     } 
     catch (error) {
-      return false; //donn't think this is needed
+      console.log(error);
+      return false; //don't think this is needed
     }
 };

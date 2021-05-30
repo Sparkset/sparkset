@@ -4,22 +4,23 @@
       <div class="card">
         <section class="fields">
           <h1>Needs Attention</h1>
-          <div class="field" >
+          <div v-if="!noData" class="field" >
             <div id="chart" >
               <apexchart type="bar" height="350" :options="chartOptions" :series="series" :key="modified"></apexchart>
             </div>
           </div>
+          <div v-else>
+            <p>You're all caught up!</p>
+          </div>
         </section>
+        <!-- <section v-else class="fields">
+          <h1>You're all caught up!</h1>
+        </section> -->
       </div>
-
-
       <div class="card">
         <section class="fields">
           <h1>New Clients</h1>
           <div class="field" id = "fields">
-
-            
-            <!-- <button v-for="client in stats.newClients" :key="client.id" id="clientButton"> -->
               <router-link :to= "`/client/${client.id}`" v-for="client in stats.newClients" :key="client.id" id="clientButton" tag="button">
                 <div id="container" >
                     <div id="image">
@@ -32,21 +33,15 @@
                         alt="The picture of the client."
                       />   
                     </div> 
-    
                     <div id="client">
                       <span>{{ client.get("fullName") }}</span>
                     </div>
-
-
                 </div>
               </router-link>
             <!-- </button> -->
-            
           </div>
         </section>
       </div>
-
-
        <div class="card">
         <section class="fields">
           <h1>Data at a Glance</h1>
@@ -121,9 +116,6 @@
           </div>
         </section>
       </div>
-     
-      
-      
     </div>
     <div class="column column--left">
       <div class="card">
@@ -185,10 +177,11 @@ export default {
         notes: 0,
         newClients: []
       },
-      doneEventData: [],
+      //doneEventData: [],
       items: [],
       modified: false,
-      doneEvents: [],
+      noData: false,
+      //doneEvents: [], 
       doneEventDataMap: {},
       event: new AV.Object("Event"),
       client: new AV.Object("Client"),
@@ -234,7 +227,6 @@ export default {
             }
           }
         },
-
         xaxis: {
           type: 'category',
           categories: [],
@@ -299,15 +291,12 @@ export default {
                   -2
                 )}:${`0${event.get("time").getMinutes()}`.slice(-2)}`
               }
-          
             }));
         })
-        
         .catch(error => {
           // console.log("goes wrong here");
           alert(error);
         });
-      //console.log("upcoming events " +  vm.upcomingEvents[0][0]);
       const lastEventQuery = new AV.Query("Event"); //suggestions section
       lastEventQuery
         .equalTo("done", true)
@@ -390,15 +379,16 @@ export default {
     async fetchData() {
       const vm = this;
       var pastMonth = new Date();
+      const currentDate = new Date();
       pastMonth.setMonth(pastMonth.getMonth() - 1);
-      vm.doneEvents = await new AV.Query("Event")
+      await new AV.Query("Event")
         .equalTo("done", false)
         .include("client") //need this to include client child
         .find()
         .then(events => {
-          vm.doneEventData = events.forEach(function (event) { ///fails if event of deleted client
+          events.forEach(function (event) { ///fails if event of deleted client
             try {
-              if (event.get("time") >= pastMonth && event.get('client').get('archived') == false) //but less than current time 
+              if (event.get("time") >= pastMonth && event.get("time") < currentDate && event.get('client').get('archived') == false) //but less than current time?? 
               {
                 if (event.get("client").get("fullName") in vm.doneEventDataMap)
                 {
@@ -413,37 +403,33 @@ export default {
             catch (error) {
               // console.log("event with deleted client");
             }
-          });
-          
+          }); 
         });
       
     },
     async sortData() {
       const vm = this;
       await vm.fetchData();
-
       vm.items =  Object.keys(vm.doneEventDataMap).map(function(key) {
         return [key, vm.doneEventDataMap[key]];
       });
-    
       vm.items.sort(function(first, second) {
         return second[1] - first[1];
       });
-
       var len = vm.items.length;
       if (len > 5) {
         vm.items = vm.items.slice(0,5);   //cap at 5 
         len = 5;
       }
-
       var i;
       for (i = 0; i <len; i++) {
         vm.series[0].data.push(vm.items[i][1]);
         vm.chartOptions.xaxis.categories.push(vm.items[i][0]);
-
+      }
+      if (len == 0){
+        vm.noData = true;
       }
       vm.modified = true;
-       
     },
     add(event) {
       const vm = this;
@@ -505,7 +491,6 @@ export default {
   border-radius: 0;
 }
 
-
 #clientButton {
   overflow-x: auto;
   width: 100%;
@@ -514,29 +499,16 @@ export default {
 
 #client {
   width: auto;
-  /* display: inline-block; */
-  /* position: relative; */
-  /* float: left; */
   margin-left: 10px;
   -webkit-box-align: center;
-  
 }
 
-/* #client, #image {
-  display: inline;
-} */
-
-
-
 #image {
-  /* position: relative; */
-  /* display: inline-block; */
   width: 40px; 
   height: 40px;
   border-radius: 64px;
   overflow: hidden;
   cursor: pointer;
-  /* float: left; */
 }
 #image > img {
   width: 100%;
