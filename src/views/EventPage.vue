@@ -278,7 +278,7 @@ export default {
       }
       const id = vm.event.get('syncId');
       if (id) {
-        const result = await deleteEvent(id);
+        await deleteEvent(id);
       }
     },
     back() {
