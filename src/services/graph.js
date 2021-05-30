@@ -105,6 +105,7 @@ export async function updateEvent(id, name, date, startTime, endTime, notes)
         .update(event);
     }
     catch (error) {
+      return false;
       // console.log("something went wrong");  //something else here porb
     }
 }
@@ -118,6 +119,7 @@ export async function deleteEvent(id)
         .delete();
     } 
     catch (error) {
+      return false;
       // console.log("something went wrong");  //something else here porb
     }
 }
