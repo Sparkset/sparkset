@@ -1,15 +1,20 @@
 <template>
     <section class="fields">
-        <div class="field field--half">
-            <h1>{{ isNew ? "New Client" : fullName || client.get("fullName") }}</h1>
+        <div class="field" id="top">
+            <div class="field field--half" id="name">
+                <h1>{{ isNew ? "New Client" : fullName || client.get("fullName") }}</h1>
+            </div>
+            <div class="field field--half" id="archive">
+                <button v-if="!client.editing"
+                        :class="[client.get('archived') ? 'primary' : '']"
+                        @click="archiveClient()">
+                    {{ client.get("archived") ? "Unarchive" : "Archive" }}
+                </button>
+            </div>
         </div>
-        <div class="field field--half">
-            <button v-if="!client.editing"
-                    :class="[client.get('archived') ? 'primary' : '']"
-                    @click="archiveClient()">
-                {{ client.get("archived") ? "Unarchive" : "Archive" }}
-            </button>
-        </div>
+        <!-- <div class="field field--half">
+            
+        </div> -->
         <form @submit.prevent="go">
             <div class="field field--half">
                 <label>
@@ -401,4 +406,15 @@
         content: "*";
         color: red;
     }
+    #archive {
+        width: auto;
+        float: right;
+        margin-top: 19px;
+    }
+    #name {
+        margin-bottom: 0;
+        width: auto;
+        display:block;
+    }
+
 </style>

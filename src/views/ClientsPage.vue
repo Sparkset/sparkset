@@ -15,7 +15,7 @@
                           {{ archived_clients.length === 1 || archived_clients.length === 0? "Client" : "Clients" }}
                       </h1>
                   </div>
-                  <div class="field field--half">
+                  <div class="field field--half" id="whose">
                       <label>
                           <span>Whose</span>
                           <select v-model="selectedField" @change="search">
@@ -27,7 +27,7 @@
                           </select>
                       </label>
                   </div>
-                  <div class="field field--half">
+                  <div class="field field--half" id="contains">
                       <label>
                           <span>Contains</span>
                           <input type="text" v-model="query" @input="search" />
@@ -39,7 +39,7 @@
                       </button>
                   </div>
                   <div class="field field--half" id="archivedToggle">
-                      <label>
+                      <label id="toggle">
                           <!--<span>View Archived Clients</span>-->
                           <toggle-button :value="newEvent.viewArchived"
                                          :color="{
@@ -472,4 +472,19 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#whose {
+  margin: 0 16px 16px 0;
+}
+#contains {
+  margin: 0 0 16px 0;
+}
+label > .vue-js-switch {
+  margin: 0 8px 0 0;
+}
+#archivedToggle {
+  margin: 0 0 16px 0;
+  float: right;
+
+}
+</style>

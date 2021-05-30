@@ -1,8 +1,8 @@
 <template>
   <div>
     <!--Back Button-->
-      <div class="column">
-          <div v-if="!editing" class="field">
+      <div id="top">
+          <div v-if="!editing" class="field" id="back">
               <button class="primary" @click="back">Back to Events</button>
           </div>
       </div>
@@ -298,6 +298,7 @@ h1 > svg {
 
 #statusButton {
   float: right;
+  margin-bottom: 8px;
 }
 
 #editButton {
@@ -310,5 +311,14 @@ h1 > svg {
   float: right;
 }
 
+#top {
+  margin-top: 25px
+}
+.column {
+  margin-top: 25px
+}
+#back {
+  margin: 0
+}
 </style>
 
