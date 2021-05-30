@@ -34,13 +34,13 @@ export async function signIn() //use this to sign in
 };
 
 export function getEmail() {
-  console.log("in getEmail");
+  // console.log("in getEmail");
   const currentAccounts = msalClient.getAllAccounts();
   if (currentAccounts.length == 0) {
     return false;
   }
   else {
-    console.log(currentAccounts[0].username);
+    // console.log(currentAccounts[0].username);
     return currentAccounts[0].username;
   }
 };
@@ -65,13 +65,13 @@ export async function handleResponse(response) {
             window.localStorage.setItem('graphUser', JSON.stringify(user));
           }
           catch(e) {
-            console.log(e);
+            // console.log(e);
           }
       } else if (currentAccounts.length === 1) {
           account = currentAccounts[0].username;
       }
       else {
-        console.log(currentAccounts);
+        // console.log(currentAccounts);
       }
   }
   return account;

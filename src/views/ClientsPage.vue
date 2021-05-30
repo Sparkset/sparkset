@@ -280,7 +280,7 @@ export default {
     },
     fetchClients() {
         const vm = this;
-        console.log("ClientsPage fetchClients")//debugging
+        // console.log("ClientsPage fetchClients")//debugging
         //show clients table
         const clientQuery = new AV.Query("Client");
         clientQuery.equalTo('archived', false);

@@ -294,7 +294,7 @@ export default {
             }));
         })
         .catch(error => {
-          console.log("goes wrong here");
+          // console.log("goes wrong here");
           alert(error);
         });
       const lastEventQuery = new AV.Query("Event"); //suggestions section
@@ -401,7 +401,7 @@ export default {
               }
             }
             catch (error) {
-              console.log("event with deleted client");
+              // console.log("event with deleted client");
             }
           }); 
         });
