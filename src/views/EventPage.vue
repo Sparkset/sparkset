@@ -265,11 +265,6 @@ export default {
 
     },
     async syncDelete() {
-      // if (vm.calendarEmail == false) {       //only needed if they want to be reminded to sign in
-      //   const response = await signIn();
-      //   vm.calendarEmail = response;
-      // }
-      //here is where the magic happens
       const vm = this;
       if (vm.calendarEmail == false) {
         //log in first 

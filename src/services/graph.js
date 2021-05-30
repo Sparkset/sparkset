@@ -24,7 +24,6 @@ export async function getUser() // only used in auth.js
 
 export async function updateEvent(id, name, date, startTime, endTime, notes)
 {
-    // console.log(endTime);
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = date + "T" + startTime;  
     const end = date + "T" + endTime;
@@ -51,8 +50,6 @@ export async function updateEvent(id, name, date, startTime, endTime, notes)
     }
     catch (error) {
       return false;
-      // console.log("something went wrong");  //something else here porb
-
     }
 }
 
@@ -66,7 +63,6 @@ export async function deleteEvent(id)
     } 
     catch (error) {
       return false;
-      // console.log("something went wrong");  //something else here porb
     }
 }
 
@@ -110,7 +106,7 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
         },
         range: {
           type: "endDate", 
-          startDate: date, //this
+          startDate: date, 
           endDate: recur
         }
       };
