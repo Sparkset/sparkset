@@ -1,4 +1,4 @@
-import * as Msal from "@azure/msal-browser";
+const Msal = require("@azure/msal-browser");
 import {getUser} from "./graph.js";  
 const m = require("../../config.js");
 
