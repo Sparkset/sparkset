@@ -119,7 +119,7 @@ AV.Cloud.afterSave("Client", async request => {
         .set("client", request.object)
         .set("name", event.name)
         .set("recursIn", event.recursIn)
-        //.set("syncId", event.syncId)
+        .set("syncId", event.syncId)
         .set(
           "time",
           new Date(
