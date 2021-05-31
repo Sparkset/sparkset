@@ -1,7 +1,7 @@
 const express = require("express");
 const AV = require("leanengine");
 const path = require("path");
-require("./src/services/cloud");
+require("./cloud.mjs");
 const app = express();
 app.use(AV.express());
 app.enable("trust proxy");
