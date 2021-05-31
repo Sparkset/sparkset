@@ -1,5 +1,5 @@
 const Msal = require ("@azure/msal-browser");
-const m = require("../../config.js");
+const m = require("./config");
 const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
 const msalClient = new Msal.PublicClientApplication(m.msalConfig);
 let account = null;
