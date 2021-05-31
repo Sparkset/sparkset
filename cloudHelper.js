@@ -35,7 +35,7 @@ const authProvider = {
       return await getToken();
     }
 };
-const graphClient = fetch(MicrosoftGraph.Client.initWithMiddleware({authProvider}));
+const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
 function getEmail() {
     const currentAccounts = msalClient.getAllAccounts();
@@ -104,9 +104,9 @@ async function createNewEvent(name, startTime, endTime, notes, recurring = null)
     }
     try {
       // POST the JSON to the /me/events endpoint
-      return await graphClient
+      return await fetch(graphClient
         .api('/me/events')
-        .post(newEvent);
+        .post(newEvent));
   
     } 
     catch (error) {
