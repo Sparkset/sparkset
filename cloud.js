@@ -66,7 +66,7 @@ AV.Cloud.afterSave("Client", request => {      // should be async for event sync
       name: "Monthly Article, Book, Tip or Recommendation",
       recursIn: 30,
       delay: 15,
-      syncId: null
+      syncId: null 
     }
   ];
   // const signedIn = getEmail();      // if signed in, sync the events too 

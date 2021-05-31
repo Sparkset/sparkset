@@ -82,8 +82,8 @@
 
 <script> 
 import AV from "leancloud-storage";
-import {createNewEvent} from "../services/graph";
-import {signIn, getEmail} from "../services/auth"; 
+import {createNewEvent} from "../../graph";
+import {signIn, getEmail} from "../../auth"; 
 export default {
   name: "AddEvent",
   data() {

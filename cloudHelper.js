@@ -1,72 +1,56 @@
-import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
-import { getToken } from "./auth.js";
-
-// Create an authentication provider
+const Msal = require ("@azure/msal-browser");
+const m = require("./config");
+const fetch = require ("isomorphic-fetch"); // or import the fetch polyfill you installed
+const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
+const msalClient = new Msal.PublicClientApplication(m.msalConfig);
+let account = null;
+async function getToken() {//only used in graph.js
+    account = window.localStorage.getItem('msalAccount'); //changed from let account
+    if (!account) {
+      throw new Error(
+        'User account missing from session. Please sign out and sign in again.');
+    }
+    try {
+      // First, attempt to get the token silently
+      const silentRequest = {
+        scopes: m.msalRequest.scopes,
+        account: msalClient.getAccountByUsername(account) 
+      };
+  
+      const silentResult = await msalClient.acquireTokenSilent(silentRequest);
+      return silentResult.accessToken;
+    } catch (silentError) {
+      // If silent requests fails with InteractionRequiredAuthError,
+      // attempt to get the token interactively
+      if (silentError instanceof Msal.InteractionRequiredAuthError) {
+        const interactiveResult = await msalClient.acquireTokenPopup(m.msalRequest);
+        return interactiveResult.accessToken;
+      } else {
+        throw silentError;
+      }
+    }
+};
 const authProvider = {
     getAccessToken: async () => {
-      // Call getToken in auth.js
       return await getToken();
     }
 };
-  
-// Initialize the Graph client
 const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
-export async function getUser() // only used in auth.js
-{
-    return await graphClient
-      .api('/me')
-      // Only get the fields used by the app
-      .select('id,displayName,mail,userPrincipalName,mailboxSettings')
-      .get();
-};
-
-export async function updateEvent(id, name, date, startTime, endTime, notes)
-{
-    const user = JSON.parse(window.localStorage.getItem('graphUser')); 
-    const start = date + "T" + startTime;  
-    const end = date + "T" + endTime;
-    const url = '/me/events/' + id;
-    const event = {
-      subject: name,
-      start: {
-        dateTime: start,
-        timeZone: user.mailboxSettings.timeZone
-      },
-      end: {
-        dateTime: end,
-        timeZone: user.mailboxSettings.timeZone
-      },
-      body: {
-        contentType: 'text',
-        content: notes
-      }
-    };
-    try {
-      return await graphClient
-        .api(url)
-        .update(event);
-    }
-    catch (error) {
+function getEmail() {
+    const currentAccounts = msalClient.getAllAccounts();
+    if (currentAccounts.length == 0) {
       return false;
     }
-}
-
-export async function deleteEvent(id) 
-{
-    const url = '/me/events/' + id;
-    try {
-      return await graphClient
-        .api(url)
-        .delete();
-    } 
-    catch (error) {
-      return false;
+    else {
+      return currentAccounts[0].username;
     }
-}
+  };
 
-export async function createNewEvent(name, startTime, endTime, notes, recurring = null)
+async function createNewEvent(name, startTime, endTime, notes, recurring = null) //creates new event. click to test
 {
+    //compare add event and graph.js side by side before pushing
+
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = (new Date(startTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
     const end = (new Date(endTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
@@ -120,11 +104,14 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
     }
     try {
       // POST the JSON to the /me/events endpoint
-      return await graphClient
+      return await fetch(graphClient
         .api('/me/events')
-        .post(newEvent);
+        .post(newEvent));
+  
     } 
     catch (error) {
-      return false; //don't think this is needed
+      throw error; //don't think this is needed
     }
 };
+
+module.exports = {getEmail, createNewEvent};

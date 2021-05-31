@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import AV from "leancloud-storage";
-import { autoSignIn } from "../services/auth";
+import { autoSignIn } from "../../auth";
 Vue.use(VueRouter);
 async function isLoggedIn() {
   const user = AV.User.current();
