@@ -1,6 +1,7 @@
 const AV = require("leanengine");
 // const { getEmail } = require("./src/services/auth");
 // const { createNewEvent } = require("./src/services/graph"); //incompatible imports ES modules vs. commonjs
+
 AV.Cloud.beforeSave("Note", request => {
   request.object.set("owner", request.currentUser);
 });

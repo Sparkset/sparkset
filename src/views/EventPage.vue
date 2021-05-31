@@ -260,7 +260,6 @@ export default {
           }); 
       }
       window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events"); 
-
     },
     async syncDelete() {
       const vm = this;

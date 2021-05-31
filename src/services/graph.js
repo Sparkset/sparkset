@@ -123,7 +123,6 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
       return await graphClient
         .api('/me/events')
         .post(newEvent);
-  
     } 
     catch (error) {
       return false; //don't think this is needed
