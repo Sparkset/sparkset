@@ -89,7 +89,7 @@ AV.Cloud.afterSave("Client", async request => {
                       ).setHours(new Date().getHours()+1)
                     );
       if (event.recursIn) {  //  make sure to test this. double check this works and doesn't break
-        const dayInput = (vm.newEvent.recurringEventType == "Daily" || vm.newEvent.recurringEventType == "Weekly") ? days[startDate.getDay()] : startDate.getDate();
+        const dayInput = (event.recursIn == 7) ? days[startDate.getDay()] : startDate.getDate();
         let endRepeat = new Date(
                           new Date( 
                             new Date( 
