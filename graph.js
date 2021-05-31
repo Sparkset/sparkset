@@ -5,7 +5,9 @@ const {getToken} = require ("./auth");
 const authProvider = {
     getAccessToken: async () => {
       // Call getToken in auth.js
-      return await getToken();
+      fetch(getToken()).then(function(response) {
+        return response;
+      });
     }
 };
   
