@@ -31,11 +31,11 @@ let account = null;
  function getEmail() {
   const currentAccounts = msalClient.getAllAccounts();
   if (currentAccounts.length == 0) {
-    console.log("or");
+    // console.log("or");
     return false;
   }
   else {
-    console.log("here");
+    // console.log("here");
     return currentAccounts[0].username;
   }
 };
