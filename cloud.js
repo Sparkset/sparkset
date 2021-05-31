@@ -1,6 +1,5 @@
 const AV = require("leanengine");
 const { getEmail, createNewEvent } = require("./cloudHelper");
-const { createNewEvent } = require("./src/services/graph");
 AV.Cloud.beforeSave("Note", request => {
   request.object.set("owner", request.currentUser);
 });
