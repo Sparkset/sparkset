@@ -1,13 +1,14 @@
 require ("isomorphic-fetch"); // or import the fetch polyfill you installed
 const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
-const e = require ("./auth");
+const auth = require ("./auth");
 // Create an authentication provider
 const authProvider = {
     getAccessToken: async () => {
       // Call getToken in auth.js
-      fetch(e.getToken()).then(function(response) {
-        return response;
-      });
+      // fetch(auth.getToken()).then(function(response) {
+      //   return response;
+      // });
+      return await auth.getToken();
     }
 };
   
