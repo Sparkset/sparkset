@@ -13,7 +13,7 @@ AV.Cloud.beforeSave("_User", request => {
   }
 });
 AV.Cloud.afterSave("Client", async request => {
-  const events = [
+  let events = [
     {
       name: "Welcome Email With Next Steps",
       delay: 1,
@@ -99,7 +99,7 @@ AV.Cloud.afterSave("Client", async request => {
                             ).setHours(new Date().getHours()+1)
                           ).setFullYear(new Date().getFullYear()+2)
                         );
-        const recurr = [type[event.recursIn], dayInput, endRepeat, 1]; //let's think about endREpeatDAte: set 2 year automatically
+        let recurr = [type[event.recursIn], dayInput, endRepeat, 1]; //let's think about endREpeatDAte: set 2 year automatically
         if (event.recursIn == 60) {
           recurr[3] = 2; //  make sure to test this. not sure if this will work 
         }
