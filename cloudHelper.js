@@ -1,5 +1,6 @@
 const Msal = require ("@azure/msal-browser");
 const m = require("./config");
+const fetch = require ("isomorphic-fetch"); // or import the fetch polyfill you installed
 const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
 const msalClient = new Msal.PublicClientApplication(m.msalConfig);
 let account = null;
@@ -31,11 +32,10 @@ async function getToken() {//only used in graph.js
 };
 const authProvider = {
     getAccessToken: async () => {
-      // Call getToken in auth.js
       return await getToken();
     }
 };
-const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
+const graphClient = fetch(MicrosoftGraph.Client.initWithMiddleware({authProvider}));
 
 function getEmail() {
     const currentAccounts = msalClient.getAllAccounts();
