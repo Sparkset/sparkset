@@ -127,9 +127,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
     }
     try {
       // POST the JSON to the /me/events endpoint
-      return await graphClient
+      fetch(graphClient
         .api('/me/events')
-        .post(newEvent);
+        .post(newEvent)).then(function(response) {
+          return response.json;
+        });
   
     } 
     catch (error) {
