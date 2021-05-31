@@ -8,7 +8,9 @@ const authProvider = {
       // fetch(auth.getToken()).then(function(response) {
       //   return response;
       // });
-      return await auth.getToken();
+      const r = await auth.getToken();
+      console.log(r);
+      return r;
     }
 };
   
@@ -17,13 +19,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
  async function getUser() // only used in auth.js
 {
-    fetch(graphClient
+    return await graphClient
       .api('/me')
       // Only get the fields used by the app
       .select('id,displayName,mail,userPrincipalName,mailboxSettings')
-      .get()).then(function(response) {
-        return response.json();
-      });
+      .get();
 
 };
 
