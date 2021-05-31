@@ -143,8 +143,8 @@
 <script>
 import AV from "leancloud-storage";
 import VueMarkdown from "vue-markdown";
-import {getEmail, signIn} from "../services/auth"; 
-import {updateEvent, deleteEvent} from "../services/graph";
+import {getEmail, signIn} from "../../auth"; 
+import {updateEvent, deleteEvent} from "../../graph";
 export default {
   name: "EventPage",
   components: {

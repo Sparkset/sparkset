@@ -119,7 +119,7 @@
 
 <script>
 import AV from "leancloud-storage";
-import { signIn, signOut, getEmail } from "../services/auth";
+import { signIn, signOut, getEmail } from "../../auth";
 export default {
   name: "SettingsPage",
   data() {

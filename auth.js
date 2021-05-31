@@ -1,12 +1,12 @@
-import * as Msal from "@azure/msal-browser";
-import {getUser} from "./graph.js";  
-const m = require("../../config.js");
+const Msal = require ("@azure/msal-browser");
+const {getUser} = require ("./graph");
+const m = require("./config.js");
 
 const msalClient = new Msal.PublicClientApplication(m.msalConfig);
 
 let account = null;
  
-export async function signIn() 
+ async function signIn() 
 {
     // Login
     try {
@@ -27,7 +27,7 @@ export async function signIn()
     
 };
 
-export function getEmail() {
+ function getEmail() {
   const currentAccounts = msalClient.getAllAccounts();
   if (currentAccounts.length == 0) {
     return false;
@@ -37,7 +37,7 @@ export function getEmail() {
   }
 };
 
-export async function handleResponse(response) {
+ async function handleResponse(response) {
   if (response !== null) {
     account = response.account.username;
     window.localStorage.setItem('msalAccount', response.account.username);  
@@ -66,11 +66,11 @@ export async function handleResponse(response) {
   return account;
 };
 
-export async function autoSignIn() {
+ async function autoSignIn() {
   msalClient.handleRedirectPromise().then(handleResponse);
 }
 
-export async function getToken() {//only used in graph.js
+ async function getToken() {//only used in graph.js
     account = window.localStorage.getItem('msalAccount'); //changed from let account
     if (!account) {
       throw new Error(
@@ -97,7 +97,7 @@ export async function getToken() {//only used in graph.js
     }
 };
 
-export async function signOut() {//use this to sign out
+ async function signOut() {//use this to sign out
   account = window.localStorage.getItem('msalAccount');
   const logoutRequest = {
     account: msalClient.getAccountByUsername(account),
@@ -107,3 +107,5 @@ export async function signOut() {//use this to sign out
   window.localStorage.removeItem('graphUser');
   await msalClient.logoutPopup(logoutRequest); 
 };
+
+module.exports = {signIn, getEmail, autoSignIn, getToken, signOut};

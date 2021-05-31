@@ -1,7 +1,6 @@
-import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
-//import * as momentT from "moment-timezone";
-import { getToken } from "./auth.js";
-
+const fetch = require ("isomorphic-fetch"); // or import the fetch polyfill you installed
+const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
+const {getToken} = require ("./auth");
 // Create an authentication provider
 const authProvider = {
     getAccessToken: async () => {
@@ -13,16 +12,16 @@ const authProvider = {
 // Initialize the Graph client
 const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
-export async function getUser() // only used in auth.js
+ async function getUser() // only used in auth.js
 {
-    return await graphClient
+    return await fetch(graphClient
       .api('/me')
       // Only get the fields used by the app
       .select('id,displayName,mail,userPrincipalName,mailboxSettings')
-      .get();
+      .get());
 };
 
-export async function updateEvent(id, name, date, startTime, endTime, notes)
+ async function updateEvent(id, name, date, startTime, endTime, notes)
 {
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = date + "T" + startTime;  
@@ -44,29 +43,29 @@ export async function updateEvent(id, name, date, startTime, endTime, notes)
       }
     };
     try {
-      return await graphClient
+      return await fetch(graphClient
         .api(url)
-        .update(event);
+        .update(event));
     }
     catch (error) {
       return false;
     }
 }
 
-export async function deleteEvent(id) 
+ async function deleteEvent(id) 
 {
     const url = '/me/events/' + id;
     try {
-      return await graphClient
+      return await fetch(graphClient
         .api(url)
-        .delete();
+        .delete());
     } 
     catch (error) {
       return false;
     }
 }
 
-export async function createNewEvent(name, startTime, endTime, notes, recurring = null) //creates new event. click to test
+ async function createNewEvent(name, startTime, endTime, notes, recurring = null) //creates new event. click to test
 {
     //compare add event and graph.js side by side before pushing
 
@@ -123,12 +122,14 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
     }
     try {
       // POST the JSON to the /me/events endpoint
-      return await graphClient
+      return await fetch(graphClient
         .api('/me/events')
-        .post(newEvent);
+        .post(newEvent));
   
     } 
     catch (error) {
       return false; //don't think this is needed
     }
 };
+
+module.exports = {getUser, updateEvent, deleteEvent, createNewEvent};
