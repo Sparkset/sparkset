@@ -14,11 +14,14 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
  async function getUser() // only used in auth.js
 {
-    return await fetch(graphClient
+    fetch(graphClient
       .api('/me')
       // Only get the fields used by the app
       .select('id,displayName,mail,userPrincipalName,mailboxSettings')
-      .get());
+      .get()).then(function(response) {
+        return response;
+      });
+
 };
 
  async function updateEvent(id, name, date, startTime, endTime, notes)
@@ -43,9 +46,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
       }
     };
     try {
-      return await fetch(graphClient
+      fetch(graphClient
         .api(url)
-        .update(event));
+        .update(event)).then(function(response) {
+          return response;
+        });
     }
     catch (error) {
       return false;
@@ -56,9 +61,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 {
     const url = '/me/events/' + id;
     try {
-      return await fetch(graphClient
+      fetch(graphClient
         .api(url)
-        .delete());
+        .delete()).then(function(response) {
+          return response;
+        });
     } 
     catch (error) {
       return false;
@@ -122,9 +129,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
     }
     try {
       // POST the JSON to the /me/events endpoint
-      return await fetch(graphClient
+      fetch(graphClient
         .api('/me/events')
-        .post(newEvent));
+        .post(newEvent)).then(function(response) {
+          return response;
+        });
   
     } 
     catch (error) {
