@@ -1,4 +1,4 @@
-// require ("isomorphic-fetch"); // or import the fetch polyfill you installed
+require ("isomorphic-fetch"); // or import the fetch polyfill you installed
 const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
 const auth = require ("./auth");
 // Create an authentication provider
@@ -9,7 +9,7 @@ const authProvider = {
       //   return response;
       // });
       const r = await auth.getToken();
-      // console.log(r);
+      console.log(r);
       return r;
     }
 };
@@ -49,9 +49,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
       }
     };
     try {
-      return await graphClient
+      fetch(graphClient
         .api(url)
-        .update(event);
+        .update(event)).then(function(response) {
+          return response.json();
+        });
     }
     catch (error) {
       return false;
@@ -62,9 +64,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 {
     const url = '/me/events/' + id;
     try {
-      return await graphClient
+      fetch(graphClient
         .api(url)
-        .delete();
+        .delete()).then(function(response) {
+          return response.json();
+        });
     } 
     catch (error) {
       return false;
@@ -128,9 +132,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
     }
     try {
       // POST the JSON to the /me/events endpoint
-      return await graphClient
+      fetch(graphClient
         .api('/me/events')
-        .post(newEvent);
+        .post(newEvent)).then(function(response) {
+          return response.json();
+        });
   
     } 
     catch (error) {
