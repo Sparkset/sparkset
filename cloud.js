@@ -1,6 +1,6 @@
 const AV = require("leanengine");
-const { getEmail} = require("./auth");
-const {createNewEvent} = require("./graph");
+const auth = require("./auth");
+const graph = require("./graph");
 AV.Cloud.beforeSave("Note", request => {
   request.object.set("owner", request.currentUser);
 });
@@ -68,7 +68,7 @@ AV.Cloud.afterSave("Client", async request => {
       syncId: null 
     }
   ];
-  const signedIn = getEmail();      // if signed in, sync the events too 
+  const signedIn = auth.getEmail();      // if signed in, sync the events too 
   if (signedIn) {   
     // give date object for time and endTime
     const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
@@ -104,10 +104,10 @@ AV.Cloud.afterSave("Client", async request => {
         if (event.recursIn == 60) {
           recurr[3] = 2; //  make sure to test this. not sure if this will work 
         }
-        result = await createNewEvent(eventName, startDate, endDate, "", recurr);
+        result = await graph.createNewEvent(eventName, startDate, endDate, "", recurr);
       }
       else {
-        result = await createNewEvent(eventName, startDate, endDate, "");
+        result = await graph.createNewEvent(eventName, startDate, endDate, "");
       }
       if (result) {
         event.syncId = result.id; 
