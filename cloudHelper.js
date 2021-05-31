@@ -110,7 +110,7 @@ async function createNewEvent(name, startTime, endTime, notes, recurring = null)
   
     } 
     catch (error) {
-      return false; //don't think this is needed
+      throw error; //don't think this is needed
     }
 };
 

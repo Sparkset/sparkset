@@ -73,18 +73,18 @@ AV.Cloud.afterSave("Client", async request => {
     const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
     const type = {7: "weekly", 30: "absoluteMonthly", 60: "absoluteMonthly", 365: "absoluteYearly"}
     const clientName = request.object.get("fullName");    //obs check this
-    let result = null;
     events.forEach(async event => {    // remember delay is part of start date/end/recurr!!!!, also special case 60
+      let result = null;
       const eventName = clientName + " - " + event.name;
       let startDate = new Date(
                         new Date(
-                          new Date().setDate(new Date().getDate() + (event.delay || 0)) //are these kept????
+                          new Date().setDate(new Date().getDate() + (event.delay || 0)) 
                         ).setSeconds(0)
                       );
       let endDate = new Date( 
                       new Date( 
                         new Date( 
-                          new Date().setDate(new Date().getDate() + (event.delay || 0)) //are these kept????
+                          new Date().setDate(new Date().getDate() + (event.delay || 0)) 
                         ).setSeconds(0) 
                       ).setHours(new Date().getHours()+1)
                     );
@@ -99,7 +99,7 @@ AV.Cloud.afterSave("Client", async request => {
                             ).setHours(new Date().getHours()+1)
                           ).setFullYear(new Date().getFullYear()+2)
                         );
-        let recurr = [type[event.recursIn], dayInput, endRepeat, 1]; //let's think about endREpeatDAte: set 2 year automatically
+        let recurr = [type[event.recursIn], dayInput, endRepeat, 1];
         if (event.recursIn == 60) {
           recurr[3] = 2; //  make sure to test this. not sure if this will work 
         }
@@ -109,7 +109,7 @@ AV.Cloud.afterSave("Client", async request => {
         result = await createNewEvent(eventName, startDate, endDate, "");
       }
       if (result) {
-        event.syncId = result.id; //check this works
+        event.syncId = result.id; 
       }
     });
   }
