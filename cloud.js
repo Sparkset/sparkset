@@ -1,6 +1,7 @@
 const AV = require("leanengine");
 const auth = require("./auth");
 const graph = require("./graph");
+require ("isomorphic-fetch"); 
 AV.Cloud.beforeSave("Note", request => {
   request.object.set("owner", request.currentUser);
 });
@@ -68,6 +69,7 @@ AV.Cloud.afterSave("Client", async request => {
       syncId: null 
     }
   ];
+  console.log("hey");
   const signedIn = auth.getEmail();      // if signed in, sync the events too 
   if (signedIn) {   
     // give date object for time and endTime
@@ -104,10 +106,14 @@ AV.Cloud.afterSave("Client", async request => {
         if (event.recursIn == 60) {
           recurr[3] = 2; //  make sure to test this. not sure if this will work 
         }
-        result = await graph.createNewEvent(eventName, startDate, endDate, "", recurr);
+        fetch(graph.createNewEvent(eventName, startDate, endDate, "", recurr)).then(function(response) {
+          result = response.json;
+        });
       }
       else {
-        result = await graph.createNewEvent(eventName, startDate, endDate, "");
+        fetch(graph.createNewEvent(eventName, startDate, endDate, "")).then(function(response) {
+          result = response.json;
+        });
       }
       if (result) {
         event.syncId = result.id; 
