@@ -108,4 +108,8 @@ let account = null;
   await msalClient.logoutPopup(logoutRequest); 
 };
 
-module.exports = {signIn, getEmail, autoSignIn, getToken, signOut};
+module.exports.getToken = getToken;
+module.exports.signIn = signIn;
+module.exports.getEmail = getEmail;
+module.exports.autoSignIn = autoSignIn;
+module.exports.signOut = signOut;
