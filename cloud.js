@@ -68,7 +68,6 @@ AV.Cloud.afterSave("Client", async request => {
     }
   ];
   const signedIn = getEmail();      // if signed in, sync the events too 
-  const signedIn = true;
   if (signedIn) {   
     // give date object for time and endTime
     const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
