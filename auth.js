@@ -1,3 +1,4 @@
+require ("isomorphic-fetch"); // or import the fetch polyfill you installed
 const Msal = require ("@azure/msal-browser");
 const {getUser} = require ("./graph");
 const m = require("./config.js");
@@ -83,8 +84,9 @@ let account = null;
         account: msalClient.getAccountByUsername(account) 
       };
   
-      const silentResult = await msalClient.acquireTokenSilent(silentRequest);
-      return silentResult.accessToken;
+      // const silentResult = await msalClient.acquireTokenSilent(silentRequest);
+      // return silentResult.accessToken;
+      fetch(msalClient.acquireTokenSilent(silentRequest)).then();
     } catch (silentError) {
       // If silent requests fails with InteractionRequiredAuthError,
       // attempt to get the token interactively
