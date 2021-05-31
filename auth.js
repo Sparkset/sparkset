@@ -18,7 +18,7 @@ let account = null;
       // Get the user's profile from Graph
       let user = await graph.getUser();
       // Save the profile in session
-      window.localStorage.setItem('graphUser', JSON.stringify(user));
+      window.localStorage.setItem('graphUser', user);
 
       return user.userPrincipalName;                      
     } 
@@ -43,7 +43,7 @@ let account = null;
     account = response.account.username;
     window.localStorage.setItem('msalAccount', response.account.username);  
     let user = await graph.getUser();
-    window.localStorage.setItem('graphUser', JSON.stringify(user));
+    window.localStorage.setItem('graphUser', user);
     // Display signed-in user content, call API, etc.
   } else {
       // In case multiple accounts exist, you can select
@@ -55,7 +55,7 @@ let account = null;
             const authResult = await msalClient.loginRedirect(m.msalRequest);
             window.localStorage.setItem('msalAccount', authResult.account.username);  
             let user = await graph.getUser();
-            window.localStorage.setItem('graphUser', JSON.stringify(user));
+            window.localStorage.setItem('graphUser', user);
           }
           catch(e) {
             return e;
