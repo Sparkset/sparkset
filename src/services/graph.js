@@ -1,14 +1,11 @@
-// require ("isomorphic-fetch"); // or import the fetch polyfill you installed
-const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
-const auth = require ("./auth");
+import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
+import { getToken } from "./auth.js";
+
 // Create an authentication provider
 const authProvider = {
     getAccessToken: async () => {
       // Call getToken in auth.js
-      // fetch(auth.getToken()).then(function(response) {
-      //   return response;
-      // });
-      const r = await auth.getToken();
+      const r = await getToken();
       return r;
     }
 };
@@ -57,7 +54,7 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
     }
 }
 
- async function deleteEvent(id) 
+export async function deleteEvent(id) 
 {
     const url = '/me/events/' + id;
     try {
@@ -70,10 +67,8 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
     }
 }
 
- async function createNewEvent(name, startTime, endTime, notes, recurring = null) //creates new event. click to test
+export async function createNewEvent(name, startTime, endTime, notes, recurring = null)
 {
-    //compare add event and graph.js side by side before pushing
-
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = (new Date(startTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
     const end = (new Date(endTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
@@ -127,16 +122,11 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
     }
     try {
       // POST the JSON to the /me/events endpoint
-      fetch(graphClient
+      return await graphClient
         .api('/me/events')
-        .post(newEvent)).then(function(response) {
-          return response.json;
-        });
-  
+        .post(newEvent);
     } 
     catch (error) {
       return false; //don't think this is needed
     }
 };
-
-module.exports = {getUser, updateEvent, deleteEvent, createNewEvent};

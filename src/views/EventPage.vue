@@ -143,8 +143,8 @@
 <script>
 import AV from "leancloud-storage";
 import VueMarkdown from "vue-markdown";
-import {getEmail, signIn} from "../../auth"; 
-import {updateEvent, deleteEvent} from "../../graph";
+import {getEmail, signIn} from "../services/auth"; 
+import {updateEvent, deleteEvent} from "../services/graph";
 export default {
   name: "EventPage",
   components: {
@@ -166,8 +166,6 @@ export default {
       },
       calendarEmail: false,
       clientName: ""
-      //eventSyncing: true 
-      // would be automatically t/f based on settings, not doing this rn tho
     };
   },
   created() {
@@ -262,7 +260,6 @@ export default {
           }); 
       }
       window.location.replace("/client/" + vm.event.get("client").get("objectId") + "/events"); 
-
     },
     async syncDelete() {
       const vm = this;
