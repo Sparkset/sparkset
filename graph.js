@@ -22,7 +22,7 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
       // Only get the fields used by the app
       .select('id,displayName,mail,userPrincipalName,mailboxSettings')
       .get()).then(function(response) {
-        return response;
+        return response.json();
       });
 
 };
@@ -52,7 +52,7 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
       fetch(graphClient
         .api(url)
         .update(event)).then(function(response) {
-          return response;
+          return response.json();
         });
     }
     catch (error) {
@@ -67,7 +67,7 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
       fetch(graphClient
         .api(url)
         .delete()).then(function(response) {
-          return response;
+          return response.json();
         });
     } 
     catch (error) {
@@ -135,7 +135,7 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
       fetch(graphClient
         .api('/me/events')
         .post(newEvent)).then(function(response) {
-          return response;
+          return response.json();
         });
   
     } 
