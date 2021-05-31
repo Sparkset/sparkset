@@ -1,6 +1,6 @@
 require ("isomorphic-fetch"); // or import the fetch polyfill you installed
 const Msal = require ("@azure/msal-browser");
-const {getUser} = require ("./graph");
+const { getUser } = require ("./graph");
 const m = require("./config.js");
 
 const msalClient = new Msal.PublicClientApplication(m.msalConfig);
