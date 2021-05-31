@@ -1,6 +1,6 @@
-import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
+const MicrosoftGraph = require ("@microsoft/microsoft-graph-client");
 //import * as momentT from "moment-timezone";
-import { getToken } from "./auth.js";
+const { getToken } = require ("./auth.js");
 
 // Create an authentication provider
 const authProvider = {
