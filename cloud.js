@@ -1,6 +1,6 @@
 const AV = require("leanengine");
-// const { getEmail } = require("./src/services/auth");
-// const { createNewEvent } = require("./src/services/graph");
+const { getEmail, createNewEvent } = require("./cloudHelper");
+const { createNewEvent } = require("./src/services/graph");
 AV.Cloud.beforeSave("Note", request => {
   request.object.set("owner", request.currentUser);
 });
@@ -68,53 +68,53 @@ AV.Cloud.afterSave("Client", async request => {
       syncId: null 
     }
   ];
-  // const signedIn = getEmail();      // if signed in, sync the events too 
-  // const signedIn = true;
-  // if (signedIn) {   
-  //   // give date object for time and endTime
-  //   const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
-  //   const type = {7: "weekly", 30: "absoluteMonthly", 60: "absoluteMonthly", 365: "absoluteYearly"}
-  //   const clientName = request.object.get("fullName");    //obs check this
-  //   let result = null;
-  //   events.forEach(async event => {    // remember delay is part of start date/end/recurr!!!!, also special case 60
-  //     const eventName = clientName + " - " + event.name;
-  //     let startDate = new Date(
-  //                       new Date(
-  //                         new Date().setDate(new Date().getDate() + (event.delay || 0)) //are these kept????
-  //                       ).setSeconds(0)
-  //                     );
-  //     let endDate = new Date( 
-  //                     new Date( 
-  //                       new Date( 
-  //                         new Date().setDate(new Date().getDate() + (event.delay || 0)) //are these kept????
-  //                       ).setSeconds(0) 
-  //                     ).setHours(new Date().getHours()+1)
-  //                   );
-  //     if (event.recursIn) {  //  make sure to test this. double check this works and doesn't break
-  //       const dayInput = (vm.newEvent.recurringEventType == "Daily" || vm.newEvent.recurringEventType == "Weekly") ? days[startDate.getDay()] : startDate.getDate();
-  //       let endRepeat = new Date(
-  //                         new Date( 
-  //                           new Date( 
-  //                             new Date( 
-  //                               new Date().setDate(new Date().getDate() + (event.delay || 0))
-  //                             ).setSeconds(0) 
-  //                           ).setHours(new Date().getHours()+1)
-  //                         ).setFullYear(new Date().getFullYear()+2)
-  //                       );
-  //       const recurr = [type[event.recursIn], dayInput, endRepeat, 1]; //let's think about endREpeatDAte: set 2 year automatically
-  //       if (event.recursIn == 60) {
-  //         recurr[3] = 2; //  make sure to test this. not sure if this will work 
-  //       }
-  //       // result = await createNewEvent(eventName, startDate, endDate, "", recurr);
-  //     }
-  //     else {
-  //       // result = await createNewEvent(eventName, startDate, endDate, "");
-  //     }
-  //     if (result) {
-  //       event.syncId = result.id; //check this works
-  //     }
-  //   });
-  // }
+  const signedIn = getEmail();      // if signed in, sync the events too 
+  const signedIn = true;
+  if (signedIn) {   
+    // give date object for time and endTime
+    const days = {0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday"};
+    const type = {7: "weekly", 30: "absoluteMonthly", 60: "absoluteMonthly", 365: "absoluteYearly"}
+    const clientName = request.object.get("fullName");    //obs check this
+    let result = null;
+    events.forEach(async event => {    // remember delay is part of start date/end/recurr!!!!, also special case 60
+      const eventName = clientName + " - " + event.name;
+      let startDate = new Date(
+                        new Date(
+                          new Date().setDate(new Date().getDate() + (event.delay || 0)) //are these kept????
+                        ).setSeconds(0)
+                      );
+      let endDate = new Date( 
+                      new Date( 
+                        new Date( 
+                          new Date().setDate(new Date().getDate() + (event.delay || 0)) //are these kept????
+                        ).setSeconds(0) 
+                      ).setHours(new Date().getHours()+1)
+                    );
+      if (event.recursIn) {  //  make sure to test this. double check this works and doesn't break
+        const dayInput = (vm.newEvent.recurringEventType == "Daily" || vm.newEvent.recurringEventType == "Weekly") ? days[startDate.getDay()] : startDate.getDate();
+        let endRepeat = new Date(
+                          new Date( 
+                            new Date( 
+                              new Date( 
+                                new Date().setDate(new Date().getDate() + (event.delay || 0))
+                              ).setSeconds(0) 
+                            ).setHours(new Date().getHours()+1)
+                          ).setFullYear(new Date().getFullYear()+2)
+                        );
+        const recurr = [type[event.recursIn], dayInput, endRepeat, 1]; //let's think about endREpeatDAte: set 2 year automatically
+        if (event.recursIn == 60) {
+          recurr[3] = 2; //  make sure to test this. not sure if this will work 
+        }
+        result = await createNewEvent(eventName, startDate, endDate, "", recurr);
+      }
+      else {
+        result = await createNewEvent(eventName, startDate, endDate, "");
+      }
+      if (result) {
+        event.syncId = result.id; //check this works
+      }
+    });
+  }
   AV.Object.saveAll(
     events.map(event =>
       new AV.Object("Event")

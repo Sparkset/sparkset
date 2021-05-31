@@ -24,6 +24,7 @@ export async function signIn()
     catch (error) {
         return false;                                       
     }
+    
 };
 
 export function getEmail() {
