@@ -13,7 +13,7 @@ const authProvider = {
 // Initialize the Graph client
 const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
- async function getUser() // only used in auth.js
+export async function getUser() // only used in auth.js
 {
     return await graphClient
       .api('/me')
@@ -23,7 +23,7 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
 
 };
 
- async function updateEvent(id, name, date, startTime, endTime, notes)
+export async function updateEvent(id, name, date, startTime, endTime, notes)
 {
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = date + "T" + startTime;  

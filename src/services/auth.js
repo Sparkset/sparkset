@@ -66,7 +66,7 @@ async function handleResponse(response) {
   return account;
 };
 
- async function autoSignIn() {
+export async function autoSignIn() {
   msalClient.handleRedirectPromise().then(handleResponse);
 }
 
