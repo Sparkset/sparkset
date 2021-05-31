@@ -9,7 +9,6 @@ const authProvider = {
       //   return response;
       // });
       const r = await auth.getToken();
-      console.log(r);
       return r;
     }
 };
