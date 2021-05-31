@@ -1,5 +1,5 @@
 const Msal = require ("@azure/msal-browser");
-import {getUser} from ("./graph");
+import {getUser} from "./graph";
 const m = require("../../config.js");
 
 const msalClient = new Msal.PublicClientApplication(m.msalConfig);
