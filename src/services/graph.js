@@ -1,5 +1,4 @@
 import * as MicrosoftGraph from "@microsoft/microsoft-graph-client";
-//import * as momentT from "moment-timezone";
 import { getToken } from "./auth.js";
 
 // Create an authentication provider
@@ -24,7 +23,6 @@ export async function getUser() // only used in auth.js
 
 export async function updateEvent(id, name, date, startTime, endTime, notes)
 {
-    // console.log(endTime);
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = date + "T" + startTime;  
     const end = date + "T" + endTime;
@@ -50,8 +48,7 @@ export async function updateEvent(id, name, date, startTime, endTime, notes)
         .update(event);
     }
     catch (error) {
-      // console.log("something went wrong");  //something else here porb
-
+      return false;
     }
 }
 
@@ -64,19 +61,15 @@ export async function deleteEvent(id)
         .delete();
     } 
     catch (error) {
-      // console.log("something went wrong");  //something else here porb
+      return false;
     }
 }
 
-export async function createNewEvent(name, startTime, endTime, notes, recurring = null) //creates new event. click to test
+export async function createNewEvent(name, startTime, endTime, notes, recurring = null)
 {
-    //compare add event and graph.js side by side before pushing
-
     const user = JSON.parse(window.localStorage.getItem('graphUser')); 
     const start = (new Date(startTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
-    console.log(start);
     const end = (new Date(endTime.toString().split('GMT')[0]+' UTC').toISOString()).split(".")[0];
-    console.log(end);
     const subject = name;
     const body = notes;
 
@@ -110,7 +103,7 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
         },
         range: {
           type: "endDate", 
-          startDate: date, //this
+          startDate: date, 
           endDate: recur
         }
       };
@@ -125,7 +118,6 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
         newEvent.recurrence.pattern.month = startTime.getMonth() + 1;
       }
     }
-    console.log(newEvent);
     try {
       // POST the JSON to the /me/events endpoint
       return await graphClient
@@ -134,7 +126,6 @@ export async function createNewEvent(name, startTime, endTime, notes, recurring 
   
     } 
     catch (error) {
-      console.log(error);
       return false; //don't think this is needed
     }
 };

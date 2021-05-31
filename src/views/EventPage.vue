@@ -166,8 +166,6 @@ export default {
       },
       calendarEmail: false,
       clientName: ""
-      //eventSyncing: true 
-      // would be automatically t/f based on settings, not doing this rn tho
     };
   },
   created() {
@@ -265,11 +263,6 @@ export default {
 
     },
     async syncDelete() {
-      // if (vm.calendarEmail == false) {       //only needed if they want to be reminded to sign in
-      //   const response = await signIn();
-      //   vm.calendarEmail = response;
-      // }
-      //here is where the magic happens
       const vm = this;
       if (vm.calendarEmail == false) {
         //log in first 
@@ -278,9 +271,7 @@ export default {
       }
       const id = vm.event.get('syncId');
       if (id) {
-        console.log(id);
         const result = await deleteEvent(id);
-        console.log(result);
       }
     },
     back() {

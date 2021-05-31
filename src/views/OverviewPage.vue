@@ -177,12 +177,12 @@ export default {
         notes: 0,
         newClients: []
       },
-      //doneEventData: [],
       items: [],
       modified: false,
       noData: false,
-      //doneEvents: [], 
       doneEventDataMap: {},
+      //doneEvents: [], 
+      //doneEventData: [],
       event: new AV.Object("Event"),
       client: new AV.Object("Client"),
       series: [{
@@ -294,7 +294,6 @@ export default {
             }));
         })
         .catch(error => {
-          // console.log("goes wrong here");
           alert(error);
         });
       const lastEventQuery = new AV.Query("Event"); //suggestions section
@@ -388,7 +387,7 @@ export default {
         .then(events => {
           events.forEach(function (event) { ///fails if event of deleted client
             try {
-              if (event.get("time") >= pastMonth && event.get("time") < currentDate && event.get('client').get('archived') == false) //but less than current time?? 
+              if (event.get("time") >= pastMonth && event.get("time") < currentDate && event.get('client').get('archived') == false)
               {
                 if (event.get("client").get("fullName") in vm.doneEventDataMap)
                 {
@@ -402,6 +401,7 @@ export default {
             }
             catch (error) {
               // console.log("event with deleted client");
+              return false;
             }
           }); 
         });
