@@ -21,8 +21,8 @@ const graphClient = MicrosoftGraph.Client.initWithMiddleware({authProvider});
       .api('/me')
       // Only get the fields used by the app
       .select('id,displayName,mail,userPrincipalName,mailboxSettings')
-      .get()).then(function(response) {
-        return response.json();
+      .get(), {body: JSON.stringify(data)}).then(function(response) {
+        return response.json().then( () => {return data;});
       });
 
 };

@@ -1,4 +1,4 @@
-require ("isomorphic-fetch"); // or import the fetch polyfill you installed
+// require ("isomorphic-fetch"); // or import the fetch polyfill you installed
 const Msal = require ("@azure/msal-browser");
 const graph = require ("./graph");
 const m = require("./config.js");
@@ -18,7 +18,7 @@ let account = null;
       // Get the user's profile from Graph
       let user = await graph.getUser();
       // Save the profile in session
-      window.localStorage.setItem('graphUser', user);
+      window.localStorage.setItem('graphUser', JSON.stringify(user));
 
       return user.userPrincipalName;                      
     } 
@@ -43,7 +43,7 @@ let account = null;
     account = response.account.username;
     window.localStorage.setItem('msalAccount', response.account.username);  
     let user = await graph.getUser();
-    window.localStorage.setItem('graphUser', user);
+    window.localStorage.setItem('graphUser', JSON.stringify(user));
     // Display signed-in user content, call API, etc.
   } else {
       // In case multiple accounts exist, you can select
@@ -55,7 +55,7 @@ let account = null;
             const authResult = await msalClient.loginRedirect(m.msalRequest);
             window.localStorage.setItem('msalAccount', authResult.account.username);  
             let user = await graph.getUser();
-            window.localStorage.setItem('graphUser', user);
+            window.localStorage.setItem('graphUser', JSON.stringify(user));
           }
           catch(e) {
             return e;
