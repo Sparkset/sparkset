@@ -86,13 +86,18 @@ let account = null;
   
       // const silentResult = await msalClient.acquireTokenSilent(silentRequest);
       // return silentResult.accessToken;
-      fetch(msalClient.acquireTokenSilent(silentRequest)).then();
+      fetch(msalClient.acquireTokenSilent(silentRequest)).then(function(silentResult) {
+        return silentResult.accessToken;
+      });
     } catch (silentError) {
       // If silent requests fails with InteractionRequiredAuthError,
       // attempt to get the token interactively
       if (silentError instanceof Msal.InteractionRequiredAuthError) {
-        const interactiveResult = await msalClient.acquireTokenPopup(m.msalRequest);
-        return interactiveResult.accessToken;
+        // const interactiveResult = await msalClient.acquireTokenPopup(m.msalRequest);
+        // return interactiveResult.accessToken;
+        fetch(msalClient.acquireTokenPopup(m.msalRequest)).then(function(interactiveResult) {
+          return interactiveResult.accessToken;
+        })
       } else {
         throw silentError;
       }
