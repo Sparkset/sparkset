@@ -81,7 +81,6 @@ export async function getToken() {
         scopes: m.msalRequest.scopes,
         account: msalClient.getAccountByUsername(account) 
       };
-  
       const silentResult = await msalClient.acquireTokenSilent(silentRequest);
       return silentResult.accessToken;
     } catch (silentError) {
